@@ -385,12 +385,14 @@ function renderOrders(){
     const itemRows = items.length ? items.map(item => {
       const qty = Number(item.quantity ?? item.qty ?? 0);
       const price = Number(item.unit_price ?? item.price ?? item.sale_price ?? 0);
+      const packageType = item.package_type === "strip" ? "Strip" : (item.package_type === "box" ? "Box" : "অজানা");
+      const quantityLabel = `${qty} ${packageType}`;
 
       return `<tr>
         <td>${escapeHtml(item.name || item.medicine_name || item.product_name || "ওষুধ")}</td>
         <td>${escapeHtml(item.company || item.company_name || "-")}</td>
-        <td>${qty}</td>
-        <td>${money(price)}</td>
+        <td><span class="package-tag">${quantityLabel}</span></td>
+        <td>${money(price)} / ${packageType}</td>
         <td>${money(qty * price)}</td>
       </tr>`;
     }).join("") : '<tr><td colspan="5">এই অর্ডারের items তালিকা পাওয়া যায়নি।</td></tr>';
@@ -435,7 +437,7 @@ function renderOrders(){
             <tr>
               <th>ওষুধ</th>
               <th>কোম্পানি</th>
-              <th>পরিমাণ</th>
+              <th>প্যাকেজ ও পরিমাণ</th>
               <th>একক দাম</th>
               <th>মোট</th>
             </tr>
@@ -564,12 +566,13 @@ function printReceipt(button){
   const rows = items.map(item => {
     const qty = Number(item.quantity ?? item.qty ?? 0);
     const price = Number(item.unit_price ?? item.price ?? item.sale_price ?? 0);
+    const packageType = item.package_type === "strip" ? "Strip" : "Box";
 
     return `<tr>
       <td>${escapeHtml(item.name || item.medicine_name || item.product_name || "ওষুধ")}</td>
       <td>${escapeHtml(item.company || item.company_name || "-")}</td>
-      <td>${qty}</td>
-      <td>${money(price)}</td>
+      <td><span class="package-tag">${qty} ${packageType}</span></td>
+      <td>${money(price)} / ${packageType}</td>
       <td>${money(qty * price)}</td>
     </tr>`;
   }).join("");
@@ -600,6 +603,7 @@ function printReceipt(button){
       th{background:#f0f6f2}
       .total{text-align:right;font-size:22px;font-weight:bold;margin-top:20px;border-top:2px solid #075e46;padding-top:14px}
       .muted{color:#666;font-size:12px}
+      .package-tag{display:inline-block;padding:3px 8px;border-radius:6px;background:#e6f4ee;color:#0b6b4f;font-size:11px;font-weight:700}
       .print{padding:10px 15px;background:#075e46;color:white;border:0;border-radius:6px;cursor:pointer}
       @media print{.print{display:none}body{margin:0;padding:0}}
     </style>
@@ -619,7 +623,7 @@ function printReceipt(button){
     </div>
     <h2>অর্ডার করা পণ্য</h2>
     <table>
-      <thead><tr><th>পণ্যের নাম</th><th>কোম্পানি</th><th>পরিমাণ</th><th>একক মূল্য</th><th>মোট</th></tr></thead>
+      <thead><tr><th>পণ্যের নাম</th><th>কোম্পানি</th><th>প্যাকেজ ও পরিমাণ</th><th>একক মূল্য</th><th>মোট</th></tr></thead>
       <tbody>${rows || '<tr><td colspan="5">এই অর্ডারের পণ্যের বিস্তারিত সংরক্ষিত নেই।</td></tr>'}</tbody>
     </table>
     <div class="total">সর্বমোট: ${money(order.total_amount)}</div>
