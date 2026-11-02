@@ -136,7 +136,7 @@ label{display:block;font-size:14px;font-weight:bold;margin-top:10px}
     </p>
     <div class="grid">
       <div>
-        <label for="stock">Stock (পরিমাণ)</label>
+        <div class="grid"><div><label for="stripsPerBox">এক Box-এ Strip</label><input id="stripsPerBox" type="number" min="1" step="1" value="10" placeholder="যেমন 10"></div><div><label for="stripPrice">প্রতি Strip-এর MRP (৳)</label><input id="stripPrice" type="number" min="0" step="0.01" value="0" placeholder="Strip price"></div></div><label for="stripDiscount">Strip Discount (%)</label><input id="stripDiscount" type="number" min="0" max="100" step="any" value="0"><p class="small">Strip price 0 থাকলে Box-এর বিক্রয়মূল্য ÷ Strip সংখ্যা অনুযায়ী দাম হিসাব হবে।</p><label for="stock">Stock (পরিমাণ)</label>
         <input id="stock" type="number" min="0" step="1" value="0" placeholder="Stock">
       </div>
       <div>
@@ -413,7 +413,10 @@ document.getElementById("medicineForm").addEventListener("submit", async e => {
       category: document.getElementById("category").value.trim(),
       price,
       discount_percent: discount,
-      stock
+      stock,
+      strips_per_box: Math.max(1, Number(document.getElementById("stripsPerBox").value) || 1),
+      strip_price: Math.max(0, Number(document.getElementById("stripPrice").value) || 0),
+      strip_discount_percent: Math.max(0, Math.min(100, Number(document.getElementById("stripDiscount").value) || 0))
     };
     if (imageUrl) row.image_url = imageUrl;
     let result;
@@ -440,6 +443,9 @@ function editMedicine(id) {
   ["name", "company", "strength", "category", "price", "stock"].forEach(k => {
     document.getElementById(k).value = m[k] ?? "";
   });
+  document.getElementById("stripsPerBox").value = m.strips_per_box ?? 10;
+  document.getElementById("stripPrice").value = m.strip_price ?? 0;
+  document.getElementById("stripDiscount").value = m.strip_discount_percent ?? 0;
   discountMode.value = "percentage";
   discountInput.value = m.discount_percent ?? 0;
   updateDiscountFields("discount");
@@ -465,6 +471,9 @@ function resetForm() {
   document.getElementById("medicineForm").reset();
   discountMode.value = "percentage";
   discountInput.value = "0";
+  document.getElementById("stripsPerBox").value = 10;
+  document.getElementById("stripPrice").value = 0;
+  document.getElementById("stripDiscount").value = 0;
   discountInput.readOnly = false;
   finalPriceInput.value = "";
   finalPriceInput.readOnly = true;
