@@ -313,7 +313,12 @@ body.cart-open{overflow:hidden}
   .qty button{font-size:14px}
   .order-btn{padding:6px 2px;font-size:10px;margin-top:5px}
   .order-btn svg{display:none}
-}
+} .mode-toggle{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--light);border-radius:8px;padding:3px}
+.mode-toggle button{border:0;background:transparent;border-radius:6px;padding:6px 4px;font-size:13px;font-weight:700;color:var(--muted)}
+.mode-toggle button.active{background:#fff;color:var(--green);box-shadow:0 1px 5px rgba(11,107,79,.15)}
+.product-card[data-mode="box"] .mode-strip,.product-card[data-mode="strip"] .mode-box{display:none}
+@media(max-width:650px){.mode-toggle button{font-size:10px;padding:4px 2px}}
+
 </style>
 </head>
 
@@ -676,6 +681,16 @@ body.cart-open{overflow:hidden}
     return {mrp, discount, finalPrice};
   }
 
+  function hasStrip(product) {
+    return Number(product.strips_per_box) >= 2 && Number(product.strip_price) > 0;
+  }
+  function getStripPrices(product) {
+    const mrp = Number(product.strip_price);
+    const discount = Math.min(100, Math.max(0, Number(product.strip_discount_percent) || 0));
+    const finalPrice = Math.round((mrp * (1 - discount / 100) + Number.EPSILON) * 100) / 100;
+    return {mrp, discount, finalPrice};
+  }
+
   try {
     const saved = JSON.parse(localStorage.getItem("medispot_cart") || "[]");
     if (Array.isArray(saved)) {
@@ -694,6 +709,9 @@ body.cart-open{overflow:hidden}
         company:String(item.company || ""),
         image_url:String(item.image_url || ""),
         unit_price:Number(item.unit_price),
+        unit:item.unit === "strip" ? "strip" : "box",
+        strips_per_box:Number(item.strips_per_box) || 0,
+
         quantity:Number(item.quantity)
       }));
     }
@@ -730,7 +748,8 @@ body.cart-open{overflow:hidden}
               : '<div class="cart-product-no-image" aria-hidden="true">💊</div>'}
             <div class="cart-product cart-product-info">
               <strong>${escapeHTML(item.name)}</strong>
-              <small>${escapeHTML(item.company)} · ${money(item.unit_price)} / বক্স</small>
+              <small>${escapeHTML(item.company)} · ${money(item.unit_price)} / ${item.unit === "strip" ? "স্ট্রিপ" : "বক্স"}</small>
+
               <div><strong>${money(item.unit_price * item.quantity)}</strong></div>
             </div>
           </div>
@@ -865,8 +884,11 @@ body.cart-open{overflow:hidden}
     renderCart();
   });
 
-  function addToCart(product, qty = 1) {
-    const prices = getPrices(product);
+  function addToCart(product, qty = 1, unitType = "box") {
+
+  const isStrip = unitType === "strip" && hasStrip(product);
+    const prices = isStrip ? getStripPrices(product) : getPrices(product);
+
 
     if (prices.finalPrice === null || prices.finalPrice <= 0) {
       alert("এই পণ্যের সঠিক বিক্রয়মূল্য এখনো দেওয়া হয়নি।");
@@ -874,7 +896,8 @@ body.cart-open{overflow:hidden}
     }
 
     const amount = Math.max(1, Math.min(999, Math.floor(Number(qty)) || 1));
-    const id = String(product.id);
+    const id = String(product.id) + (isStrip ? ":strip" : "");
+
     const existing = cart.find(item => item.id === id);
 
     if (existing) {
@@ -890,6 +913,9 @@ body.cart-open{overflow:hidden}
         company:String(product.company || ""),
         image_url:String(product.image_url || ""),
         unit_price:prices.finalPrice,
+        unit:isStrip ? "strip" : "box",
+        strips_per_box:Number(product.strips_per_box) || 0,
+
         quantity:amount
       });
     }
@@ -930,8 +956,14 @@ body.cart-open{overflow:hidden}
     const {mrp, discount, finalPrice} = getPrices(product);
     const fmt2 = n => "৳" + Number(n).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
 
-    const badgeHTML = discount > 0
-      ? `<span class="discount-badge">${Number(discount.toFixed(2))}% ছাড়</span>` : "";
+  const stripOn = hasStrip(product);
+    const sp = stripOn ? getStripPrices(product) : null;
+    const stripBadge = stripOn && sp.discount > 0
+      ? `<span class="discount-badge mode-strip">${Number(sp.discount.toFixed(2))}% ছাড়</span>` : "";
+    const badgeHTML = (discount > 0
+
+   ? `<span class="discount-badge${stripOn ? " mode-box" : ""}">${Number(discount.toFixed(2))}% ছাড়</span>` : "") + stripBadge;
+
 
     let priceHTML;
     if (mrp === null) {
@@ -942,6 +974,13 @@ body.cart-open{overflow:hidden}
       priceHTML = `<div class="price-row"><span class="product-price">${fmt2(mrp)}</span></div>`;
     }
 
+    let stripPriceHTML = "", toggleHTML = "";
+    if (stripOn) {
+      priceHTML = priceHTML.replace(/class="(price-row|product-price small)"/, 'class="$1 mode-box"');
+      stripPriceHTML = `<div class="price-label mode-strip">প্রতি স্ট্রিপ</div><div class="price-row mode-strip">${sp.discount > 0 ? `<span class="mrp">${formatPrice(sp.mrp)}</span>` : ""}<span class="product-price">${fmt2(sp.finalPrice)}</span></div>`;
+      toggleHTML = `<div class="mode-toggle"><button type="button" class="active" data-mode-btn="box">বক্স (${Number(product.strips_per_box)} স্ট্রিপ)</button><button type="button" data-mode-btn="strip">স্ট্রিপ</button></div>`;
+    }
+
     const imageHTML = image ? `
       ${badgeHTML}
       <img src="${escapeHTML(image)}" alt="${name}" loading="lazy"
@@ -950,15 +989,18 @@ body.cart-open{overflow:hidden}
     ` : `${badgeHTML}<div class="image-placeholder" style="display:block"><span class="medical-icon">💊</span><small>ওষুধের ছবি</small></div>`;
 
     return `
-      <article class="product-card">
+     <article class="product-card" data-mode="box">
+
         <div class="product-image">${imageHTML}</div>
         <div class="product-info">
           <h3 class="product-name">${name}</h3>
           ${companyHTML}
           ${categoryHTML}
           <div class="product-bottom">
-            <div class="price-label">${unit}</div>
-            ${priceHTML}
+            ${toggleHTML}<div class="price-label${stripOn ? " mode-box" : ""}">${unit}</div>
+
+         ${priceHTML}${stripPriceHTML}
+
             <div class="qty">
               <button type="button" data-qty="-" aria-label="কমান">−</button>
               <span class="qty-val">1</span>
@@ -1023,7 +1065,14 @@ body.cart-open{overflow:hidden}
     document.getElementById("products").scrollIntoView({behavior:"smooth"});
   });
 
-  function handleCardClick(event) {
+  function handleCardClick(event) {    const modeBtn = event.target.closest("button[data-mode-btn]");
+    if (modeBtn) {
+      const card = modeBtn.closest(".product-card");
+      card.dataset.mode = modeBtn.dataset.modeBtn;
+      card.querySelectorAll("[data-mode-btn]").forEach(b => b.classList.toggle("active", b === modeBtn));
+      return;
+    }
+
     const qtyButton = event.target.closest("button[data-qty]");
     if (qtyButton) {
       const valueEl = qtyButton.closest(".qty").querySelector(".qty-val");
@@ -1041,7 +1090,8 @@ body.cart-open{overflow:hidden}
 
     const valueEl = button.closest(".product-card").querySelector(".qty-val");
     const qty = Number(valueEl && valueEl.textContent) || 1;
-    addToCart(product, qty);
+    addToCart(product, qty, button.closest(".product-card").dataset.mode);
+
     if (valueEl) valueEl.textContent = "1";
   }
 
@@ -1051,7 +1101,7 @@ body.cart-open{overflow:hidden}
   async function loadProducts() {
     try {
       const response = await fetch(
-        SUPABASE_URL + "/rest/v1/medicines?select=id,name,company,strength,price,discount_percent,image_url,stock,category,is_flash_sale",
+        SUPABASE_URL + "/rest/v1/medicines?select=id,name,company,strength,price,discount_percent,image_ image_url,stock,category,is_flash_sale,strips_per_box,strip_price,strip_discount_percent",
         { headers: { apikey:SUPABASE_PUBLISHABLE_KEY, Authorization:"Bearer " + SUPABASE_PUBLISHABLE_KEY } }
       );
 
@@ -1076,7 +1126,11 @@ body.cart-open{overflow:hidden}
           image_url:row.image_url || "",
           category:row.category || "",
           stock:row.stock,
-          is_flash_sale:row.is_flash_sale === true
+          is_flash_sale:row.is_flash_sale === true,
+          strips_per_box:Number(row.strips_per_box) || 0,
+          strip_price:row.strip_price,
+          strip_discount_percent:Number(row.strip_discount_percent) || 0
+
         };
       });
 
@@ -1134,7 +1188,10 @@ body.cart-open{overflow:hidden}
       name:item.name,
       company:item.company,
       image_url:item.image_url || "",
-      unit_price:item.unit_price,
+         unit_price:item.unit_price,
+      unit:item.unit || "box",
+      strips_per_box:item.strips_per_box || 0,
+
       quantity:item.quantity
     }));
 
@@ -1333,7 +1390,8 @@ body.cart-open{overflow:hidden}
     myOrdersEl.innerHTML = data.map(order => {
       const st = STATUS_LABELS[String(order.status || "").toLowerCase()] || [String(order.status || "—"), ""];
       const items = Array.isArray(order.items)
-        ? order.items.map(i => escapeHTML(i.name) + " × " + escapeHTML(i.quantity)).join(", ") : "";
+        ? order.items.map(i => escapeHTML(i.name) + (i.unit === "strip" ? " (স্ট্রিপ)" : "") + " × "
+ + escapeHTML(i.quantity)).join(", ") : "";
       const date = order.created_at
         ? new Date(order.created_at).toLocaleString("bn-BD", {dateStyle:"medium", timeStyle:"short"}) : "";
       return `<div class="my-order">
