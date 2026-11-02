@@ -314,6 +314,25 @@ body.cart-open{overflow:hidden}
   .order-btn{padding:6px 2px;font-size:10px;margin-top:5px}
   .order-btn svg{display:none}
 }
+
+/* Premium Box / Strip selector */
+.package-choice-overlay{position:fixed;inset:0;z-index:10040;background:rgba(8,28,19,.58);display:none;align-items:center;justify-content:center;padding:16px}
+.package-choice-card{width:min(390px,100%);background:#fff;border:1px solid #dcebe4;border-radius:20px;padding:20px;box-shadow:0 20px 65px #0003}
+.package-choice-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.package-choice-head h3{margin:0;color:#064c37;font-size:19px}
+.package-choice-close{border:0;background:#e6f4ee;color:#0b6b4f;border-radius:9px;padding:7px 11px}
+.package-choice-sub{font-size:12px;color:#667a70;margin:5px 0 14px}
+.package-choice-options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.package-choice-option{border:1px solid #dcebe4;border-radius:14px;background:#fff;padding:13px 10px;text-align:left;cursor:pointer;color:#10261e}
+.package-choice-option.active{border:2px solid #0b6b4f;background:#f0faf5}
+.package-choice-option strong{display:block;font-size:15px;color:#0b6b4f}
+.package-choice-option small{display:block;color:#667a70;font-size:11px;margin-top:5px}
+.package-choice-qty{display:flex;align-items:center;justify-content:space-between;margin-top:15px;padding:10px 12px;background:#f5faf7;border-radius:12px}
+.package-choice-qty button{border:1px solid #dcebe4;background:white;border-radius:8px;width:34px;height:34px;font-size:18px;color:#0b6b4f}
+.package-choice-qty input{width:55px;text-align:center;border:1px solid #dcebe4;border-radius:8px;padding:7px}
+.package-choice-total{display:flex;justify-content:space-between;margin:14px 0;font-weight:700}
+.package-choice-add{width:100%;border:0;border-radius:12px;background:#0b6b4f;color:white;padding:13px;font-weight:700}
+
 </style>
 </head>
 
@@ -401,6 +420,21 @@ body.cart-open{overflow:hidden}
     </div>
   </section>
 </main>
+
+
+<div id="packageChoiceModal" class="package-choice-overlay" role="dialog" aria-modal="true" aria-label="Box অথবা Strip নির্বাচন">
+ <div class="package-choice-card">
+  <div class="package-choice-head"><h3>কীভাবে কিনবেন?</h3><button type="button" class="package-choice-close" id="packageChoiceClose">✕</button></div>
+  <div id="packageChoiceMedicine" class="package-choice-sub"></div>
+  <div class="package-choice-options">
+   <button type="button" class="package-choice-option active" data-package="box"><strong>📦 Full Box</strong><small id="packageBoxPrice">দাম লোড হচ্ছে</small></button>
+   <button type="button" class="package-choice-option" data-package="strip"><strong>💊 Strip</strong><small id="packageStripPrice">দাম লোড হচ্ছে</small></button>
+  </div>
+  <div class="package-choice-qty"><span>পরিমাণ</span><button type="button" id="packageQtyMinus">−</button><input id="packageQtyInput" type="number" min="1" max="999" value="1"><button type="button" id="packageQtyPlus">+</button></div>
+  <div class="package-choice-total"><span>মোট</span><strong id="packageChoiceTotal">৳0.00</strong></div>
+  <button type="button" class="package-choice-add" id="packageChoiceAdd">কার্টে যোগ করুন</button>
+ </div>
+</div>
 
 <div id="cartModal" class="cart-overlay" style="display:none">
   <section class="cart-panel" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
@@ -865,38 +899,75 @@ body.cart-open{overflow:hidden}
     renderCart();
   });
 
-  function addToCart(product, qty = 1) {
-    const prices = getPrices(product);
+  let packageChoiceProduct = null;
+  let packageChoiceType = "box";
+  let packageChoiceQty = 1;
+  const packageChoiceModal = document.getElementById("packageChoiceModal");
+  const packageChoiceInput = document.getElementById("packageQtyInput");
+  const packageMoney = n => "৳" + Number(n || 0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
 
-    if (prices.finalPrice === null || prices.finalPrice <= 0) {
-      alert("এই পণ্যের সঠিক বিক্রয়মূল্য এখনো দেওয়া হয়নি।");
-      return;
-    }
+  function packagePrices(product){
+    const box = getPrices(product).finalPrice;
+    const perBox = Math.max(1, Number(product.strips_per_box || 1));
+    const stripBase = Number(product.strip_price || 0);
+    const stripDiscount = Math.max(0,Math.min(100,Number(product.strip_discount_percent || 0)));
+    const strip = stripBase > 0 ? stripBase * (1-stripDiscount/100) : (box > 0 ? box/perBox : null);
+    return {box,strip,perBox};
+  }
+  function updatePackageChoice(){
+    if(!packageChoiceProduct)return;
+    const prices=packagePrices(packageChoiceProduct);
+    document.getElementById("packageBoxPrice").textContent=prices.box>0?packageMoney(prices.box)+" / Box":"দাম দেওয়া নেই";
+    document.getElementById("packageStripPrice").textContent=prices.strip>0?packageMoney(prices.strip)+" / Strip":"Strip বিক্রি নেই";
+    document.querySelectorAll(".package-choice-option").forEach(b=>b.classList.toggle("active",b.dataset.package===packageChoiceType));
+    const unit=packageChoiceType==="box"?prices.box:prices.strip;
+    document.getElementById("packageChoiceTotal").textContent=unit>0?packageMoney(unit*packageChoiceQty):"দাম দেওয়া নেই";
+    document.getElementById("packageChoiceAdd").disabled=!(unit>0);
+    document.getElementById("packageChoiceAdd").style.opacity=unit>0?"1":".5";
+  }
+  function openPackageChoice(product,qty=1){
+    packageChoiceProduct=product;packageChoiceQty=Math.max(1,Math.min(999,Math.floor(Number(qty)||1)));
+    packageChoiceType="box";
+    document.getElementById("packageChoiceMedicine").textContent=String(product.name||"ওষুধ")+" · "+String(product.company||"");
+    packageChoiceInput.value=packageChoiceQty;
+    const pp=packagePrices(product);
+    const stripBtn=document.querySelector('.package-choice-option[data-package="strip"]');
+    stripBtn.disabled=!(pp.strip>0);
+    stripBtn.style.opacity=pp.strip>0?"1":".45";
+    packageChoiceModal.style.display="flex";
+    updatePackageChoice();
+  }
+  function closePackageChoice(){packageChoiceModal.style.display="none";packageChoiceProduct=null;}
+  document.getElementById("packageChoiceClose").addEventListener("click",closePackageChoice);
+  packageChoiceModal.addEventListener("click",e=>{if(e.target===packageChoiceModal)closePackageChoice();});
+  document.querySelectorAll(".package-choice-option").forEach(b=>b.addEventListener("click",()=>{
+    if(b.disabled)return;packageChoiceType=b.dataset.package;updatePackageChoice();
+  }));
+  document.getElementById("packageQtyMinus").addEventListener("click",()=>{packageChoiceQty=Math.max(1,packageChoiceQty-1);packageChoiceInput.value=packageChoiceQty;updatePackageChoice();});
+  document.getElementById("packageQtyPlus").addEventListener("click",()=>{packageChoiceQty=Math.min(999,packageChoiceQty+1);packageChoiceInput.value=packageChoiceQty;updatePackageChoice();});
+  packageChoiceInput.addEventListener("input",()=>{packageChoiceQty=Math.max(1,Math.min(999,Math.floor(Number(packageChoiceInput.value)||1)));updatePackageChoice();});
+  document.getElementById("packageChoiceAdd").addEventListener("click",()=>{
+    if(!packageChoiceProduct)return;
+    addToCart(packageChoiceProduct,packageChoiceQty,packageChoiceType);closePackageChoice();
+  });
 
-    const amount = Math.max(1, Math.min(999, Math.floor(Number(qty)) || 1));
-    const id = String(product.id);
-    const existing = cart.find(item => item.id === id);
-
-    if (existing) {
-      if (existing.quantity >= 999) {
-        alert("একসঙ্গে সর্বোচ্চ 999 বক্স যোগ করা যাবে।");
-        return;
-      }
-      existing.quantity = Math.min(999, existing.quantity + amount);
-    } else {
-      cart.push({
-        id,
-        name:String(product.name || "ওষুধ"),
-        company:String(product.company || ""),
-        image_url:String(product.image_url || ""),
-        unit_price:prices.finalPrice,
-        quantity:amount
-      });
-    }
-
-    renderCart();
-    checkoutMessage.textContent = "";
-    showPremiumToast(String(product.name || "ওষুধ"));
+  function addToCart(product, qty = 1, packageType = "box") {
+    const prices=packagePrices(product);
+    const unitPrice=packageType==="strip"?prices.strip:prices.box;
+    if(!(unitPrice>0)){alert("এই প্যাকেজের সঠিক বিক্রয়মূল্য দেওয়া হয়নি।");return;}
+    const amount=Math.max(1,Math.min(999,Math.floor(Number(qty))||1));
+    const id=String(product.id)+"-"+packageType;
+    const packageLabel=packageType==="strip"?"Strip":"Full Box";
+    const existing=cart.find(item=>item.id===id);
+    if(existing) existing.quantity=Math.min(999,existing.quantity+amount);
+    else cart.push({
+      id,name:String(product.name||"ওষুধ"),company:String(product.company||""),
+      image_url:String(product.image_url||""),unit_price:Number(unitPrice),
+      quantity:amount,package_type:packageType,package_label:packageLabel,
+      strips_per_box:prices.perBox,medicine_id:String(product.id)
+    });
+    renderCart();checkoutMessage.textContent="";
+    showPremiumToast(String(product.name||"ওষুধ")+" · "+packageLabel);
   }
 
   function renderCompanyFilters() {
@@ -1041,7 +1112,7 @@ body.cart-open{overflow:hidden}
 
     const valueEl = button.closest(".product-card").querySelector(".qty-val");
     const qty = Number(valueEl && valueEl.textContent) || 1;
-    addToCart(product, qty);
+    openPackageChoice(product, qty);
     if (valueEl) valueEl.textContent = "1";
   }
 
@@ -1051,7 +1122,7 @@ body.cart-open{overflow:hidden}
   async function loadProducts() {
     try {
       const response = await fetch(
-        SUPABASE_URL + "/rest/v1/medicines?select=id,name,company,strength,price,discount_percent,image_url,stock,category,is_flash_sale",
+        SUPABASE_URL + "/rest/v1/medicines?select=id,name,company,strength,price,discount_percent,image_url,stock,category,is_flash_sale,strips_per_box,strip_price,strip_discount_percent",
         { headers: { apikey:SUPABASE_PUBLISHABLE_KEY, Authorization:"Bearer " + SUPABASE_PUBLISHABLE_KEY } }
       );
 
@@ -1076,7 +1147,7 @@ body.cart-open{overflow:hidden}
           image_url:row.image_url || "",
           category:row.category || "",
           stock:row.stock,
-          is_flash_sale:row.is_flash_sale === true
+          is_flash_sale:row.is_flash_sale, strips_per_box:row.strips_per_box, strip_price:row.strip_price, strip_discount_percent:row.strip_discount_percent === true
         };
       });
 
