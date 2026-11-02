@@ -28,6 +28,7 @@ button.flash-active{background:#fff0cc;color:#805500}
 label{display:block;font-size:14px;font-weight:bold;margin-top:10px}
 #app{display:none}
 .status{font-size:14px;overflow-wrap:anywhere}
+.strip-box{border:1px dashed #b9d6c8;border-radius:12px;padding:12px;margin:12px 0}
 @media(max-width:550px){.grid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -134,6 +135,30 @@ label{display:block;font-size:14px;font-weight:bold;margin-top:10px}
     <p class="small" id="discountHelp">
       Percentage Mode-এ Discount লিখলে Final Price হিসাব হবে।
     </p>
+    <div class="strip-box">
+      <label style="margin-top:0">💊 স্ট্রিপে বিক্রি (ঐচ্ছিক)</label>
+      <p class="small">খালি রাখলে ওষুধ শুধু বক্সে বিক্রি হবে। উপরের MRP ও Discount পুরো বক্সের।</p>
+      <div class="grid">
+        <div>
+          <label for="stripsPerBox">এক বক্সে কয়টা স্ট্রিপ</label>
+          <input id="stripsPerBox" type="number" min="2" step="1" placeholder="যেমন 10">
+        </div>
+        <div>
+          <label for="stripPrice">স্ট্রিপের MRP (৳)</label>
+          <input id="stripPrice" type="number" min="0.01" step="0.01" placeholder="যেমন 98">
+        </div>
+      </div>
+      <div class="grid">
+        <div>
+          <label for="stripDiscount">স্ট্রিপের Discount (%)</label>
+          <input id="stripDiscount" type="number" min="0" max="100" step="any" value="0">
+        </div>
+        <div>
+          <label for="stripFinal">স্ট্রিপের Final Price (৳)</label>
+          <input id="stripFinal" readonly>
+        </div>
+      </div>
+    </div>
     <div class="grid">
       <div>
         <label for="stock">Stock (পরিমাণ)</label>
@@ -221,6 +246,15 @@ discountMode.addEventListener("change", () => updateDiscountFields("mode"));
 priceInput.addEventListener("input", () => updateDiscountFields("price"));
 discountInput.addEventListener("input", () => updateDiscountFields("discount"));
 finalPriceInput.addEventListener("input", () => updateDiscountFields("finalPrice"));
+// ===== STRIP PRICE =====
+function updateStripFinal() {
+  const p = Number(document.getElementById("stripPrice").value);
+  const d = Number(document.getElementById("stripDiscount").value) || 0;
+  document.getElementById("stripFinal").value =
+    p > 0 ? (p * (1 - d / 100)).toFixed(2) : "";
+}
+["stripPrice", "stripDiscount"].forEach(id =>
+  document.getElementById(id).addEventListener("input", updateStripFinal));
 // ===== AUTHENTICATION =====
 async function loginAdmin() {
   const email = document.getElementById("email").value.trim();
@@ -306,6 +340,7 @@ function renderMedicines() {
     details.textContent = [
       m.company,
       m.strength,
+      m.strip_price ? "স্ট্রিপ: ৳" + (Number(m.strip_price) * (1 - Number(m.strip_discount_percent || 0) / 100)).toFixed(2) + " (বক্সে " + m.strips_per_box + "টি)" : "",
       "Stock: " + (m.stock ?? 0),
       "Flash Sale: " + (m.is_flash_sale ? "চালু" : "বন্ধ")
     ].filter(Boolean).join(" • ");
@@ -387,6 +422,24 @@ document.getElementById("medicineForm").addEventListener("submit", async e => {
     }
     discount = ((price - sale) / price) * 100;
   }
+  const spbText = document.getElementById("stripsPerBox").value;
+  const spText = document.getElementById("stripPrice").value;
+  const sdText = document.getElementById("stripDiscount").value;
+  let stripsPerBox = null, stripPrice = null, stripDiscount = 0;
+  if (spbText !== "" || spText !== "") {
+    stripsPerBox = Number(spbText);
+    stripPrice = Number(spText);
+    stripDiscount = sdText === "" ? 0 : Number(sdText);
+    if (!Number.isInteger(stripsPerBox) || stripsPerBox < 2 ||
+        !Number.isFinite(stripPrice) || stripPrice <= 0) {
+      msg.textContent = "স্ট্রিপে বিক্রি করতে হলে বক্সে স্ট্রিপ সংখ্যা (২ বা বেশি) ও স্ট্রিপের দাম দুটোই দাও।";
+      return;
+    }
+    if (!Number.isFinite(stripDiscount) || stripDiscount < 0 || stripDiscount > 100) {
+      msg.textContent = "স্ট্রিপের Discount 0 থেকে 100-এর মধ্যে দাও।";
+      return;
+    }
+  }
   const stockText = document.getElementById("stock").value;
   const stock = stockText === "" ? 0 : Number(stockText);
   if (!Number.isInteger(stock) || stock < 0) {
@@ -413,6 +466,9 @@ document.getElementById("medicineForm").addEventListener("submit", async e => {
       category: document.getElementById("category").value.trim(),
       price,
       discount_percent: discount,
+      strips_per_box: stripsPerBox,
+      strip_price: stripPrice,
+      strip_discount_percent: stripDiscount,
       stock
     };
     if (imageUrl) row.image_url = imageUrl;
@@ -443,6 +499,10 @@ function editMedicine(id) {
   discountMode.value = "percentage";
   discountInput.value = m.discount_percent ?? 0;
   updateDiscountFields("discount");
+  document.getElementById("stripsPerBox").value = m.strips_per_box ?? "";
+  document.getElementById("stripPrice").value = m.strip_price ?? "";
+  document.getElementById("stripDiscount").value = m.strip_discount_percent ?? 0;
+  updateStripFinal();
   document.getElementById("photo").value = "";
   document.getElementById("formTitle").textContent = "ওষুধ Edit করো";
   document.getElementById("saveButton").textContent = "পরিবর্তন Save করো";
