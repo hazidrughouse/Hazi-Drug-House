@@ -326,6 +326,8 @@ body.cart-open{overflow:hidden}
 .package-choice-option{border:1px solid #dcebe4;border-radius:14px;background:#fff;padding:13px 10px;text-align:left;cursor:pointer;color:#10261e}
 .package-choice-option.active{border:2px solid #0b6b4f;background:#f0faf5}
 .package-choice-option strong{display:block;font-size:15px;color:#0b6b4f}
+.package-discount{display:inline-block;vertical-align:middle;margin-left:5px;padding:3px 6px;border-radius:6px;background:#fff0f1;color:#d7192d;font-size:10px;font-weight:800;white-space:nowrap}
+.package-discount:empty{display:none}
 .package-choice-option small{display:block;color:#667a70;font-size:11px;margin-top:5px}
 .package-choice-qty{display:flex;align-items:center;justify-content:space-between;margin-top:15px;padding:10px 12px;background:#f5faf7;border-radius:12px}
 .package-choice-qty button{border:1px solid #dcebe4;background:white;border-radius:8px;width:34px;height:34px;font-size:18px;color:#0b6b4f}
@@ -427,8 +429,8 @@ body.cart-open{overflow:hidden}
   <div class="package-choice-head"><h3>কীভাবে কিনবেন?</h3><button type="button" class="package-choice-close" id="packageChoiceClose">✕</button></div>
   <div id="packageChoiceMedicine" class="package-choice-sub"></div>
   <div class="package-choice-options">
-   <button type="button" class="package-choice-option active" data-package="box"><strong>📦 Full Box</strong><small id="packageBoxPrice">দাম লোড হচ্ছে</small></button>
-   <button type="button" class="package-choice-option" data-package="strip"><strong>💊 Strip</strong><small id="packageStripPrice">দাম লোড হচ্ছে</small></button>
+   <button type="button" class="package-choice-option active" data-package="box"><strong>📦 Full Box <span class="package-discount" id="packageBoxDiscount"></span></strong><small id="packageBoxPrice">দাম লোড হচ্ছে</small></button>
+   <button type="button" class="package-choice-option" data-package="strip"><strong>💊 Strip <span class="package-discount" id="packageStripDiscount"></span></strong><small id="packageStripPrice">দাম লোড হচ্ছে</small></button>
   </div>
   <div class="package-choice-qty"><span>পরিমাণ</span><button type="button" id="packageQtyMinus">−</button><input id="packageQtyInput" type="number" min="1" max="999" value="1"><button type="button" id="packageQtyPlus">+</button></div>
   <div class="package-choice-total"><span>মোট</span><strong id="packageChoiceTotal">৳0.00</strong></div>
@@ -917,6 +919,10 @@ body.cart-open{overflow:hidden}
   function updatePackageChoice(){
     if(!packageChoiceProduct)return;
     const prices=packagePrices(packageChoiceProduct);
+    const boxDiscount=Math.max(0,Math.min(100,Number(getPrices(packageChoiceProduct).discount)||0));
+    const stripDiscount=Math.max(0,Math.min(100,Number(packageChoiceProduct.strip_discount_percent)||0));
+    document.getElementById("packageBoxDiscount").textContent=boxDiscount>0?boxDiscount.toLocaleString("en-US",{maximumFractionDigits:2})+"% ছাড়":"";
+    document.getElementById("packageStripDiscount").textContent=stripDiscount>0?stripDiscount.toLocaleString("en-US",{maximumFractionDigits:2})+"% ছাড়":"";
     document.getElementById("packageBoxPrice").textContent=prices.box>0?packageMoney(prices.box)+" / Box":"দাম দেওয়া নেই";
     document.getElementById("packageStripPrice").textContent=prices.strip>0?packageMoney(prices.strip)+" / Strip":"Strip বিক্রি নেই";
     document.querySelectorAll(".package-choice-option").forEach(b=>b.classList.toggle("active",b.dataset.package===packageChoiceType));
@@ -1148,7 +1154,7 @@ body.cart-open{overflow:hidden}
           image_url:row.image_url || "",
           category:row.category || "",
           stock:row.stock,
-          is_flash_sale:row.is_flash_sale, strips_per_box:row.strips_per_box, strip_price:row.strip_price, strip_discount_percent:row.strip_discount_percent === true
+          is_flash_sale:row.is_flash_sale, strips_per_box:row.strips_per_box, strip_price:row.strip_price, strip_discount_percent:Number(row.strip_discount_percent) || 0
         };
       });
 
