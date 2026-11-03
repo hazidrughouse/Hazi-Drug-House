@@ -20,14 +20,14 @@ main{max-width:1500px;margin:0 auto;padding:24px 26px}.card{background:var(--whi
 <body>
 <header>
   <div class="brand"><div class="brand-mark">MS</div><div><h2>Medispot BD</h2><small>MEDICINE MARKETPLACE</small></div></div>
-  <div class="header-right">â¦ Premium Admin Workspace</div>
+  <div class="header-right">✦ Premium Admin Workspace</div>
 </header>
 <main>
 <section class="card login-card" id="login">
-  <div class="login-icon">â¦</div>
+  <div class="login-icon">✦</div>
   <h3>Admin Login</h3>
-  <p class="small">Medispot BD-&#2447;&#2480; secure management workspace-&#2447; &#2474;&#2509;&#2480;&#2476;&#2503;&#2486; &#2453;&#2480;&#2497;&#2472;à¥¤</p>
-  <p class="small">&#2468;&#2507;&#2478;&#2494;&#2480; Supabase Admin account &#2470;&#2495;&#2479;&#2492;&#2503; &#2482;&#2455;&#2439;&#2472; &#2453;&#2480;&#2507;à¥¤</p>
+  <p class="small">Medispot BD-এর secure management workspace-এ প্রবেশ করুন।</p>
+  <p class="small">তোমার Supabase Admin account দিয়ে লগইন করো।</p>
   <input id="email" type="email" placeholder="Admin email" autocomplete="username">
   <input id="password" type="password" placeholder="Password" autocomplete="current-password">
   <button type="button" id="loginButton" onclick="loginAdmin()">Login</button>
@@ -37,90 +37,90 @@ main{max-width:1500px;margin:0 auto;padding:24px 26px}.card{background:var(--whi
 <div class="admin-shell">
   <aside class="sidebar">
     <div class="side-label">MAIN MENU</div>
-    <button type="button" class="nav-btn active" data-panel="dashboard"><span class="nav-icon">â</span> Dashboard</button>
-    <button type="button" class="nav-btn" data-panel="logos"><span class="nav-icon">â§</span> Company Logo</button>
-    <button type="button" class="nav-btn" data-panel="add"><span class="nav-icon">ï¼</span> Add Medicine</button>
-    <button type="button" class="nav-btn" data-panel="manage"><span class="nav-icon">â¤</span> Manage Medicines</button>
-    <div class="sidebar-bottom"><button type="button" class="nav-btn" onclick="logoutAdmin()"><span class="nav-icon">âª</span> Logout</button></div>
+    <button type="button" class="nav-btn active" data-panel="dashboard"><span class="nav-icon">⌂</span> Dashboard</button>
+    <button type="button" class="nav-btn" data-panel="logos"><span class="nav-icon">▧</span> Company Logo</button>
+    <button type="button" class="nav-btn" data-panel="add"><span class="nav-icon">＋</span> Add Medicine</button>
+    <button type="button" class="nav-btn" data-panel="manage"><span class="nav-icon">▤</span> Manage Medicines</button>
+    <div class="sidebar-bottom"><button type="button" class="nav-btn" onclick="logoutAdmin()"><span class="nav-icon">↪</span> Logout</button></div>
   </aside>
   <div class="content-area">
     <div class="welcome">
-      <span class="welcome-tag">MEDISPOT BD â¢ ADMIN WORKSPACE</span>
-      <h1>&#2488;&#2509;&#2476;&#2494;&#2455;&#2468;&#2478;, Admin ð</h1>
-      <p>&#2438;&#2474;&#2472;&#2494;&#2480; Medicine Marketplace-&#2447;&#2480; &#2488;&#2476; &#2453;&#2494;&#2460; &#2447;&#2454;&#2472; &#2447;&#2453; premium dashboard &#2469;&#2503;&#2453;&#2503; &#2474;&#2480;&#2495;&#2458;&#2494;&#2482;&#2472;&#2494; &#2453;&#2480;&#2497;&#2472;à¥¤</p>
+      <span class="welcome-tag">MEDISPOT BD • ADMIN WORKSPACE</span>
+      <h1>স্বাগতম, Admin 👋</h1>
+      <p>আপনার Medicine Marketplace-এর সব কাজ এখন এক premium dashboard থেকে পরিচালনা করুন।</p>
     </div>
     <div class="panel active" id="panel-dashboard">
-      <div class="section-heading"><div><h2>Dashboard Overview</h2><p>&#2438;&#2474;&#2472;&#2494;&#2480; store-&#2447;&#2480; &#2476;&#2480;&#2509;&#2468;&#2478;&#2494;&#2472; &#2488;&#2434;&#2453;&#2509;&#2487;&#2495;&#2474;&#2509;&#2468; &#2468;&#2469;&#2509;&#2479;</p></div></div>
+      <div class="section-heading"><div><h2>Dashboard Overview</h2><p>আপনার store-এর বর্তমান সংক্ষিপ্ত তথ্য</p></div></div>
       <div class="stats-grid">
-        <div class="stat-card"><div class="stat-top"><span class="stat-label">&#2478;&#2507;&#2463; &#2451;&#2487;&#2497;&#2471;</span><span class="stat-icon">ð</span></div><div class="stat-value" id="statMedicines">â</div><div class="stat-label">Medicine inventory</div></div>
-        <div class="stat-card"><div class="stat-top"><span class="stat-label">Company Logo</span><span class="stat-icon">ð¢</span></div><div class="stat-value" id="statLogos">â</div><div class="stat-label">Logo records</div></div>
-        <div class="stat-card"><div class="stat-top"><span class="stat-label">Stock units</span><span class="stat-icon">ð¦</span></div><div class="stat-value" id="statStock">â</div><div class="stat-label">&#2478;&#2507;&#2463; recorded stock</div></div>
+        <div class="stat-card"><div class="stat-top"><span class="stat-label">মোট ওষুধ</span><span class="stat-icon">💊</span></div><div class="stat-value" id="statMedicines">—</div><div class="stat-label">Medicine inventory</div></div>
+        <div class="stat-card"><div class="stat-top"><span class="stat-label">Company Logo</span><span class="stat-icon">🏢</span></div><div class="stat-value" id="statLogos">—</div><div class="stat-label">Logo records</div></div>
+        <div class="stat-card"><div class="stat-top"><span class="stat-label">Stock units</span><span class="stat-icon">📦</span></div><div class="stat-value" id="statStock">—</div><div class="stat-label">মোট recorded stock</div></div>
       </div>
-      <div class="card"><h3>Quick Actions</h3><p class="small">&#2479;&#2503; &#2453;&#2494;&#2460;&#2463;&#2495; &#2453;&#2480;&#2468;&#2503; &#2458;&#2494;&#2472;, &#2472;&#2495;&#2458;&#2503;&#2480; shortcut-&#2447; click &#2453;&#2480;&#2497;&#2472;à¥¤</p><div class="grid"><button type="button" onclick="showAdminPanel('add')">ï¼ &#2472;&#2468;&#2497;&#2472; &#2451;&#2487;&#2497;&#2471; &#2479;&#2507;&#2455; &#2453;&#2480;&#2497;&#2472;</button><button type="button" class="secondary" onclick="showAdminPanel('manage')">â¤ &#2451;&#2487;&#2497;&#2471; Edit / Manage</button><button type="button" class="secondary" onclick="showAdminPanel('logos')">ð¢ Company Logo &#2474;&#2480;&#2495;&#2458;&#2494;&#2482;&#2472;&#2494;</button></div></div>
+      <div class="card"><h3>Quick Actions</h3><p class="small">যে কাজটি করতে চান, নিচের shortcut-এ click করুন।</p><div class="grid"><button type="button" onclick="showAdminPanel('add')">＋ নতুন ওষুধ যোগ করুন</button><button type="button" class="secondary" onclick="showAdminPanel('manage')">▤ ওষুধ Edit / Manage</button><button type="button" class="secondary" onclick="showAdminPanel('logos')">🏢 Company Logo পরিচালনা</button></div></div>
     </div>
     <div class="panel" id="panel-logos">
-      <div class="section-heading"><div><h2>Company Logo Management</h2><p>&#2453;&#2507;&#2478;&#2509;&#2474;&#2494;&#2472;&#2495;&#2480; logo upload, update &#2451; search &#2453;&#2480;&#2497;&#2472;</p></div></div>
-      <div class="panel-note">&#2447;&#2453;&#2463;&#2495; &#2453;&#2507;&#2478;&#2509;&#2474;&#2494;&#2472;&#2495;&#2480; &#2482;&#2507;&#2455;&#2507; &#2447;&#2453;&#2476;&#2494;&#2480; Upload &#2453;&#2480;&#2482;&#2503; Storefront-&#2447; &#2451;&#2439; &#2453;&#2507;&#2478;&#2509;&#2474;&#2494;&#2472;&#2495;&#2480; &#2488;&#2476; &#2451;&#2487;&#2497;&#2471;&#2503; &#2447;&#2453;&#2439; &#2482;&#2507;&#2455;&#2507; &#2470;&#2503;&#2454;&#2494;&#2472;&#2507;&#2480; &#2460;&#2472;&#2509;&#2479; &#2453;&#2507;&#2478;&#2509;&#2474;&#2494;&#2472;&#2495;&#2480; &#2472;&#2494;&#2478; &#2478;&#2495;&#2482;&#2468;&#2503; &#2489;&#2476;&#2503;à¥¤</div>
+      <div class="section-heading"><div><h2>Company Logo Management</h2><p>কোম্পানির logo upload, update ও search করুন</p></div></div>
+      <div class="panel-note">একটি কোম্পানির লোগো একবার Upload করলে Storefront-এ ওই কোম্পানির সব ওষুধে একই লোগো দেখানোর জন্য কোম্পানির নাম মিলতে হবে।</div>
       <div class="card" id="companyLogoCard">
-  <h3>ð¢ Company Logo Management</h3>
+  <h3>🏢 Company Logo Management</h3>
   <p class="small">
-    &#2447;&#2453;&#2463;&#2495; &#2453;&#2507;&#2478;&#2509;&#2474;&#2494;&#2472;&#2495;&#2480; &#2482;&#2507;&#2455;&#2507; &#2447;&#2453;&#2476;&#2494;&#2480; Upload &#2453;&#2480;&#2507;à¥¤ Storefront-&#2447; &#2451;&#2439; &#2453;&#2507;&#2478;&#2509;&#2474;&#2494;&#2472;&#2495;&#2480;
-    &#2488;&#2476; &#2451;&#2487;&#2497;&#2471;&#2503; &#2447;&#2453;&#2439; &#2482;&#2507;&#2455;&#2507; &#2470;&#2503;&#2454;&#2494;&#2472;&#2507;&#2480; &#2460;&#2472;&#2509;&#2479; &#2453;&#2507;&#2478;&#2509;&#2474;&#2494;&#2472;&#2495;&#2480; &#2472;&#2494;&#2478; &#2478;&#2495;&#2482;&#2468;&#2503; &#2489;&#2476;&#2503;à¥¤
+    একটি কোম্পানির লোগো একবার Upload করো। Storefront-এ ওই কোম্পানির
+    সব ওষুধে একই লোগো দেখানোর জন্য কোম্পানির নাম মিলতে হবে।
   </p>
   <form id="companyLogoForm">
-    <label for="logoCompanyName">&#2453;&#2507;&#2478;&#2509;&#2474;&#2494;&#2472;&#2495;&#2480; &#2472;&#2494;&#2478; *</label>
+    <label for="logoCompanyName">কোম্পানির নাম *</label>
     <input
       id="logoCompanyName"
       list="companyLogoSuggestions"
       type="text"
-      placeholder="&#2453;&#2507;&#2478;&#2509;&#2474;&#2494;&#2472;&#2495;&#2480; &#2472;&#2494;&#2478; &#2482;&#2495;&#2454;&#2507; &#2476;&#2494; &#2472;&#2495;&#2480;&#2509;&#2476;&#2494;&#2458;&#2472; &#2453;&#2480;&#2507;"
+      placeholder="কোম্পানির নাম লিখো বা নির্বাচন করো"
       maxlength="150"
       required
     >
     <datalist id="companyLogoSuggestions"></datalist>
-    <label for="companyLogoFile">&#2453;&#2507;&#2478;&#2509;&#2474;&#2494;&#2472;&#2495;&#2480; &#2482;&#2507;&#2455;&#2507; *</label>
+    <label for="companyLogoFile">কোম্পানির লোগো *</label>
     <input
       id="companyLogoFile"
       type="file"
       accept="image/png,image/jpeg,image/webp"
       required
     >
-    <p class="small">PNG, JPG &#2476;&#2494; WEBPà¥¤ &#2488;&#2480;&#2509;&#2476;&#2507;&#2458;&#2509;&#2458; 5 MBà¥¤</p>
+    <p class="small">PNG, JPG বা WEBP। সর্বোচ্চ 5 MB।</p>
     <button type="submit" id="companyLogoSaveButton">
-      &#2482;&#2507;&#2455;&#2507; Upload &#2451; Save
+      লোগো Upload ও Save
     </button>
   </form>
   <p id="companyLogoMsg" class="status" role="status"></p>
   <hr style="border:0;border-top:1px solid #e4ebe6;margin:20px 0">
-  <h3>&#2438;&#2474;&#2482;&#2507;&#2465; &#2453;&#2480;&#2494; &#2453;&#2507;&#2478;&#2509;&#2474;&#2494;&#2472;&#2495;&#2480; &#2482;&#2507;&#2455;&#2507;</h3>
-  <input id="companyLogoSearch" type="search" placeholder="&#2453;&#2507;&#2478;&#2509;&#2474;&#2494;&#2472;&#2495;&#2480; &#2472;&#2494;&#2478; &#2470;&#2495;&#2479;&#2492;&#2503; &#2454;&#2497;&#2433;&#2460;&#2497;&#2472;">
-  <div id="companyLogoList">&#2482;&#2507;&#2455;&#2507; &#2482;&#2507;&#2465; &#2489;&#2458;&#2509;&#2459;&#2503;...</div>
+  <h3>আপলোড করা কোম্পানির লোগো</h3>
+  <input id="companyLogoSearch" type="search" placeholder="কোম্পানির নাম দিয়ে খুঁজুন">
+  <div id="companyLogoList">লোগো লোড হচ্ছে...</div>
   <button type="button" class="secondary" id="companyLogoRefresh">
-    &#2482;&#2507;&#2455;&#2507;&#2480; &#2468;&#2494;&#2482;&#2495;&#2453;&#2494; Refresh
+    লোগোর তালিকা Refresh
   </button>
 </div>
     </div>
     <div class="panel" id="panel-add">
-      <div class="section-heading"><div><h2>Add / Edit Medicine</h2><p>Medicine details, pricing, discount &#2451; stock &#2447;&#2453;&#2488;&#2457;&#2509;&#2455;&#2503; manage &#2453;&#2480;&#2497;&#2472;</p></div></div>
-      <div class="panel-note">&#2472;&#2468;&#2497;&#2472; &#2451;&#2487;&#2497;&#2471; &#2479;&#2507;&#2455; &#2453;&#2480;&#2468;&#2503; &#2468;&#2469;&#2509;&#2479; &#2474;&#2498;&#2480;&#2467; &#2453;&#2480;&#2497;&#2472;à¥¤ Edit &#2453;&#2480;&#2468;&#2503; Manage Medicines &#2469;&#2503;&#2453;&#2503; Edit &#2458;&#2494;&#2474;&#2497;&#2472;à¥¤</div>
+      <div class="section-heading"><div><h2>Add / Edit Medicine</h2><p>Medicine details, pricing, discount ও stock একসঙ্গে manage করুন</p></div></div>
+      <div class="panel-note">নতুন ওষুধ যোগ করতে তথ্য পূরণ করুন। Edit করতে Manage Medicines থেকে Edit চাপুন।</div>
 <div class="card" id="medicineFormCard">
-  <h3 id="formTitle">&#2472;&#2468;&#2497;&#2472; &#2451;&#2487;&#2497;&#2471; &#2479;&#2507;&#2455; &#2453;&#2480;&#2507;</h3>
+  <h3 id="formTitle">নতুন ওষুধ যোগ করো</h3>
   <form id="medicineForm">
-    <label for="name">&#2451;&#2487;&#2497;&#2471;&#2503;&#2480; &#2472;&#2494;&#2478; *</label>
-    <input id="name" placeholder="&#2451;&#2487;&#2497;&#2471;&#2503;&#2480; &#2472;&#2494;&#2478;" required>
+    <label for="name">ওষুধের নাম *</label>
+    <input id="name" placeholder="ওষুধের নাম" required>
     <div class="grid">
       <div>
-        <label for="company">&#2453;&#2507;&#2478;&#2509;&#2474;&#2494;&#2472;&#2495;&#2480; &#2472;&#2494;&#2478;</label>
+        <label for="company">কোম্পানির নাম</label>
         <input
           id="company"
           list="medicineCompanySuggestions"
-          placeholder="&#2453;&#2507;&#2478;&#2509;&#2474;&#2494;&#2472;&#2495;&#2480; &#2472;&#2494;&#2478;"
+          placeholder="কোম্পানির নাম"
         >
         <datalist id="medicineCompanySuggestions"></datalist>
       </div>
       <div>
         <label for="strength">Strength</label>
-        <input id="strength" placeholder="&#2479;&#2503;&#2478;&#2472; 10 mg">
+        <input id="strength" placeholder="যেমন 10 mg">
       </div>
     </div>
     <div class="grid">
@@ -129,57 +129,57 @@ main{max-width:1500px;margin:0 auto;padding:24px 26px}.card{background:var(--whi
         <input id="category" placeholder="Category">
       </div>
       <div>
-        <label for="price">MRP / Regular Price (&#2547;) *</label>
-        <input id="price" type="number" min="0.01" step="0.01" placeholder="&#2479;&#2503;&#2478;&#2472; 980" required>
+        <label for="price">MRP / Regular Price (৳) *</label>
+        <input id="price" type="number" min="0.01" step="0.01" placeholder="যেমন 980" required>
       </div>
     </div>
-    <label for="discountMode">Discount &#2470;&#2503;&#2451;&#2479;&#2492;&#2494;&#2480; &#2474;&#2470;&#2509;&#2471;&#2468;&#2495;</label>
+    <label for="discountMode">Discount দেওয়ার পদ্ধতি</label>
     <select id="discountMode">
       <option value="percentage">Percentage Mode (%)</option>
-      <option value="finalPrice">Final Price Mode (&#2547;)</option>
+      <option value="finalPrice">Final Price Mode (৳)</option>
     </select>
     <div class="grid">
       <div>
         <label for="discount">Discount (%)</label>
-        <input id="discount" type="number" min="0" max="100" step="any" value="0" placeholder="&#2479;&#2503;&#2478;&#2472; 16.3261">
+        <input id="discount" type="number" min="0" max="100" step="any" value="0" placeholder="যেমন 16.3261">
       </div>
       <div>
-        <label for="finalPrice">Final Price (&#2547;)</label>
-        <input id="finalPrice" type="number" min="0.01" step="0.01" placeholder="&#2476;&#2495;&#2453;&#2509;&#2480;&#2495;&#2480; &#2470;&#2494;&#2478;">
+        <label for="finalPrice">Final Price (৳)</label>
+        <input id="finalPrice" type="number" min="0.01" step="0.01" placeholder="বিক্রির দাম">
       </div>
     </div>
     <p class="small" id="discountHelp">
-      Percentage Mode-&#2447; Discount &#2482;&#2495;&#2454;&#2482;&#2503; Final Price &#2489;&#2495;&#2488;&#2494;&#2476; &#2489;&#2476;&#2503;à¥¤
+      Percentage Mode-এ Discount লিখলে Final Price হিসাব হবে।
     </p>
     <div class="grid">
       <div>
-        <div class="grid"><div><label for="stripsPerBox">&#2447;&#2453; Box-&#2447; Strip</label><input id="stripsPerBox" type="number" min="1" step="1" value="10" placeholder="&#2479;&#2503;&#2478;&#2472; 10"></div><div><label for="stripPrice">&#2474;&#2509;&#2480;&#2468;&#2495; Strip-&#2447;&#2480; MRP (&#2547;)</label><input id="stripPrice" type="number" min="0" step="0.01" value="0" placeholder="Strip price"></div></div><label for="stripDiscount">Strip Discount (%)</label><input id="stripDiscount" type="number" min="0" max="100" step="any" value="0"><p class="small">Strip price 0 &#2469;&#2494;&#2453;&#2482;&#2503; Box-&#2447;&#2480; &#2476;&#2495;&#2453;&#2509;&#2480;&#2479;&#2492;&#2478;&#2498;&#2482;&#2509;&#2479; Ã· Strip &#2488;&#2434;&#2454;&#2509;&#2479;&#2494; &#2437;&#2472;&#2497;&#2479;&#2494;&#2479;&#2492;&#2496; &#2470;&#2494;&#2478; &#2489;&#2495;&#2488;&#2494;&#2476; &#2489;&#2476;&#2503;à¥¤</p><label for="stock">Stock (&#2474;&#2480;&#2495;&#2478;&#2494;&#2467;)</label>
+        <div class="grid"><div><label for="stripsPerBox">এক Box-এ Strip</label><input id="stripsPerBox" type="number" min="1" step="1" value="10" placeholder="যেমন 10"></div><div><label for="stripPrice">প্রতি Strip-এর MRP (৳)</label><input id="stripPrice" type="number" min="0" step="0.01" value="0" placeholder="Strip price"></div></div><label for="stripDiscount">Strip Discount (%)</label><input id="stripDiscount" type="number" min="0" max="100" step="any" value="0"><p class="small">Strip price 0 থাকলে Box-এর বিক্রয়মূল্য ÷ Strip সংখ্যা অনুযায়ী দাম হিসাব হবে।</p><label for="stock">Stock (পরিমাণ)</label>
         <input id="stock" type="number" min="0" step="1" value="0" placeholder="Stock">
       </div>
       <div>
-        <label for="photo">&#2451;&#2487;&#2497;&#2471;&#2503;&#2480; &#2459;&#2476;&#2495;</label>
+        <label for="photo">ওষুধের ছবি</label>
         <input id="photo" type="file" accept="image/*">
       </div>
     </div>
-    <p class="small">&#2472;&#2468;&#2497;&#2472; &#2459;&#2476;&#2495; &#2472;&#2494; &#2470;&#2495;&#2482;&#2503; Edit &#2453;&#2480;&#2494;&#2480; &#2488;&#2478;&#2479;&#2492; &#2438;&#2455;&#2503;&#2480; &#2459;&#2476;&#2495;&#2439; &#2469;&#2494;&#2453;&#2476;&#2503;à¥¤ &#2459;&#2476;&#2495; &#2488;&#2480;&#2509;&#2476;&#2507;&#2458;&#2509;&#2458; 5 MBà¥¤</p>
-    <button type="submit" id="saveButton">&#2451;&#2487;&#2497;&#2471; Save &#2453;&#2480;&#2507;</button>
-    <button type="button" class="secondary" onclick="resetForm()">&#2475;&#2480;&#2509;&#2478; &#2474;&#2480;&#2495;&#2487;&#2509;&#2453;&#2494;&#2480; &#2453;&#2480;&#2507;</button>
+    <p class="small">নতুন ছবি না দিলে Edit করার সময় আগের ছবিই থাকবে। ছবি সর্বোচ্চ 5 MB।</p>
+    <button type="submit" id="saveButton">ওষুধ Save করো</button>
+    <button type="button" class="secondary" onclick="resetForm()">ফর্ম পরিষ্কার করো</button>
   </form>
   <p id="formMsg" class="status" role="status"></p>
 </div>
     </div>
     <div class="panel" id="panel-manage">
-      <div class="section-heading"><div><h2>Manage Medicines</h2><p>Search, edit, delete &#2451; Flash Sale &#2474;&#2480;&#2495;&#2458;&#2494;&#2482;&#2472;&#2494; &#2453;&#2480;&#2497;&#2472;</p></div></div>
-      <div class="panel-note">&#2453;&#2507;&#2472;&#2507; &#2451;&#2487;&#2497;&#2471; Edit &#2453;&#2480;&#2482;&#2503; Add Medicine section-&#2447; &#2475;&#2480;&#2509;&#2478; &#2454;&#2497;&#2482;&#2476;&#2503;à¥¤ Save &#2453;&#2480;&#2494;&#2480; &#2474;&#2480; &#2468;&#2494;&#2482;&#2495;&#2453;&#2494; &#2438;&#2474;&#2465;&#2503;&#2463; &#2489;&#2476;&#2503;à¥¤</div>
+      <div class="section-heading"><div><h2>Manage Medicines</h2><p>Search, edit, delete ও Flash Sale পরিচালনা করুন</p></div></div>
+      <div class="panel-note">কোনো ওষুধ Edit করলে Add Medicine section-এ ফর্ম খুলবে। Save করার পর তালিকা আপডেট হবে।</div>
 <div class="card" id="medicineListCard">
-  <h3>&#2451;&#2487;&#2497;&#2471;&#2503;&#2480; &#2468;&#2494;&#2482;&#2495;&#2453;&#2494;</h3>
+  <h3>ওষুধের তালিকা</h3>
   <p class="small">
-    Flash Sale &#2458;&#2494;&#2482;&#2497; &#2453;&#2480;&#2482;&#2503; &#2451;&#2487;&#2497;&#2471;&#2463;&#2495; Flash Sale-&#2447;&#2480; &#2460;&#2472;&#2509;&#2479; &#2472;&#2495;&#2480;&#2509;&#2476;&#2494;&#2458;&#2495;&#2468; &#2489;&#2476;&#2503;à¥¤
-    Homepage-&#2447; &#2470;&#2503;&#2454;&#2494;&#2472;&#2507;&#2480; &#2460;&#2472;&#2509;&#2479; Storefront-&#2447; Flash Sale &#2488;&#2478;&#2480;&#2509;&#2469;&#2472;&#2451; &#2469;&#2494;&#2453;&#2468;&#2503; &#2489;&#2476;&#2503;à¥¤
+    Flash Sale চালু করলে ওষুধটি Flash Sale-এর জন্য নির্বাচিত হবে।
+    Homepage-এ দেখানোর জন্য Storefront-এ Flash Sale সমর্থনও থাকতে হবে।
   </p>
-  <input id="search" placeholder="&#2451;&#2487;&#2497;&#2471;&#2503;&#2480; &#2472;&#2494;&#2478; &#2476;&#2494; &#2453;&#2507;&#2478;&#2509;&#2474;&#2494;&#2472;&#2495; &#2470;&#2495;&#2479;&#2492;&#2503; &#2454;&#2497;&#2433;&#2460;&#2497;&#2472;" oninput="renderMedicines()">
-  <div id="medicineList">&#2482;&#2507;&#2465; &#2489;&#2458;&#2509;&#2459;&#2503;...</div>
-  <button type="button" class="secondary" onclick="loadMedicines()">&#2468;&#2494;&#2482;&#2495;&#2453;&#2494; Refresh</button>
+  <input id="search" placeholder="ওষুধের নাম বা কোম্পানি দিয়ে খুঁজুন" oninput="renderMedicines()">
+  <div id="medicineList">লোড হচ্ছে...</div>
+  <button type="button" class="secondary" onclick="loadMedicines()">তালিকা Refresh</button>
 </div>
     </div>
   </div>
@@ -215,8 +215,8 @@ function updateDiscountFields(changedField) {
   discountInput.readOnly = mode === "finalPrice";
   finalPriceInput.readOnly = mode === "percentage";
   discountHelp.textContent = mode === "percentage"
-    ? "Percentage Mode: Discount (%) \u09B2\u09BF\u0996\u09B2\u09C7 Final Price \u09B9\u09BF\u09B8\u09BE\u09AC \u09B9\u09AC\u09C7à¥¤"
-    : "Final Price Mode: \u09AC\u09BF\u0995\u09CD\u09B0\u09BF\u09B0 \u09A6\u09BE\u09AE \u09B2\u09BF\u0996\u09B2\u09C7 Discount (%) \u09B9\u09BF\u09B8\u09BE\u09AC \u09B9\u09AC\u09C7à¥¤";
+    ? "Percentage Mode: Discount (%) লিখলে Final Price হিসাব হবে।"
+    : "Final Price Mode: বিক্রির দাম লিখলে Discount (%) হিসাব হবে।";
   if (priceText === "" || !Number.isFinite(mrp) || mrp <= 0) {
     if (changedField === "price") {
       finalPriceInput.value = "";
@@ -250,11 +250,11 @@ async function loginAdmin() {
   const msg = document.getElementById("loginMsg");
   const button = document.getElementById("loginButton");
   if (!email || !password) {
-    msg.textContent = "Email \u0993 Password \u09A6\u09BE\u0993à¥¤";
+    msg.textContent = "Email ও Password দাও।";
     return;
   }
   button.disabled = true;
-  msg.textContent = "\u09B2\u0997\u0987\u09A8 \u09B9\u099A\u09CD\u099B\u09C7...";
+  msg.textContent = "লগইন হচ্ছে...";
   try {
     const { error } = await db.auth.signInWithPassword({ email, password });
     if (error) throw error;
@@ -262,7 +262,7 @@ async function loginAdmin() {
     document.getElementById("app").style.display = "block";
     await Promise.all([loadMedicines(), loadCompanyLogos()]);
   } catch (err) {
-    msg.textContent = "\u09B2\u0997\u0987\u09A8 \u09B9\u09AF\u09BC\u09A8\u09BF: " + err.message;
+    msg.textContent = "লগইন হয়নি: " + err.message;
   } finally {
     button.disabled = false;
   }
@@ -270,7 +270,7 @@ async function loginAdmin() {
 async function logoutAdmin() {
   const { error } = await db.auth.signOut();
   if (error) {
-    alert("Logout \u09B9\u09AF\u09BC\u09A8\u09BF: " + error.message);
+    alert("Logout হয়নি: " + error.message);
     return;
   }
   location.reload();
@@ -278,13 +278,13 @@ async function logoutAdmin() {
 // ===== MEDICINE MANAGEMENT =====
 async function loadMedicines() {
   const list = document.getElementById("medicineList");
-  list.textContent = "\u09B2\u09CB\u09A1 \u09B9\u099A\u09CD\u099B\u09C7...";
+  list.textContent = "লোড হচ্ছে...";
   const { data, error } = await db
     .from("medicines")
     .select("*")
     .order("created_at", { ascending: false });
   if (error) {
-    list.textContent = "\u09A4\u09BE\u09B2\u09BF\u0995\u09BE \u09B2\u09CB\u09A1 \u09B9\u09AF\u09BC\u09A8\u09BF: " + error.message;
+    list.textContent = "তালিকা লোড হয়নি: " + error.message;
     return;
   }
   medicines = data || [];
@@ -302,7 +302,7 @@ function renderMedicines() {
   );
   list.replaceChildren();
   if (!filtered.length) {
-    list.textContent = "\u0995\u09CB\u09A8\u09CB \u0993\u09B7\u09C1\u09A7 \u09AA\u09BE\u0993\u09AF\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BFà¥¤";
+    list.textContent = "কোনো ওষুধ পাওয়া যায়নি।";
     return;
   }
   filtered.forEach(m => {
@@ -316,27 +316,27 @@ function renderMedicines() {
       div.appendChild(img);
     }
     const title = document.createElement("strong");
-    title.textContent = (m.name || "\u09A8\u09BE\u09AE \u09A8\u09C7\u0987") + " â MRP \u09F3" + Number(m.price || 0).toFixed(2);
+    title.textContent = (m.name || "নাম নেই") + " — MRP ৳" + Number(m.price || 0).toFixed(2);
     div.appendChild(title);
     const discount = Number(m.discount_percent || 0);
     const finalPrice = Number(m.price || 0) * (1 - discount / 100);
     const priceDetails = document.createElement("p");
     priceDetails.textContent =
-      "\u09B9\u09BF\u09B8\u09BE\u09AC \u0995\u09B0\u09BE Final Price: \u09F3" + finalPrice.toFixed(2) +
-      " â¢ Discount: " + discount.toFixed(2) + "%";
+      "হিসাব করা Final Price: ৳" + finalPrice.toFixed(2) +
+      " • Discount: " + discount.toFixed(2) + "%";
     div.appendChild(priceDetails);
     const details = document.createElement("p");
     details.textContent = [
       m.company,
       m.strength,
       "Stock: " + (m.stock ?? 0),
-      "Flash Sale: " + (m.is_flash_sale ? "\u099A\u09BE\u09B2\u09C1" : "\u09AC\u09A8\u09CD\u09A7")
-    ].filter(Boolean).join(" â¢ ");
+      "Flash Sale: " + (m.is_flash_sale ? "চালু" : "বন্ধ")
+    ].filter(Boolean).join(" • ");
     div.appendChild(details);
     const flash = document.createElement("button");
     flash.textContent = m.is_flash_sale
-      ? "â¡ Flash Sale \u09AC\u09A8\u09CD\u09A7 \u0995\u09B0\u09CB"
-      : "â¡ Flash Sale \u099A\u09BE\u09B2\u09C1 \u0995\u09B0\u09CB";
+      ? "⚡ Flash Sale বন্ধ করো"
+      : "⚡ Flash Sale চালু করো";
     flash.className = m.is_flash_sale ? "flash-active" : "secondary";
     flash.onclick = () => toggleFlashSale(m.id, m.is_flash_sale);
     div.appendChild(flash);
@@ -359,20 +359,20 @@ async function toggleFlashSale(id, currentStatus) {
     .update({ is_flash_sale: !currentStatus })
     .eq("id", id);
   if (error) {
-    alert("Flash Sale \u09AA\u09B0\u09BF\u09AC\u09B0\u09CD\u09A4\u09A8 \u09B9\u09AF\u09BC\u09A8\u09BF: " + error.message);
+    alert("Flash Sale পরিবর্তন হয়নি: " + error.message);
     return;
   }
   await loadMedicines();
 }
-// Original medicine photo \u09B8\u09B0\u09BE\u09B8\u09B0\u09BF Supabase Storage-\u098F upload \u0995\u09B0\u09BE \u09B9\u09AC\u09C7à¥¤
-// Canvas/JPEG conversion \u09A8\u09C7\u0987â\u09A4\u09BE\u0987 \u099B\u09AC\u09BF\u09B0 original pixels/color \u09AA\u09B0\u09BF\u09AC\u09B0\u09CD\u09A4\u09A8 \u0995\u09B0\u09BE \u09B9\u09AC\u09C7 \u09A8\u09BEà¥¤
+// Original medicine photo সরাসরি Supabase Storage-এ upload করা হবে।
+// Canvas/JPEG conversion নেই—তাই ছবির original pixels/color পরিবর্তন করা হবে না।
 async function uploadPhoto(file) {
   if (!file) return null;
   if (!file.type.startsWith("image/")) {
-    throw new Error("\u099B\u09AC\u09BF \u09AB\u09BE\u0987\u09B2 \u09A8\u09BF\u09B0\u09CD\u09AC\u09BE\u099A\u09A8 \u0995\u09B0\u09CBà¥¤");
+    throw new Error("ছবি ফাইল নির্বাচন করো।");
   }
   if (file.size > 5 * 1024 * 1024) {
-    throw new Error("\u099B\u09AC\u09BF 5 MB-\u098F\u09B0 \u0995\u09AE \u09B9\u09A4\u09C7 \u09B9\u09AC\u09C7à¥¤");
+    throw new Error("ছবি 5 MB-এর কম হতে হবে।");
   }
 
   const originalName = (file.name || "medicine-photo").toLowerCase();
@@ -392,7 +392,7 @@ document.getElementById("medicineForm").addEventListener("submit", async e => {
   const priceText = priceInput.value;
   const price = Number(priceText);
   if (priceText === "" || !Number.isFinite(price) || price <= 0) {
-    msg.textContent = "MRP \u09B6\u09C2\u09A8\u09CD\u09AF\u09C7\u09B0 \u09AC\u09C7\u09B6\u09BF \u09B9\u09A4\u09C7 \u09B9\u09AC\u09C7à¥¤";
+    msg.textContent = "MRP শূন্যের বেশি হতে হবে।";
     return;
   }
   let discount;
@@ -400,7 +400,7 @@ document.getElementById("medicineForm").addEventListener("submit", async e => {
     discount = Number(discountInput.value);
     if (discountInput.value === "" || !Number.isFinite(discount) ||
         discount < 0 || discount > 100) {
-      msg.textContent = "Discount 0 \u09A5\u09C7\u0995\u09C7 100-\u098F\u09B0 \u09AE\u09A7\u09CD\u09AF\u09C7 \u09A6\u09BE\u0993à¥¤";
+      msg.textContent = "Discount 0 থেকে 100-এর মধ্যে দাও।";
       return;
     }
   } else {
@@ -408,7 +408,7 @@ document.getElementById("medicineForm").addEventListener("submit", async e => {
     const sale = Number(saleText);
     if (saleText === "" || !Number.isFinite(sale) ||
         sale <= 0 || sale > price) {
-      msg.textContent = "Final Price \u09B6\u09C2\u09A8\u09CD\u09AF\u09C7\u09B0 \u09AC\u09C7\u09B6\u09BF \u098F\u09AC\u0982 MRP-\u098F\u09B0 \u09B8\u09AE\u09BE\u09A8 \u09AC\u09BE \u0995\u09AE \u09B9\u09A4\u09C7 \u09B9\u09AC\u09C7à¥¤";
+      msg.textContent = "Final Price শূন্যের বেশি এবং MRP-এর সমান বা কম হতে হবে।";
       return;
     }
     discount = ((price - sale) / price) * 100;
@@ -416,18 +416,18 @@ document.getElementById("medicineForm").addEventListener("submit", async e => {
   const stockText = document.getElementById("stock").value;
   const stock = stockText === "" ? 0 : Number(stockText);
   if (!Number.isInteger(stock) || stock < 0) {
-    msg.textContent = "Stock \u09B6\u09C2\u09A8\u09CD\u09AF \u09AC\u09BE \u09A4\u09BE\u09B0 \u09AC\u09C7\u09B6\u09BF \u09AA\u09C2\u09B0\u09CD\u09A3\u09B8\u0982\u0996\u09CD\u09AF\u09BE \u09B9\u09A4\u09C7 \u09B9\u09AC\u09C7à¥¤";
+    msg.textContent = "Stock শূন্য বা তার বেশি পূর্ণসংখ্যা হতে হবে।";
     return;
   }
   const { data: { user }, error: authError } = await db.auth.getUser();
   if (authError || !user) {
-    msg.textContent = "\u0986\u0997\u09C7 Admin Login \u0995\u09B0\u09CBà¥¤";
+    msg.textContent = "আগে Admin Login করো।";
     return;
   }
   const saveButton = document.getElementById("saveButton");
   saveButton.disabled = true;
-  saveButton.textContent = "Save \u09B9\u099A\u09CD\u099B\u09C7...";
-  msg.textContent = "Save \u09B9\u099A\u09CD\u099B\u09C7...";
+  saveButton.textContent = "Save হচ্ছে...";
+  msg.textContent = "Save হচ্ছে...";
   try {
     const file = document.getElementById("photo").files[0];
     let imageUrl = null;
@@ -452,14 +452,14 @@ document.getElementById("medicineForm").addEventListener("submit", async e => {
       result = await db.from("medicines").insert(row);
     }
     if (result.error) throw result.error;
-    msg.textContent = "\u09B8\u09AB\u09B2\u09AD\u09BE\u09AC\u09C7 Save \u09B9\u09AF\u09BC\u09C7\u099B\u09C7!";
+    msg.textContent = "সফলভাবে Save হয়েছে!";
     resetForm();
     await loadMedicines();
   } catch (err) {
-    msg.textContent = "Save \u09B9\u09AF\u09BC\u09A8\u09BF: " + err.message;
+    msg.textContent = "Save হয়নি: " + err.message;
   } finally {
     saveButton.disabled = false;
-    saveButton.textContent = "\u0993\u09B7\u09C1\u09A7 Save \u0995\u09B0\u09CB";
+    saveButton.textContent = "ওষুধ Save করো";
   }
 });
 function editMedicine(id) {
@@ -476,18 +476,18 @@ function editMedicine(id) {
   discountInput.value = m.discount_percent ?? 0;
   updateDiscountFields("discount");
   document.getElementById("photo").value = "";
-  document.getElementById("formTitle").textContent = "\u0993\u09B7\u09C1\u09A7 Edit \u0995\u09B0\u09CB";
-  document.getElementById("saveButton").textContent = "\u09AA\u09B0\u09BF\u09AC\u09B0\u09CD\u09A4\u09A8 Save \u0995\u09B0\u09CB";
+  document.getElementById("formTitle").textContent = "ওষুধ Edit করো";
+  document.getElementById("saveButton").textContent = "পরিবর্তন Save করো";
   document.getElementById("formMsg").textContent =
-    "Edit mode: \u09A8\u09A4\u09C1\u09A8 \u099B\u09AC\u09BF \u09A8\u09BE \u09A6\u09BF\u09B2\u09C7 \u0986\u0997\u09C7\u09B0 \u099B\u09AC\u09BF\u0987 \u09A5\u09BE\u0995\u09AC\u09C7à¥¤";
+    "Edit mode: নতুন ছবি না দিলে আগের ছবিই থাকবে।";
   showAdminPanel("add");
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 async function deleteMedicine(id) {
-  if (!confirm("\u098F\u0987 \u0993\u09B7\u09C1\u09A7\u099F\u09BF \u09AE\u09C1\u099B\u09C7 \u09AB\u09C7\u09B2\u09A4\u09C7 \u099A\u09BE\u0993?")) return;
+  if (!confirm("এই ওষুধটি মুছে ফেলতে চাও?")) return;
   const { error } = await db.from("medicines").delete().eq("id", id);
   if (error) {
-    alert("Delete \u09B9\u09AF\u09BC\u09A8\u09BF: " + error.message);
+    alert("Delete হয়নি: " + error.message);
     return;
   }
   if (String(editingId) === String(id)) resetForm();
@@ -505,9 +505,9 @@ function resetForm() {
   finalPriceInput.value = "";
   finalPriceInput.readOnly = true;
   discountHelp.textContent =
-    "Percentage Mode-\u098F Discount \u09B2\u09BF\u0996\u09B2\u09C7 Final Price \u09B9\u09BF\u09B8\u09BE\u09AC \u09B9\u09AC\u09C7à¥¤";
-  document.getElementById("formTitle").textContent = "\u09A8\u09A4\u09C1\u09A8 \u0993\u09B7\u09C1\u09A7 \u09AF\u09CB\u0997 \u0995\u09B0\u09CB";
-  document.getElementById("saveButton").textContent = "\u0993\u09B7\u09C1\u09A7 Save \u0995\u09B0\u09CB";
+    "Percentage Mode-এ Discount লিখলে Final Price হিসাব হবে।";
+  document.getElementById("formTitle").textContent = "নতুন ওষুধ যোগ করো";
+  document.getElementById("saveButton").textContent = "ওষুধ Save করো";
   document.getElementById("formMsg").textContent = "";
 }
 // ===== COMPANY LOGO MANAGEMENT =====
@@ -540,14 +540,14 @@ function updateLogoCompanySuggestions() {
   });
 }
 async function loadCompanyLogos() {
-  companyLogoList.textContent = "\u09B2\u09CB\u0997\u09CB \u09B2\u09CB\u09A1 \u09B9\u099A\u09CD\u099B\u09C7...";
+  companyLogoList.textContent = "লোগো লোড হচ্ছে...";
   const { data, error } = await db
     .from("company_logos")
     .select("company_name,logo_url")
     .order("company_name");
   if (error) {
     companyLogos = [];
-    companyLogoList.textContent = "\u09B2\u09CB\u0997\u09CB \u09B2\u09CB\u09A1 \u09B9\u09AF\u09BC\u09A8\u09BF: " + error.message;
+    companyLogoList.textContent = "লোগো লোড হয়নি: " + error.message;
     return;
   }
   companyLogos = data || [];
@@ -562,7 +562,7 @@ function renderCompanyLogos() {
   );
   companyLogoList.replaceChildren();
   if (!filtered.length) {
-    companyLogoList.textContent = "\u098F\u0996\u09A8\u09CB \u0995\u09CB\u09A8\u09CB \u0995\u09CB\u09AE\u09CD\u09AA\u09BE\u09A8\u09BF\u09B0 \u09B2\u09CB\u0997\u09CB \u09AA\u09BE\u0993\u09AF\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BFà¥¤";
+    companyLogoList.textContent = "এখনো কোনো কোম্পানির লোগো পাওয়া যায়নি।";
     return;
   }
   filtered.forEach(item => {
@@ -578,12 +578,12 @@ function renderCompanyLogos() {
     const editButton = document.createElement("button");
     editButton.type = "button";
     editButton.className = "secondary";
-    editButton.textContent = "\u09B2\u09CB\u0997\u09CB \u09AA\u09B0\u09BF\u09AC\u09B0\u09CD\u09A4\u09A8 \u0995\u09B0\u09CB";
+    editButton.textContent = "লোগো পরিবর্তন করো";
     editButton.onclick = () => {
       logoCompanyName.value = item.company_name;
       companyLogoFile.value = "";
       companyLogoMsg.textContent =
-        "\u09A8\u09A4\u09C1\u09A8 \u09B2\u09CB\u0997\u09CB \u09A8\u09BF\u09B0\u09CD\u09AC\u09BE\u099A\u09A8 \u0995\u09B0\u09C7 Upload \u0993 Save \u0995\u09B0\u09CBà¥¤";
+        "নতুন লোগো নির্বাচন করে Upload ও Save করো।";
       document.getElementById("companyLogoCard").scrollIntoView({
         behavior: "smooth",
         block: "start"
@@ -594,17 +594,17 @@ function renderCompanyLogos() {
   });
 }
 async function uploadCompanyLogo(file, companyName) {
-  if (!file) throw new Error("\u0995\u09CB\u09AE\u09CD\u09AA\u09BE\u09A8\u09BF\u09B0 \u09B2\u09CB\u0997\u09CB \u09A8\u09BF\u09B0\u09CD\u09AC\u09BE\u099A\u09A8 \u0995\u09B0\u09CBà¥¤");
+  if (!file) throw new Error("কোম্পানির লোগো নির্বাচন করো।");
   const allowedTypes = ["image/png", "image/jpeg", "image/webp"];
   if (!allowedTypes.includes(file.type)) {
-    throw new Error("PNG, JPG \u09AC\u09BE WEBP \u099B\u09AC\u09BF \u09AC\u09CD\u09AF\u09AC\u09B9\u09BE\u09B0 \u0995\u09B0\u09CBà¥¤");
+    throw new Error("PNG, JPG বা WEBP ছবি ব্যবহার করো।");
   }
   if (file.size > 5 * 1024 * 1024) {
-    throw new Error("\u09B2\u09CB\u0997\u09CB\u09B0 \u09AB\u09BE\u0987\u09B2 5 MB-\u098F\u09B0 \u0995\u09AE \u09B9\u09A4\u09C7 \u09B9\u09AC\u09C7à¥¤");
+    throw new Error("লোগোর ফাইল 5 MB-এর কম হতে হবে।");
   }
   const { data: { user }, error: authError } = await db.auth.getUser();
   if (authError || !user) {
-    throw new Error("\u0986\u0997\u09C7 Admin Login \u0995\u09B0\u09CBà¥¤");
+    throw new Error("আগে Admin Login করো।");
   }
   const ext = file.name.split(".").pop().toLowerCase();
   const safeName = companyName
@@ -625,7 +625,7 @@ async function uploadCompanyLogo(file, companyName) {
     .from(COMPANY_LOGO_BUCKET)
     .getPublicUrl(path);
   if (!data || !data.publicUrl) {
-    throw new Error("\u09B2\u09CB\u0997\u09CB\u09B0 Public URL \u09AA\u09BE\u0993\u09AF\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BFà¥¤");
+    throw new Error("লোগোর Public URL পাওয়া যায়নি।");
   }
   return data.publicUrl;
 }
@@ -634,15 +634,15 @@ companyLogoForm.addEventListener("submit", async event => {
   const companyName = logoCompanyName.value.trim().replace(/\s+/g, " ");
   const file = companyLogoFile.files[0];
   if (!companyName || !file) {
-    companyLogoMsg.textContent = "\u0995\u09CB\u09AE\u09CD\u09AA\u09BE\u09A8\u09BF\u09B0 \u09A8\u09BE\u09AE \u0993 \u09B2\u09CB\u0997\u09CB \u09A6\u09C1\u099F\u09CB\u0987 \u09A6\u09BF\u09A4\u09C7 \u09B9\u09AC\u09C7à¥¤";
+    companyLogoMsg.textContent = "কোম্পানির নাম ও লোগো দুটোই দিতে হবে।";
     return;
   }
   const existing = companyLogos.find(item =>
     normalizeCompanyName(item.company_name) === normalizeCompanyName(companyName)
   );
   companyLogoSaveButton.disabled = true;
-  companyLogoSaveButton.textContent = "Upload \u09B9\u099A\u09CD\u099B\u09C7...";
-  companyLogoMsg.textContent = "\u0985\u09AA\u09C7\u0995\u09CD\u09B7\u09BE \u0995\u09B0\u09CB...";
+  companyLogoSaveButton.textContent = "Upload হচ্ছে...";
+  companyLogoMsg.textContent = "অপেক্ষা করো...";
   try {
     const logoUrl = await uploadCompanyLogo(file, companyName);
     let result;
@@ -660,14 +660,14 @@ companyLogoForm.addEventListener("submit", async event => {
         });
     }
     if (result.error) throw result.error;
-    companyLogoMsg.textContent = "\u09B2\u09CB\u0997\u09CB \u09B8\u09AB\u09B2\u09AD\u09BE\u09AC\u09C7 Save \u09B9\u09AF\u09BC\u09C7\u099B\u09C7!";
+    companyLogoMsg.textContent = "লোগো সফলভাবে Save হয়েছে!";
     companyLogoForm.reset();
     await loadCompanyLogos();
   } catch (err) {
-    companyLogoMsg.textContent = "\u09B2\u09CB\u0997\u09CB Save \u09B9\u09AF\u09BC\u09A8\u09BF: " + err.message;
+    companyLogoMsg.textContent = "লোগো Save হয়নি: " + err.message;
   } finally {
     companyLogoSaveButton.disabled = false;
-    companyLogoSaveButton.textContent = "\u09B2\u09CB\u0997\u09CB Upload \u0993 Save";
+    companyLogoSaveButton.textContent = "লোগো Upload ও Save";
   }
 });
 companyLogoSearch.addEventListener("input", renderCompanyLogos);
@@ -707,7 +707,7 @@ function updateDashboardStats() {
     }
   } catch (err) {
     document.getElementById("loginMsg").textContent =
-      "Session \u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE \u0995\u09B0\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BF: " + err.message;
+      "Session পরীক্ষা করা যায়নি: " + err.message;
   }
 })();
 </script>
