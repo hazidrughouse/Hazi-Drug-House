@@ -6,39 +6,27 @@
 <title>Medispot BD | Admin Panel</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#f4f8f6;font-family:Arial,sans-serif;color:#20332b}
-header{background:#087b50;color:white;padding:20px}
-header h2{margin:0}
-main{max-width:850px;margin:22px auto;padding:15px}
-.card{background:white;padding:20px;border-radius:16px;margin-bottom:18px;box-shadow:0 3px 14px #0000000c}
-h3{margin-top:0}
-input,select,button{width:100%;padding:12px;margin:7px 0;border:1px solid #d5e1da;border-radius:9px;font-size:15px}
-input[readonly]{background:#edf3ef;color:#52645a}
-button{background:#087b50;color:white;border:0;font-weight:bold;cursor:pointer}
-button:disabled{opacity:.6;cursor:wait}
-button.secondary{background:#e7f3ed;color:#087b50}
-button.danger{background:#b42318;color:white}
-button.flash-active{background:#fff0cc;color:#805500}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.item{border-top:1px solid #e4ebe6;padding:14px 0;overflow-wrap:anywhere}
-.item img{width:75px;height:75px;object-fit:contain;display:block;margin-bottom:8px}
-.logo-preview{width:100px!important;height:75px!important;object-fit:contain;background:#f7faf8;border-radius:8px;padding:5px}
-.small{font-size:13px;color:#66766d;line-height:1.5}
-label{display:block;font-size:14px;font-weight:bold;margin-top:10px}
-#app{display:none}
-.status{font-size:14px;overflow-wrap:anywhere}
-@media(max-width:550px){.grid{grid-template-columns:1fr}}
+:root{--green:#087b50;--green2:#0b9364;--dark:#064c37;--mint:#eaf7f0;--bg:#f3f7f5;--text:#172b22;--muted:#718178;--line:#e3ece6;--white:#fff;--shadow:0 12px 34px rgba(19,65,44,.07)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);font-family:Inter,"Hind Siliguri",Arial,sans-serif;color:var(--text)}
+header{height:76px;background:linear-gradient(110deg,#064c37,#087b50 70%,#0b9364);color:#fff;padding:0 28px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 8px 24px #064c3720;position:sticky;top:0;z-index:20}
+.brand{display:flex;align-items:center;gap:12px}.brand-mark{width:44px;height:44px;border-radius:14px;background:#ffffff1b;border:1px solid #ffffff40;display:grid;place-items:center;font-weight:900;font-size:20px;letter-spacing:-1px}.brand h2{margin:0;font-size:20px;letter-spacing:.2px}.brand small{display:block;color:#d5eee2;font-size:11px;margin-top:3px}.header-right{font-size:12px;color:#d8f1e4;background:#ffffff12;border:1px solid #ffffff25;border-radius:999px;padding:9px 14px}
+main{max-width:1500px;margin:0 auto;padding:24px 26px}.card{background:var(--white);padding:24px;border:1px solid var(--line);border-radius:20px;margin-bottom:20px;box-shadow:var(--shadow)}h3{margin:0 0 12px;font-size:20px;letter-spacing:-.3px}input,select,button{width:100%;padding:13px 14px;margin:7px 0;border:1px solid #d9e5de;border-radius:11px;font-size:15px;font-family:inherit;transition:.18s}input,select{background:#fbfdfc;color:var(--text)}input:focus,select:focus{outline:3px solid #0b93641c;border-color:#0b9364}input[readonly]{background:#edf3ef;color:#52645a}button{background:linear-gradient(135deg,var(--green),var(--green2));color:white;border:0;font-weight:700;cursor:pointer;box-shadow:0 5px 12px #087b501c}button:hover{transform:translateY(-1px);filter:brightness(1.02)}button:disabled{opacity:.6;cursor:wait;transform:none}button.secondary{background:#eaf5ef;color:var(--green);box-shadow:none;border:1px solid #d7eade}button.danger{background:#fff0ef;color:#b42318;box-shadow:none;border:1px solid #ffd8d4}button.flash-active{background:#fff3d4;color:#805500;box-shadow:none;border:1px solid #ffe3a1}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.item{border:1px solid var(--line);background:#fcfefd;padding:16px;border-radius:15px;margin:12px 0;overflow-wrap:anywhere}.item img{width:85px;height:85px;object-fit:contain;display:block;margin-bottom:10px;background:#f5faf7;border-radius:12px;padding:5px}.logo-preview{width:110px!important;height:80px!important;object-fit:contain;background:#f7faf8;border-radius:10px;padding:6px}.small{font-size:13px;color:var(--muted);line-height:1.65}label{display:block;font-size:14px;font-weight:700;margin-top:12px;color:#385247}#app{display:none}.status{font-size:14px;overflow-wrap:anywhere}.login-card{max-width:460px;margin:55px auto;padding:34px}.login-card h3{font-size:24px}.login-icon{width:54px;height:54px;border-radius:17px;background:var(--mint);color:var(--green);display:grid;place-items:center;font-size:24px;margin-bottom:18px}
+.admin-shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:24px;align-items:start}.sidebar{position:sticky;top:98px;background:#fff;border:1px solid var(--line);border-radius:20px;padding:15px;box-shadow:var(--shadow)}.side-label{font-size:10px;letter-spacing:1.5px;font-weight:800;color:#9aa99f;padding:13px 12px 8px}.nav-btn{display:flex;align-items:center;gap:12px;text-align:left;width:100%;margin:4px 0;padding:13px 14px;border-radius:12px;background:transparent;color:#53685c;box-shadow:none;font-weight:650;border:1px solid transparent}.nav-btn .nav-icon{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:#f0f5f2;font-size:15px}.nav-btn:hover{transform:none;background:#f4faf6}.nav-btn.active{background:linear-gradient(100deg,#e7f5ed,#f2faf5);color:#087b50;border-color:#d6ecdf}.nav-btn.active .nav-icon{background:#087b50;color:white}.sidebar-bottom{border-top:1px solid var(--line);margin-top:12px;padding-top:12px}.content-area{min-width:0}.welcome{background:linear-gradient(115deg,#064c37,#087b50 66%,#0b9364);color:white;border-radius:22px;padding:27px 30px;margin-bottom:20px;position:relative;overflow:hidden;box-shadow:0 12px 30px #064c3725}.welcome:after{content:"MS";position:absolute;right:28px;top:-22px;font-size:125px;font-weight:900;color:#ffffff0d;letter-spacing:-10px}.welcome h1{font-size:26px;margin:0 0 8px;position:relative;z-index:1}.welcome p{margin:0;color:#d8f1e4;font-size:14px;position:relative;z-index:1}.welcome-tag{display:inline-block;font-size:11px;background:#ffffff20;border:1px solid #ffffff30;padding:6px 10px;border-radius:999px;margin-bottom:12px}.stats-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:20px}.stat-card{background:white;border:1px solid var(--line);border-radius:17px;padding:18px;box-shadow:var(--shadow)}.stat-top{display:flex;justify-content:space-between;align-items:center;gap:10px}.stat-icon{width:38px;height:38px;border-radius:12px;background:#eaf6ef;display:grid;place-items:center;font-size:18px}.stat-value{font-size:28px;font-weight:800;color:#123c2b;margin:12px 0 2px}.stat-label{font-size:12px;color:var(--muted)}.section-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 16px}.section-heading h2{font-size:22px;margin:0}.section-heading p{margin:5px 0 0;color:var(--muted);font-size:13px}.panel{display:none}.panel.active{display:block;animation:fadeIn .22s ease}@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}.panel .card{margin-bottom:0}.panel-note{background:#f0f8f3;border:1px solid #dcefe3;color:#496b57;padding:12px 14px;border-radius:12px;font-size:13px;margin-bottom:18px}
+#companyLogoList,#medicineList{margin-top:12px}.card hr{border:0;border-top:1px solid var(--line);margin:22px 0}.logout-btn{width:100%}
+@media(max-width:900px){main{padding:18px}.admin-shell{grid-template-columns:1fr;gap:15px}.sidebar{position:static;display:flex;overflow-x:auto;gap:6px;padding:9px;border-radius:15px}.side-label,.sidebar-bottom{display:none}.nav-btn{min-width:max-content;width:auto;margin:0;padding:10px 12px;font-size:13px}.nav-btn .nav-icon{width:24px;height:24px}.welcome{padding:23px}.welcome h1{font-size:22px}.stats-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:560px){header{height:68px;padding:0 15px}.brand h2{font-size:17px}.brand-mark{width:38px;height:38px}.header-right{font-size:10px;padding:7px 9px}main{padding:13px}.card{padding:17px;border-radius:16px}.grid{grid-template-columns:1fr;gap:5px}.stats-grid{grid-template-columns:1fr}.stat-card{padding:14px}.stat-value{font-size:24px}.welcome:after{right:5px;font-size:90px}.section-heading h2{font-size:19px}}
 </style>
 </head>
 <body>
 <header>
-  <h2>Medispot BD</h2>
-  <div>Medicine Management • Admin Panel</div>
+  <div class="brand"><div class="brand-mark">MS</div><div><h2>Medispot BD</h2><small>MEDICINE MARKETPLACE</small></div></div>
+  <div class="header-right">✦ Premium Admin Workspace</div>
 </header>
 <main>
-<section class="card" id="login">
+<section class="card login-card" id="login">
+  <div class="login-icon">✦</div>
   <h3>Admin Login</h3>
+  <p class="small">Medispot BD-এর secure management workspace-এ প্রবেশ করুন।</p>
   <p class="small">তোমার Supabase Admin account দিয়ে লগইন করো।</p>
   <input id="email" type="email" placeholder="Admin email" autocomplete="username">
   <input id="password" type="password" placeholder="Password" autocomplete="current-password">
@@ -46,8 +34,34 @@ label{display:block;font-size:14px;font-weight:bold;margin-top:10px}
   <p id="loginMsg" class="status" role="status"></p>
 </section>
 <section id="app">
-<!-- COMPANY LOGO MANAGEMENT -->
-<div class="card" id="companyLogoCard">
+<div class="admin-shell">
+  <aside class="sidebar">
+    <div class="side-label">MAIN MENU</div>
+    <button type="button" class="nav-btn active" data-panel="dashboard"><span class="nav-icon">⌂</span> Dashboard</button>
+    <button type="button" class="nav-btn" data-panel="logos"><span class="nav-icon">▧</span> Company Logo</button>
+    <button type="button" class="nav-btn" data-panel="add"><span class="nav-icon">＋</span> Add Medicine</button>
+    <button type="button" class="nav-btn" data-panel="manage"><span class="nav-icon">▤</span> Manage Medicines</button>
+    <div class="sidebar-bottom"><button type="button" class="nav-btn" onclick="logoutAdmin()"><span class="nav-icon">↪</span> Logout</button></div>
+  </aside>
+  <div class="content-area">
+    <div class="welcome">
+      <span class="welcome-tag">MEDISPOT BD • ADMIN WORKSPACE</span>
+      <h1>স্বাগতম, Admin 👋</h1>
+      <p>আপনার Medicine Marketplace-এর সব কাজ এখন এক premium dashboard থেকে পরিচালনা করুন।</p>
+    </div>
+    <div class="panel active" id="panel-dashboard">
+      <div class="section-heading"><div><h2>Dashboard Overview</h2><p>আপনার store-এর বর্তমান সংক্ষিপ্ত তথ্য</p></div></div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-top"><span class="stat-label">মোট ওষুধ</span><span class="stat-icon">💊</span></div><div class="stat-value" id="statMedicines">—</div><div class="stat-label">Medicine inventory</div></div>
+        <div class="stat-card"><div class="stat-top"><span class="stat-label">Company Logo</span><span class="stat-icon">🏢</span></div><div class="stat-value" id="statLogos">—</div><div class="stat-label">Logo records</div></div>
+        <div class="stat-card"><div class="stat-top"><span class="stat-label">Stock units</span><span class="stat-icon">📦</span></div><div class="stat-value" id="statStock">—</div><div class="stat-label">মোট recorded stock</div></div>
+      </div>
+      <div class="card"><h3>Quick Actions</h3><p class="small">যে কাজটি করতে চান, নিচের shortcut-এ click করুন।</p><div class="grid"><button type="button" onclick="showAdminPanel('add')">＋ নতুন ওষুধ যোগ করুন</button><button type="button" class="secondary" onclick="showAdminPanel('manage')">▤ ওষুধ Edit / Manage</button><button type="button" class="secondary" onclick="showAdminPanel('logos')">🏢 Company Logo পরিচালনা</button></div></div>
+    </div>
+    <div class="panel" id="panel-logos">
+      <div class="section-heading"><div><h2>Company Logo Management</h2><p>কোম্পানির logo upload, update ও search করুন</p></div></div>
+      <div class="panel-note">একটি কোম্পানির লোগো একবার Upload করলে Storefront-এ ওই কোম্পানির সব ওষুধে একই লোগো দেখানোর জন্য কোম্পানির নাম মিলতে হবে।</div>
+      <div class="card" id="companyLogoCard">
   <h3>🏢 Company Logo Management</h3>
   <p class="small">
     একটি কোম্পানির লোগো একবার Upload করো। Storefront-এ ওই কোম্পানির
@@ -85,8 +99,11 @@ label{display:block;font-size:14px;font-weight:bold;margin-top:10px}
     লোগোর তালিকা Refresh
   </button>
 </div>
-<!-- MEDICINE FORM -->
-<div class="card">
+    </div>
+    <div class="panel" id="panel-add">
+      <div class="section-heading"><div><h2>Add / Edit Medicine</h2><p>Medicine details, pricing, discount ও stock একসঙ্গে manage করুন</p></div></div>
+      <div class="panel-note">নতুন ওষুধ যোগ করতে তথ্য পূরণ করুন। Edit করতে Manage Medicines থেকে Edit চাপুন।</div>
+<div class="card" id="medicineFormCard">
   <h3 id="formTitle">নতুন ওষুধ যোগ করো</h3>
   <form id="medicineForm">
     <label for="name">ওষুধের নাম *</label>
@@ -150,8 +167,11 @@ label{display:block;font-size:14px;font-weight:bold;margin-top:10px}
   </form>
   <p id="formMsg" class="status" role="status"></p>
 </div>
-<!-- MEDICINE LIST -->
-<div class="card">
+    </div>
+    <div class="panel" id="panel-manage">
+      <div class="section-heading"><div><h2>Manage Medicines</h2><p>Search, edit, delete ও Flash Sale পরিচালনা করুন</p></div></div>
+      <div class="panel-note">কোনো ওষুধ Edit করলে Add Medicine section-এ ফর্ম খুলবে। Save করার পর তালিকা আপডেট হবে।</div>
+<div class="card" id="medicineListCard">
   <h3>ওষুধের তালিকা</h3>
   <p class="small">
     Flash Sale চালু করলে ওষুধটি Flash Sale-এর জন্য নির্বাচিত হবে।
@@ -160,7 +180,9 @@ label{display:block;font-size:14px;font-weight:bold;margin-top:10px}
   <input id="search" placeholder="ওষুধের নাম বা কোম্পানি দিয়ে খুঁজুন" oninput="renderMedicines()">
   <div id="medicineList">লোড হচ্ছে...</div>
   <button type="button" class="secondary" onclick="loadMedicines()">তালিকা Refresh</button>
-  <button type="button" class="danger" onclick="logoutAdmin()">Logout</button>
+</div>
+    </div>
+  </div>
 </div>
 </section>
 </main>
@@ -266,6 +288,7 @@ async function loadMedicines() {
     return;
   }
   medicines = data || [];
+  updateDashboardStats();
   renderMedicines();
   updateCompanySuggestions();
   updateLogoCompanySuggestions();
@@ -454,6 +477,7 @@ function editMedicine(id) {
   document.getElementById("saveButton").textContent = "পরিবর্তন Save করো";
   document.getElementById("formMsg").textContent =
     "Edit mode: নতুন ছবি না দিলে আগের ছবিই থাকবে।";
+  showAdminPanel("add");
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 async function deleteMedicine(id) {
@@ -524,6 +548,7 @@ async function loadCompanyLogos() {
     return;
   }
   companyLogos = data || [];
+  updateDashboardStats();
   renderCompanyLogos();
   updateLogoCompanySuggestions();
 }
@@ -645,6 +670,28 @@ companyLogoForm.addEventListener("submit", async event => {
 companyLogoSearch.addEventListener("input", renderCompanyLogos);
 document.getElementById("companyLogoRefresh")
   .addEventListener("click", loadCompanyLogos);
+// ===== PREMIUM ADMIN DASHBOARD NAVIGATION =====
+function showAdminPanel(panelName) {
+  document.querySelectorAll(".panel").forEach(panel => panel.classList.remove("active"));
+  const target = document.getElementById("panel-" + panelName);
+  if (target) target.classList.add("active");
+  document.querySelectorAll(".nav-btn[data-panel]").forEach(button => {
+    button.classList.toggle("active", button.dataset.panel === panelName);
+  });
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+document.querySelectorAll(".nav-btn[data-panel]").forEach(button => {
+  button.addEventListener("click", () => showAdminPanel(button.dataset.panel));
+});
+function updateDashboardStats() {
+  const medicineCount = document.getElementById("statMedicines");
+  const logoCount = document.getElementById("statLogos");
+  const stockCount = document.getElementById("statStock");
+  if (medicineCount) medicineCount.textContent = medicines.length.toLocaleString("en-US");
+  if (logoCount) logoCount.textContent = companyLogos.length.toLocaleString("en-US");
+  if (stockCount) stockCount.textContent = medicines.reduce((sum, item) => sum + (Number(item.stock) || 0), 0).toLocaleString("en-US");
+}
+
 // ===== RESTORE SESSION =====
 (async function checkSession() {
   try {
