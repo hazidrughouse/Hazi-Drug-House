@@ -333,7 +333,7 @@ body.cart-open{overflow:hidden}
 .package-choice-total{display:flex;justify-content:space-between;margin:14px 0;font-weight:700}
 .package-choice-add{width:100%;border:0;border-radius:12px;background:#0b6b4f;color:white;padding:13px;font-weight:700}
 
-.package-discount-info{display:block;margin-top:5px;font-size:12px;font-weight:700;color:#0b6b4f}.package-discount-info del{color:#84948c;font-weight:500;margin-right:5px}.package-discount-info .off{display:inline-block;background:#e6f4ee;color:#0b6b4f;border-radius:20px;padding:2px 7px}\n</style>
+</style>
 </head>
 
 <body>
@@ -427,8 +427,8 @@ body.cart-open{overflow:hidden}
   <div class="package-choice-head"><h3>কীভাবে কিনবেন?</h3><button type="button" class="package-choice-close" id="packageChoiceClose">✕</button></div>
   <div id="packageChoiceMedicine" class="package-choice-sub"></div>
   <div class="package-choice-options">
-   <button type="button" class="package-choice-option active" data-package="box"><strong>📦 Full Box</strong><small id="packageBoxPrice">দাম লোড হচ্ছে</small><span class="package-discount-info" id="packageBoxDiscount"></span></button>
-   <button type="button" class="package-choice-option" data-package="strip"><strong>💊 Strip</strong><small id="packageStripPrice">দাম লোড হচ্ছে</small><span class="package-discount-info" id="packageStripDiscount"></span></button>
+   <button type="button" class="package-choice-option active" data-package="box"><strong>📦 Full Box</strong><small id="packageBoxPrice">দাম লোড হচ্ছে</small></button>
+   <button type="button" class="package-choice-option" data-package="strip"><strong>💊 Strip</strong><small id="packageStripPrice">দাম লোড হচ্ছে</small></button>
   </div>
   <div class="package-choice-qty"><span>পরিমাণ</span><button type="button" id="packageQtyMinus">−</button><input id="packageQtyInput" type="number" min="1" max="999" value="1"><button type="button" id="packageQtyPlus">+</button></div>
   <div class="package-choice-total"><span>মোট</span><strong id="packageChoiceTotal">৳0.00</strong></div>
@@ -728,11 +728,7 @@ body.cart-open{overflow:hidden}
         company:String(item.company || ""),
         image_url:String(item.image_url || ""),
         unit_price:Number(item.unit_price),
-        quantity:Number(item.quantity),
-        package_type:item.package_type==="strip"?"strip":"box",
-        package_label:item.package_type==="strip"?"Strip":"Full Box",
-        strips_per_box:Number(item.strips_per_box)||1,
-        medicine_id:String(item.medicine_id||"")
+        quantity:Number(item.quantity)
       }));
     }
   } catch {
@@ -768,7 +764,7 @@ body.cart-open{overflow:hidden}
               : '<div class="cart-product-no-image" aria-hidden="true">💊</div>'}
             <div class="cart-product cart-product-info">
               <strong>${escapeHTML(item.name)}</strong>
-              <small>${escapeHTML(item.company)} · ${money(item.unit_price)} / ${item.package_type==="strip"?"Strip":"Box"}</small>
+              <small>${escapeHTML(item.company)} · ${money(item.unit_price)} / বক্স</small>
               <div><strong>${money(item.unit_price * item.quantity)}</strong></div>
             </div>
           </div>
@@ -911,30 +907,18 @@ body.cart-open{overflow:hidden}
   const packageMoney = n => "৳" + Number(n || 0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
 
   function packagePrices(product){
-    const boxInfo = getPrices(product);
-    const box = boxInfo.finalPrice;
-    const boxMrp = boxInfo.mrp;
-    const boxDiscount = boxInfo.discount;
+    const box = getPrices(product).finalPrice;
     const perBox = Math.max(1, Number(product.strips_per_box || 1));
     const stripBase = Number(product.strip_price || 0);
     const stripDiscount = Math.max(0,Math.min(100,Number(product.strip_discount_percent || 0)));
-    const stripMrp = stripBase > 0 ? stripBase : (box > 0 ? box/perBox : null);
-    const strip = stripMrp !== null ? Math.round((stripMrp * (1-stripDiscount/100) + Number.EPSILON)*100)/100 : null;
-    return {box,boxMrp,boxDiscount,strip,stripMrp,stripDiscount,perBox};
+    const strip = stripBase > 0 ? stripBase * (1-stripDiscount/100) : (box > 0 ? box/perBox : null);
+    return {box,strip,perBox};
   }
   function updatePackageChoice(){
     if(!packageChoiceProduct)return;
     const prices=packagePrices(packageChoiceProduct);
-    const boxPrice=document.getElementById("packageBoxPrice");
-    const stripPrice=document.getElementById("packageStripPrice");
-    boxPrice.textContent=prices.box>0?packageMoney(prices.box)+" / Box":"দাম দেওয়া নেই";
-    stripPrice.textContent=prices.strip>0?packageMoney(prices.strip)+" / Strip":"Strip বিক্রি নেই";
-    const boxDiscountEl=document.getElementById("packageBoxDiscount");
-    const stripDiscountEl=document.getElementById("packageStripDiscount");
-    boxDiscountEl.innerHTML=prices.boxDiscount>0
-      ? `<del>${packageMoney(prices.boxMrp)}</del><span class="off">${prices.boxDiscount.toFixed(2)}% OFF</span>` : "";
-    stripDiscountEl.innerHTML=prices.stripDiscount>0
-      ? `<del>${packageMoney(prices.stripMrp)}</del><span class="off">${prices.stripDiscount.toFixed(2)}% OFF</span>` : "";
+    document.getElementById("packageBoxPrice").textContent=prices.box>0?packageMoney(prices.box)+" / Box":"দাম দেওয়া নেই";
+    document.getElementById("packageStripPrice").textContent=prices.strip>0?packageMoney(prices.strip)+" / Strip":"Strip বিক্রি নেই";
     document.querySelectorAll(".package-choice-option").forEach(b=>b.classList.toggle("active",b.dataset.package===packageChoiceType));
     const unit=packageChoiceType==="box"?prices.box:prices.strip;
     document.getElementById("packageChoiceTotal").textContent=unit>0?packageMoney(unit*packageChoiceQty):"দাম দেওয়া নেই";
@@ -1007,7 +991,7 @@ body.cart-open{overflow:hidden}
     `;
   }
 
-  function productCardHTML(product) {
+  function productCardHTML(product, imagePriority = false) {
     const name = escapeHTML(product.name || "ওষুধ");
     const companyHTML = companyDisplayHTML(product.company);
     const categoryHTML = product.category
@@ -1031,7 +1015,9 @@ body.cart-open{overflow:hidden}
 
     const imageHTML = image ? `
       ${badgeHTML}
-      <img src="${escapeHTML(image)}" alt="${name}" loading="lazy"
+      <img src="${escapeHTML(image)}" alt="${name}"
+        loading="${imagePriority ? 'eager' : 'lazy'}" decoding="async"
+        ${imagePriority ? 'fetchpriority="high"' : 'fetchpriority="auto"'}
         onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
       <div class="image-placeholder"><span class="medical-icon">💊</span><small>ছবি পাওয়া যায়নি</small></div>
     ` : `${badgeHTML}<div class="image-placeholder" style="display:block"><span class="medical-icon">💊</span><small>ওষুধের ছবি</small></div>`;
@@ -1072,7 +1058,7 @@ body.cart-open{overflow:hidden}
       return;
     }
 
-    grid.innerHTML = filtered.map(productCardHTML).join("");
+    grid.innerHTML = filtered.map((product, index) => productCardHTML(product, index < 8)).join("");
   }
 
   function renderFlashSale() {
@@ -1088,7 +1074,7 @@ body.cart-open{overflow:hidden}
     }
 
     flashSaleSection.style.display = "block";
-    flashSaleGrid.innerHTML = saleProducts.map(productCardHTML).join("");
+    flashSaleGrid.innerHTML = saleProducts.map((product, index) => productCardHTML(product, index < 4)).join("");
   }
 
   filters.addEventListener("click", event => {
@@ -1098,7 +1084,6 @@ body.cart-open{overflow:hidden}
     selectedCompany = button.dataset.company;
     renderCompanyFilters();
     renderProducts();
-    renderFlashSale();
   });
 
   searchInput.addEventListener("input", renderProducts);
@@ -1163,7 +1148,7 @@ body.cart-open{overflow:hidden}
           image_url:row.image_url || "",
           category:row.category || "",
           stock:row.stock,
-          is_flash_sale:row.is_flash_sale, strips_per_box:row.strips_per_box, strip_price:row.strip_price, strip_discount_percent:Number(row.strip_discount_percent) || 0
+          is_flash_sale:row.is_flash_sale, strips_per_box:row.strips_per_box, strip_price:row.strip_price, strip_discount_percent:row.strip_discount_percent === true
         };
       });
 
@@ -1222,13 +1207,7 @@ body.cart-open{overflow:hidden}
       company:item.company,
       image_url:item.image_url || "",
       unit_price:item.unit_price,
-      quantity:item.quantity,
-      package_type:item.package_type==="strip"?"strip":"box",
-      package_label:item.package_type==="strip"?"Strip":"Full Box",
-      unit_label:item.package_type==="strip"?"Strip":"Box",
-      strips_per_box:Number(item.strips_per_box)||1,
-      line_total:Math.round((item.unit_price*item.quantity+Number.EPSILON)*100)/100,
-      medicine_id:item.medicine_id||""
+      quantity:item.quantity
     }));
 
     const submittedTotal = calculateCartTotal();
