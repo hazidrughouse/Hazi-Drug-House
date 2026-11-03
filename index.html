@@ -730,7 +730,11 @@ body.cart-open{overflow:hidden}
         company:String(item.company || ""),
         image_url:String(item.image_url || ""),
         unit_price:Number(item.unit_price),
-        quantity:Number(item.quantity)
+        quantity:Number(item.quantity),
+        package_type:item.package_type === "strip" ? "strip" : "box",
+        package_label:item.package_type === "strip" ? "Strip" : "Box",
+        strips_per_box:Math.max(1, Number(item.strips_per_box || 1)),
+        medicine_id:String(item.medicine_id || String(item.id).replace(/-(box|strip)$/,""))
       }));
     }
   } catch {
@@ -766,7 +770,7 @@ body.cart-open{overflow:hidden}
               : '<div class="cart-product-no-image" aria-hidden="true">💊</div>'}
             <div class="cart-product cart-product-info">
               <strong>${escapeHTML(item.name)}</strong>
-              <small>${escapeHTML(item.company)} · ${money(item.unit_price)} / বক্স</small>
+              <small>${escapeHTML(item.company)} · ${money(item.unit_price)} / ${item.package_type === "strip" ? "Strip" : "Box"}</small>
               <div><strong>${money(item.unit_price * item.quantity)}</strong></div>
             </div>
           </div>
@@ -891,6 +895,7 @@ body.cart-open{overflow:hidden}
 
     if (button.dataset.cartAction === "plus") {
       if (item.quantity < 999) item.quantity++;
+      if (item.package_type === "strip") convertCompleteStripQuantity(item);
     } else if (button.dataset.cartAction === "minus") {
       item.quantity--;
       if (item.quantity <= 0) cart = cart.filter(entry => entry.id !== item.id);
@@ -957,23 +962,65 @@ body.cart-open{overflow:hidden}
     addToCart(packageChoiceProduct,packageChoiceQty,packageChoiceType);closePackageChoice();
   });
 
+  function convertCompleteStripQuantity(stripItem) {
+    const product = allProducts.find(p => String(p.id) === String(stripItem.medicine_id));
+    if (!product) return;
+    const prices = packagePrices(product);
+    const perBox = Math.max(1, Number(stripItem.strips_per_box || prices.perBox || 1));
+    const fullBoxes = Math.floor(stripItem.quantity / perBox);
+    if (fullBoxes < 1 || !(prices.box > 0)) return;
+    const remaining = stripItem.quantity % perBox;
+    const stripId = stripItem.id;
+    stripItem.quantity = remaining;
+    if (remaining === 0) cart = cart.filter(entry => entry.id !== stripId);
+    addCartLine(product, fullBoxes, "box", prices.box, perBox);
+  }
+
+  function addCartLine(product, quantity, packageType, unitPrice, perBox) {
+    if(quantity <= 0 || !(unitPrice > 0)) return;
+    const medicineId=String(product.id);
+    const id=medicineId+"-"+packageType;
+    const packageLabel=packageType==="strip"?"Strip":"Box";
+    const existing=cart.find(item=>item.id===id);
+    if(existing) {
+      existing.quantity=Math.min(999,existing.quantity+quantity);
+      existing.unit_price=Number(unitPrice);
+      existing.package_type=packageType;
+      existing.package_label=packageLabel;
+      existing.strips_per_box=Math.max(1,Number(perBox)||1);
+      existing.medicine_id=medicineId;
+    } else {
+      cart.push({
+        id,name:String(product.name||"ওষুধ"),company:String(product.company||""),
+        image_url:String(product.image_url||""),unit_price:Number(unitPrice),
+        quantity,package_type:packageType,package_label:packageLabel,
+        strips_per_box:Math.max(1,Number(perBox)||1),medicine_id:medicineId
+      });
+    }
+  }
+
   function addToCart(product, qty = 1, packageType = "box") {
     const prices=packagePrices(product);
-    const unitPrice=packageType==="strip"?prices.strip:prices.box;
-    if(!(unitPrice>0)){alert("এই প্যাকেজের সঠিক বিক্রয়মূল্য দেওয়া হয়নি।");return;}
     const amount=Math.max(1,Math.min(999,Math.floor(Number(qty))||1));
-    const id=String(product.id)+"-"+packageType;
-    const packageLabel=packageType==="strip"?"Strip":"Full Box";
-    const existing=cart.find(item=>item.id===id);
-    if(existing) existing.quantity=Math.min(999,existing.quantity+amount);
-    else cart.push({
-      id,name:String(product.name||"ওষুধ"),company:String(product.company||""),
-      image_url:String(product.image_url||""),unit_price:Number(unitPrice),
-      quantity:amount,package_type:packageType,package_label:packageLabel,
-      strips_per_box:prices.perBox,medicine_id:String(product.id)
-    });
+    if(packageType==="strip") {
+      if(!(prices.strip>0)){alert("এই ওষুধের Strip বিক্রয়মূল্য দেওয়া নেই।");return;}
+      // পূর্ণ Strip-এর সংখ্যা Box-এর সমান হলে Box price/discount প্রযোজ্য।
+      const boxes=Math.floor(amount/prices.perBox);
+      const remaining=amount%prices.perBox;
+      if(boxes>0 && !(prices.box>0)){alert("এই ওষুধের Box বিক্রয়মূল্য দেওয়া নেই।");return;}
+      addCartLine(product,boxes,"box",prices.box,prices.perBox);
+      addCartLine(product,remaining,"strip",prices.strip,prices.perBox);
+      const toastLabel=boxes>0
+        ? (boxes+" Box"+(remaining>0?" + "+remaining+" Strip":""))
+        : "Strip";
+      renderCart();checkoutMessage.textContent="";
+      showPremiumToast(String(product.name||"ওষুধ")+" · "+toastLabel);
+      return;
+    }
+    if(!(prices.box>0)){alert("এই প্যাকেজের সঠিক বিক্রয়মূল্য দেওয়া হয়নি।");return;}
+    addCartLine(product,amount,"box",prices.box,prices.perBox);
     renderCart();checkoutMessage.textContent="";
-    showPremiumToast(String(product.name||"ওষুধ")+" · "+packageLabel);
+    showPremiumToast(String(product.name||"ওষুধ")+" · Box");
   }
 
   function renderCompanyFilters() {
@@ -1212,8 +1259,12 @@ body.cart-open{overflow:hidden}
       name:item.name,
       company:item.company,
       image_url:item.image_url || "",
-      unit_price:item.unit_price,
-      quantity:item.quantity
+      unit_price:Number(item.unit_price),
+      quantity:Number(item.quantity),
+      package_type:item.package_type === "strip" ? "strip" : "box",
+      package_label:item.package_type === "strip" ? "Strip" : "Box",
+      strips_per_box:Math.max(1,Number(item.strips_per_box || 1)),
+      medicine_id:String(item.medicine_id || item.id)
     }));
 
     const submittedTotal = calculateCartTotal();
