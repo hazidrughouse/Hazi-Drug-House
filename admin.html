@@ -364,6 +364,41 @@ async function toggleFlashSale(id, currentStatus) {
   }
   await loadMedicines();
 }
+// iPhone HDR/HEIC ছবিকে standard web-friendly SDR JPEG-এ normalize করি।
+// এতে canvas-এর মাধ্যমে browser-rendered color/brightness সাইটে আরও consistent থাকে।
+async function normalizeMedicinePhoto(file) {
+  const objectURL = URL.createObjectURL(file);
+  try {
+    const img = new Image();
+    img.src = objectURL;
+    await new Promise((resolve, reject) => {
+      img.onload = resolve;
+      img.onerror = () => reject(new Error("ছবিটি পড়া যায়নি। JPG বা PNG ছবি দিয়ে আবার চেষ্টা করো।"));
+    });
+
+    const canvas = document.createElement("canvas");
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    const ctx = canvas.getContext("2d", { colorSpace: "srgb" });
+    if (!ctx) throw new Error("ছবি প্রস্তুত করা যায়নি। আবার চেষ্টা করো।");
+
+    // Transparent ছবির ক্ষেত্রে সাদা background রাখি; medicine photo-তে পরিষ্কার দেখাবে।
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    const blob = await new Promise((resolve, reject) => {
+      canvas.toBlob(result => result ? resolve(result) : reject(new Error("ছবি JPEG-এ রূপান্তর করা যায়নি।")), "image/jpeg", 0.96);
+    });
+    return new File([blob], (file.name.replace(/\.[^.]+$/, "") || "medicine-photo") + ".jpg", {
+      type: "image/jpeg",
+      lastModified: Date.now()
+    });
+  } finally {
+    URL.revokeObjectURL(objectURL);
+  }
+}
+
 async function uploadPhoto(file) {
   if (!file) return null;
   if (!file.type.startsWith("image/")) {
@@ -372,13 +407,14 @@ async function uploadPhoto(file) {
   if (file.size > 5 * 1024 * 1024) {
     throw new Error("ছবি 5 MB-এর কম হতে হবে।");
   }
-  const ext = (file.name.split(".").pop() || "jpg")
-    .toLowerCase().replace(/[^a-z0-9]/g, "");
+
+  // Upload-এর আগে ছবিকে standard JPEG/sRGB-তে normalize করা হচ্ছে।
+  const uploadFile = await normalizeMedicinePhoto(file);
   const path = Date.now() + "-" +
-    Math.random().toString(36).slice(2) + "." + ext;
+    Math.random().toString(36).slice(2) + ".jpg";
   const { error } = await db.storage
     .from("Medicine-image")
-    .upload(path, file, { upsert: false, contentType: file.type });
+    .upload(path, uploadFile, { upsert: false, contentType: "image/jpeg" });
   if (error) throw error;
   const { data } = db.storage.from("Medicine-image").getPublicUrl(path);
   return data.publicUrl;
