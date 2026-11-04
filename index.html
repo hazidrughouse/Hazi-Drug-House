@@ -181,19 +181,19 @@ header{background-color:#f3fbf7;background-image:url("data:image/svg+xml,%3Csvg 
 .f-line svg{flex:0 0 20px;margin-top:5px;color:#fff}
 .footer-bottom{border-top:1px solid #ffffff2e;margin-top:36px;padding:18px 0;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:#cfe8dc;font-size:14px}
 
-/* Premium marketplace cart */
-.cart-overlay{position:fixed;inset:0;z-index:100;background:rgba(10,30,20,.48);padding:0;overflow-y:auto}
-.cart-panel{background:#f8fafb;color:var(--text);width:min(720px,100%);min-height:100%;margin:0 auto;padding:18px 22px 150px;border-radius:0;box-shadow:0 15px 50px #0003}
-.cart-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 -22px 18px;padding:8px 22px 16px;background:#fff;border-bottom:1px solid #e8edf0}
-.cart-heading h2{font-size:22px;margin:0}
-.cart-close{border:0;background:#f2f5f6;border-radius:50%;width:38px;height:38px;padding:8px;color:#46545b;font-size:20px}
-.cart-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 12px;margin:0 0 10px;background:#fff;border:1px solid #e5e9ed;border-radius:17px;box-shadow:0 2px 8px #132b1708}
+/* Cart */
+.cart-overlay{position:fixed;inset:0;z-index:100;background:rgba(10,30,20,.62);padding:14px;overflow-y:auto}
+.cart-panel{background:#fff;color:var(--text);width:min(600px,100%);margin:20px auto;padding:22px;border-radius:20px;box-shadow:0 15px 50px #0003}
+.cart-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+.cart-heading h2{font-size:22px}
+.cart-close{border:0;background:var(--light);border-radius:10px;padding:8px 12px;color:var(--green)}
+.cart-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border)}
 .cart-product{flex:1;min-width:0}
 .cart-product strong{display:block;overflow-wrap:anywhere}
 .cart-product small{color:var(--muted)}
 .cart-product-main{display:flex;align-items:center;gap:12px;min-width:0}
-.cart-product-image{width:88px;height:88px;flex:0 0 88px;object-fit:contain;border:1px solid #e8edf0;border-radius:12px;background:#fff;padding:4px}
-.cart-product-no-image{width:88px;height:88px;flex:0 0 88px;display:grid;place-items:center;border:1px solid #e8edf0;border-radius:12px;background:#f5f8fa;font-size:24px}
+.cart-product-image{width:68px;height:68px;flex:0 0 68px;object-fit:contain;border:1px solid var(--border);border-radius:12px;background:#fff;padding:4px}
+.cart-product-no-image{width:68px;height:68px;flex:0 0 68px;display:grid;place-items:center;border:1px solid var(--border);border-radius:12px;background:var(--bg);font-size:24px}
 .cart-product-info{min-width:0}
 .cart-product-info small{display:block;margin:3px 0}
 .customer-medicine-upload{margin:16px 0 4px;padding:16px;background:#f4faf7;border:1px dashed #8acbb0;border-radius:15px}
@@ -498,14 +498,6 @@ body.cart-open{overflow:hidden}
   </section>
 </div>
 
-<div class="cart-checkout-sticky" id="cartCheckoutSticky" style="display:none">
-  <div class="cart-checkout-summary">
-    <small>Payable · মোট</small>
-    <strong id="cartStickyTotal">৳0.00</strong>
-  </div>
-  <button type="button" id="cartCheckoutBtn">Checkout</button>
-</div>
-
 <div id="authModal" class="cart-overlay" style="display:none">
   <section class="cart-panel" role="dialog" aria-modal="true" aria-labelledby="authTitle">
     <div class="cart-heading">
@@ -777,10 +769,6 @@ body.cart-open{overflow:hidden}
   function renderCart() {
     cartCountEl.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
     cartTotalEl.textContent = money(calculateCartTotal());
-    const stickyTotal = document.getElementById("cartStickyTotal");
-    if (stickyTotal) stickyTotal.textContent = money(calculateCartTotal());
-    const stickyBar = document.getElementById("cartCheckoutSticky");
-    if (stickyBar) stickyBar.style.display = cartModal.style.display === "block" && cart.length ? "flex" : "none";
 
     if (!cart.length) {
       cartItemsEl.innerHTML = '<div class="cart-empty">তোমার Cart এখনো খালি। আগে ওষুধ যোগ করো।</div>';
@@ -896,7 +884,6 @@ body.cart-open{overflow:hidden}
 
   function openCart() {
     cartModal.style.display = "block";
-    document.getElementById("cartCheckoutSticky").style.display = cart.length ? "flex" : "none";
     document.body.classList.add("cart-open");
     checkoutMessage.textContent = "";
     renderCart();
@@ -904,16 +891,11 @@ body.cart-open{overflow:hidden}
 
   function closeCart() {
     cartModal.style.display = "none";
-    document.getElementById("cartCheckoutSticky").style.display = "none";
     document.body.classList.remove("cart-open");
   }
 
   document.getElementById("cartOpenBtn").addEventListener("click", openCart);
   document.getElementById("cartCloseBtn").addEventListener("click", closeCart);
-  document.getElementById("cartCheckoutBtn").addEventListener("click", () => {
-    const target = checkoutForm.hidden ? document.getElementById("loginPrompt") : document.getElementById("checkoutTitle");
-    target.scrollIntoView({behavior:"smooth", block:"center"});
-  });
 
   document.querySelectorAll("[data-open-cart]").forEach(el => {
     el.addEventListener("click", event => { event.preventDefault(); openCart(); });
