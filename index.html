@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Medispot BD | Medicine Marketplace</title>
-<meta name="description" content="Medispot BD — ফার্মেসির জন্য ওষুধ খোঁজা ও পাইকারি দামের তথ্য পাওয়ার সহজ প্ল্যাটফর্ম।">
+<title>Hazi Drug House | Medicine Marketplace</title>
+<meta name="description" content="Hazi Drug House — ফার্মেসির জন্য ওষুধ খোঁজা ও পাইকারি দামের তথ্য পাওয়ার সহজ প্ল্যাটফর্ম।">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -335,6 +335,17 @@ body.cart-open{overflow:hidden}
 .package-choice-total{display:flex;justify-content:space-between;margin:14px 0;font-weight:700}
 .package-choice-add{width:100%;border:0;border-radius:12px;background:#0b6b4f;color:white;padding:13px;font-weight:700}
 
+
+  .cart-discount {
+    display: inline-block;
+    margin-top: 4px;
+    padding: 3px 7px;
+    border-radius: 6px;
+    background: #fff0f1;
+    color: #d92332;
+    font-weight: 700;
+    font-size: 12px;
+  }
 </style>
 </head>
 
@@ -346,7 +357,7 @@ body.cart-open{overflow:hidden}
     <a class="brand" href="#">
       <span class="brand-mark">MS</span>
       <div>
-        <div class="brand-name">Medispot BD</div>
+        <div class="brand-name">Hazi Drug House</div>
         <div class="brand-subtitle">Medicine Marketplace</div>
       </div>
     </a>
@@ -482,7 +493,7 @@ body.cart-open{overflow:hidden}
       <button id="placeOrderBtn" class="order-btn" type="submit" style="margin-top:16px">অর্ডার কনফার্ম করুন</button>
 
       <p id="checkoutMessage" role="status" aria-live="polite"></p>
-      <p class="checkout-hint">অর্ডার জমা দেওয়ার পর Medispot BD থেকে ফোন করে পণ্য, দাম ও প্রাপ্যতা নিশ্চিত করা হবে।</p>
+      <p class="checkout-hint">অর্ডার জমা দেওয়ার পর Hazi Drug House থেকে ফোন করে পণ্য, দাম ও প্রাপ্যতা নিশ্চিত করা হবে।</p>
     </form>
   </section>
 </div>
@@ -514,7 +525,7 @@ body.cart-open{overflow:hidden}
       </div>
       <button id="authSubmit" class="order-btn" type="submit" style="margin-top:16px">লগইন করুন</button>
       <p id="authMessage" role="status" aria-live="polite"></p>
-      <p class="auth-hint">পাসওয়ার্ড ভুলে গেলে Medispot BD-তে যোগাযোগ করুন।</p>
+      <p class="auth-hint">পাসওয়ার্ড ভুলে গেলে Hazi Drug House-তে যোগাযোগ করুন।</p>
     </form>
   </section>
 </div>
@@ -548,8 +559,8 @@ body.cart-open{overflow:hidden}
   <div class="container">
     <div class="footer-cols">
       <div class="footer-col">
-        <div class="f-brand"><span class="mk">MS</span><div><b>Medispot BD</b><small>Medicine Marketplace</small></div></div>
-        <p>ফার্মেসির জন্য নির্ভরযোগ্য ওষুধের পাইকারি দাম ও সহজ অনুসন্ধানের একমাত্র প্ল্যাটফর্ম — Medispot BD।</p>
+        <div class="f-brand"><span class="mk">MS</span><div><b>Hazi Drug House</b><small>Medicine Marketplace</small></div></div>
+        <p>ফার্মেসির জন্য নির্ভরযোগ্য ওষুধের পাইকারি দাম ও সহজ অনুসন্ধানের একমাত্র প্ল্যাটফর্ম — Hazi Drug House।</p>
       </div>
       <div class="footer-col">
         <h4>দ্রুত লিংক</h4>
@@ -566,7 +577,7 @@ body.cart-open{overflow:hidden}
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© <span id="currentYear"></span> Medispot BD. সর্বস্বত্ব সংরক্ষিত।</span>
+      <span>© <span id="currentYear"></span> Hazi Drug House. সর্বস্বত্ব সংরক্ষিত।</span>
       <span>সুস্থ সমাজ, শক্তিশালী ফার্মেসি</span>
     </div>
   </div>
@@ -771,6 +782,16 @@ body.cart-open{overflow:hidden}
             <div class="cart-product cart-product-info">
               <strong>${escapeHTML(item.name)}</strong>
               <small>${escapeHTML(item.company)} · ${money(item.unit_price)} / ${item.package_type === "strip" ? "Strip" : "Box"}</small>
+              ${(() => {
+                const product = allProducts.find(p => String(p.id) === String(item.medicine_id));
+                if (!product) return "";
+                const discountPercent = item.package_type === "strip"
+                  ? Math.max(0, Math.min(100, Number(product.strip_discount_percent) || 0))
+                  : Math.max(0, Math.min(100, Number(getPrices(product).discount) || 0));
+                return discountPercent > 0
+                  ? `<small class="cart-discount">${discountPercent.toLocaleString("en-US", {maximumFractionDigits:2})}% ছাড়</small>`
+                  : "";
+              })()}
               <div><strong>${money(item.unit_price * item.quantity)}</strong></div>
             </div>
           </div>
@@ -1318,8 +1339,8 @@ body.cart-open{overflow:hidden}
       prefillCheckout();
 
       checkoutMessage.textContent = customerPhotoUploadFailed
-        ? "✅ অর্ডার সফলভাবে জমা হয়েছে (অর্ডার নম্বর: " + orderNo + ")! তবে ছবিটি আপলোড হয়নি। ছবিটি পরে পাঠাতে হবে। Medispot BD থেকে যোগাযোগ করে অর্ডার নিশ্চিত করা হবে।"
-        : "✅ অর্ডার সফলভাবে জমা হয়েছে (অর্ডার নম্বর: " + orderNo + ")! Medispot BD থেকে যোগাযোগ করে অর্ডার নিশ্চিত করা হবে।";
+        ? "✅ অর্ডার সফলভাবে জমা হয়েছে (অর্ডার নম্বর: " + orderNo + ")! তবে ছবিটি আপলোড হয়নি। ছবিটি পরে পাঠাতে হবে। Hazi Drug House থেকে যোগাযোগ করে অর্ডার নিশ্চিত করা হবে।"
+        : "✅ অর্ডার সফলভাবে জমা হয়েছে (অর্ডার নম্বর: " + orderNo + ")! Hazi Drug House থেকে যোগাযোগ করে অর্ডার নিশ্চিত করা হবে।";
 
     } catch(error) {
       console.error("Order submission error:", error);
