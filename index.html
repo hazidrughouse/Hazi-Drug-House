@@ -24,7 +24,7 @@ button:disabled{opacity:.6;cursor:not-allowed}
 header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--border)}
 .navbar{min-height:84px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--green)}
-.brand-mark{font-size:36px;font-weight:800;letter-spacing:-2px;line-height:1;color:var(--green)}
+.brand-mark{font-size:40px;font-weight:700;letter-spacing:-4px;line-height:1;color:var(--green)}
 .brand-name{font-size:24px;font-weight:700;color:var(--green);line-height:1.1}
 .brand-subtitle{color:#2f8a6e;font-size:13px;letter-spacing:.3px}
 .nav-menu{display:flex;gap:44px}
@@ -174,26 +174,26 @@ header{background-color:#f3fbf7;background-image:url("data:image/svg+xml,%3Csvg 
 .site-footer p,.site-footer a{color:#d3ebe0;font-size:15px;line-height:1.9;text-decoration:none;display:block}
 .site-footer a:hover{color:#fff}
 .f-brand{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.f-brand .mk{font-size:34px;font-weight:800;letter-spacing:-2px;line-height:1;color:#fff}
+.f-brand .mk{font-size:40px;font-weight:700;letter-spacing:-4px;line-height:1;color:#fff}
 .f-brand b{display:block;font-size:22px;line-height:1.1}
 .f-brand small{color:#bfe3d3;font-size:13px}
 .f-line{display:flex!important;gap:12px;align-items:flex-start}
 .f-line svg{flex:0 0 20px;margin-top:5px;color:#fff}
 .footer-bottom{border-top:1px solid #ffffff2e;margin-top:36px;padding:18px 0;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:#cfe8dc;font-size:14px}
 
-/* Cart */
-.cart-overlay{position:fixed;inset:0;z-index:100;background:rgba(10,30,20,.62);padding:14px;overflow-y:auto}
-.cart-panel{background:#fff;color:var(--text);width:min(600px,100%);margin:20px auto;padding:22px;border-radius:20px;box-shadow:0 15px 50px #0003}
-.cart-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
-.cart-heading h2{font-size:22px}
-.cart-close{border:0;background:var(--light);border-radius:10px;padding:8px 12px;color:var(--green)}
-.cart-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border)}
+/* Premium marketplace cart */
+.cart-overlay{position:fixed;inset:0;z-index:100;background:rgba(10,30,20,.48);padding:0;overflow-y:auto}
+.cart-panel{background:#f8fafb;color:var(--text);width:min(720px,100%);min-height:100%;margin:0 auto;padding:18px 22px 150px;border-radius:0;box-shadow:0 15px 50px #0003}
+.cart-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 -22px 18px;padding:8px 22px 16px;background:#fff;border-bottom:1px solid #e8edf0}
+.cart-heading h2{font-size:22px;margin:0}
+.cart-close{border:0;background:#f2f5f6;border-radius:50%;width:38px;height:38px;padding:8px;color:#46545b;font-size:20px}
+.cart-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 12px;margin:0 0 10px;background:#fff;border:1px solid #e5e9ed;border-radius:17px;box-shadow:0 2px 8px #132b1708}
 .cart-product{flex:1;min-width:0}
 .cart-product strong{display:block;overflow-wrap:anywhere}
 .cart-product small{color:var(--muted)}
 .cart-product-main{display:flex;align-items:center;gap:12px;min-width:0}
-.cart-product-image{width:68px;height:68px;flex:0 0 68px;object-fit:contain;border:1px solid var(--border);border-radius:12px;background:#fff;padding:4px}
-.cart-product-no-image{width:68px;height:68px;flex:0 0 68px;display:grid;place-items:center;border:1px solid var(--border);border-radius:12px;background:var(--bg);font-size:24px}
+.cart-product-image{width:88px;height:88px;flex:0 0 88px;object-fit:contain;border:1px solid #e8edf0;border-radius:12px;background:#fff;padding:4px}
+.cart-product-no-image{width:88px;height:88px;flex:0 0 88px;display:grid;place-items:center;border:1px solid #e8edf0;border-radius:12px;background:#f5f8fa;font-size:24px}
 .cart-product-info{min-width:0}
 .cart-product-info small{display:block;margin:3px 0}
 .customer-medicine-upload{margin:16px 0 4px;padding:16px;background:#f4faf7;border:1px dashed #8acbb0;border-radius:15px}
@@ -336,44 +336,16 @@ body.cart-open{overflow:hidden}
 .package-choice-add{width:100%;border:0;border-radius:12px;background:#0b6b4f;color:white;padding:13px;font-weight:700}
 
 
-/* Cart image and homepage-style red discount badge */
-.cart-product-image-wrap{
-  position:relative;
-  width:68px;
-  height:68px;
-  flex:0 0 68px;
-  overflow:hidden;
-  border:1px solid var(--border);
-  border-radius:12px;
-  background:#f6f8fc;
-}
-.cart-product-image-wrap .cart-product-image{
-  display:block;
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  border:0;
-  border-radius:0;
-  background:transparent;
-  padding:4px;
-}
-.cart-discount-badge{
-  position:absolute;
-  top:4px;
-  left:4px;
-  z-index:3;
-  display:inline-block;
-  max-width:calc(100% - 8px);
-  padding:4px 7px;
-  border-radius:20px;
-  background:#e11d2e;
-  color:#fff;
-  font-size:9px;
-  font-weight:800;
-  line-height:1.1;
-  white-space:nowrap;
-  box-shadow:0 2px 5px rgba(0,0,0,.12);
-}
+  .cart-discount {
+    display: inline-block;
+    margin-top: 4px;
+    padding: 3px 7px;
+    border-radius: 6px;
+    background: #fff0f1;
+    color: #d92332;
+    font-weight: 700;
+    font-size: 12px;
+  }
 </style>
 </head>
 
@@ -383,7 +355,7 @@ body.cart-open{overflow:hidden}
 <header>
   <div class="container navbar">
     <a class="brand" href="#">
-      <span class="brand-mark">HDH</span>
+      <span class="brand-mark">MS</span>
       <div>
         <div class="brand-name">Hazi Drug House</div>
         <div class="brand-subtitle">Medicine Marketplace</div>
@@ -526,6 +498,14 @@ body.cart-open{overflow:hidden}
   </section>
 </div>
 
+<div class="cart-checkout-sticky" id="cartCheckoutSticky" style="display:none">
+  <div class="cart-checkout-summary">
+    <small>Payable · মোট</small>
+    <strong id="cartStickyTotal">৳0.00</strong>
+  </div>
+  <button type="button" id="cartCheckoutBtn">Checkout</button>
+</div>
+
 <div id="authModal" class="cart-overlay" style="display:none">
   <section class="cart-panel" role="dialog" aria-modal="true" aria-labelledby="authTitle">
     <div class="cart-heading">
@@ -587,7 +567,7 @@ body.cart-open{overflow:hidden}
   <div class="container">
     <div class="footer-cols">
       <div class="footer-col">
-        <div class="f-brand"><span class="mk">HDH</span><div><b>Hazi Drug House</b><small>Medicine Marketplace</small></div></div>
+        <div class="f-brand"><span class="mk">MS</span><div><b>Hazi Drug House</b><small>Medicine Marketplace</small></div></div>
         <p>ফার্মেসির জন্য নির্ভরযোগ্য ওষুধের পাইকারি দাম ও সহজ অনুসন্ধানের একমাত্র প্ল্যাটফর্ম — Hazi Drug House।</p>
       </div>
       <div class="footer-col">
@@ -773,7 +753,6 @@ body.cart-open{overflow:hidden}
         package_type:item.package_type === "strip" ? "strip" : "box",
         package_label:item.package_type === "strip" ? "Strip" : "Box",
         strips_per_box:Math.max(1, Number(item.strips_per_box || 1)),
-        discount_percent:Math.max(0,Math.min(100,Number(item.discount_percent)||0)),
         medicine_id:String(item.medicine_id || String(item.id).replace(/-(box|strip)$/,""))
       }));
     }
@@ -798,42 +777,44 @@ body.cart-open{overflow:hidden}
   function renderCart() {
     cartCountEl.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
     cartTotalEl.textContent = money(calculateCartTotal());
+    const stickyTotal = document.getElementById("cartStickyTotal");
+    if (stickyTotal) stickyTotal.textContent = money(calculateCartTotal());
+    const stickyBar = document.getElementById("cartCheckoutSticky");
+    if (stickyBar) stickyBar.style.display = cartModal.style.display === "block" && cart.length ? "flex" : "none";
 
     if (!cart.length) {
       cartItemsEl.innerHTML = '<div class="cart-empty">তোমার Cart এখনো খালি। আগে ওষুধ যোগ করো।</div>';
     } else {
-      cartItemsEl.innerHTML = cart.map(item => {
-        const product = allProducts.find(p => String(p.id) === String(item.medicine_id));
-        const discountPercent = product
-          ? (item.package_type === "strip"
-              ? Math.max(0, Math.min(100, Number(product.strip_discount_percent) || 0))
-              : Math.max(0, Math.min(100, Number(getPrices(product).discount) || 0)))
-          : Math.max(0, Math.min(100, Number(item.discount_percent) || 0));
-        const discountBadge = discountPercent > 0
-          ? `<span class="cart-discount-badge">${discountPercent.toLocaleString("en-US", {maximumFractionDigits:2})}% ছাড়</span>`
-          : "";
-
-        return `
-          <div class="cart-row">
-            <div class="cart-product-main">
-              ${item.image_url
-                ? `<div class="cart-product-image-wrap">${discountBadge}<img class="cart-product-image" src="${escapeHTML(safeImagePath(item.image_url))}" alt="${escapeHTML(item.name)}" loading="lazy" onerror="this.style.display='none'"></div>`
-                : '<div class="cart-product-no-image" aria-hidden="true">💊</div>'}
-              <div class="cart-product cart-product-info">
-                <strong>${escapeHTML(item.name)}</strong>
-                <small>${escapeHTML(item.company)} · ${money(item.unit_price)} / ${item.package_type === "strip" ? "Strip" : "Box"}</small>
-                <div><strong>${money(item.unit_price * item.quantity)}</strong></div>
-              </div>
-            </div>
-            <div class="cart-controls">
-              <button type="button" data-cart-action="minus" data-id="${escapeHTML(item.id)}">−</button>
-              <span>${item.quantity}</span>
-              <button type="button" data-cart-action="plus" data-id="${escapeHTML(item.id)}">+</button>
-              <button type="button" data-cart-action="remove" data-id="${escapeHTML(item.id)}">বাদ দিন</button>
+      cartItemsEl.innerHTML = cart.map(item => `
+        <div class="cart-row">
+          <div class="cart-product-main">
+            ${item.image_url
+              ? `<img class="cart-product-image" src="${escapeHTML(safeImagePath(item.image_url))}" alt="${escapeHTML(item.name)}" loading="lazy" onerror="this.style.display='none'">`
+              : '<div class="cart-product-no-image" aria-hidden="true">💊</div>'}
+            <div class="cart-product cart-product-info">
+              <strong>${escapeHTML(item.name)}</strong>
+              <small>${escapeHTML(item.company)} · ${money(item.unit_price)} / ${item.package_type === "strip" ? "Strip" : "Box"}</small>
+              ${(() => {
+                const product = allProducts.find(p => String(p.id) === String(item.medicine_id));
+                if (!product) return "";
+                const discountPercent = item.package_type === "strip"
+                  ? Math.max(0, Math.min(100, Number(product.strip_discount_percent) || 0))
+                  : Math.max(0, Math.min(100, Number(getPrices(product).discount) || 0));
+                return discountPercent > 0
+                  ? `<small class="cart-discount">${discountPercent.toLocaleString("en-US", {maximumFractionDigits:2})}% ছাড়</small>`
+                  : "";
+              })()}
+              <div><strong>${money(item.unit_price * item.quantity)}</strong></div>
             </div>
           </div>
-        `;
-      }).join("");
+          <div class="cart-controls">
+            <button type="button" data-cart-action="minus" data-id="${escapeHTML(item.id)}">−</button>
+            <span>${item.quantity}</span>
+            <button type="button" data-cart-action="plus" data-id="${escapeHTML(item.id)}">+</button>
+            <button type="button" data-cart-action="remove" data-id="${escapeHTML(item.id)}">বাদ দিন</button>
+          </div>
+        </div>
+      `).join("");
     }
 
     saveCart();
@@ -915,6 +896,7 @@ body.cart-open{overflow:hidden}
 
   function openCart() {
     cartModal.style.display = "block";
+    document.getElementById("cartCheckoutSticky").style.display = cart.length ? "flex" : "none";
     document.body.classList.add("cart-open");
     checkoutMessage.textContent = "";
     renderCart();
@@ -922,11 +904,16 @@ body.cart-open{overflow:hidden}
 
   function closeCart() {
     cartModal.style.display = "none";
+    document.getElementById("cartCheckoutSticky").style.display = "none";
     document.body.classList.remove("cart-open");
   }
 
   document.getElementById("cartOpenBtn").addEventListener("click", openCart);
   document.getElementById("cartCloseBtn").addEventListener("click", closeCart);
+  document.getElementById("cartCheckoutBtn").addEventListener("click", () => {
+    const target = checkoutForm.hidden ? document.getElementById("loginPrompt") : document.getElementById("checkoutTitle");
+    target.scrollIntoView({behavior:"smooth", block:"center"});
+  });
 
   document.querySelectorAll("[data-open-cart]").forEach(el => {
     el.addEventListener("click", event => { event.preventDefault(); openCart(); });
@@ -1033,9 +1020,6 @@ body.cart-open{overflow:hidden}
     const medicineId=String(product.id);
     const id=medicineId+"-"+packageType;
     const packageLabel=packageType==="strip"?"Strip":"Box";
-    const discountPercent=packageType==="strip"
-      ? Math.max(0,Math.min(100,Number(product.strip_discount_percent)||0))
-      : Math.max(0,Math.min(100,Number(getPrices(product).discount)||0));
     const existing=cart.find(item=>item.id===id);
     if(existing) {
       existing.quantity=Math.min(999,existing.quantity+quantity);
@@ -1043,14 +1027,13 @@ body.cart-open{overflow:hidden}
       existing.package_type=packageType;
       existing.package_label=packageLabel;
       existing.strips_per_box=Math.max(1,Number(perBox)||1);
-      existing.discount_percent=discountPercent;
       existing.medicine_id=medicineId;
     } else {
       cart.push({
         id,name:String(product.name||"ওষুধ"),company:String(product.company||""),
         image_url:String(product.image_url||""),unit_price:Number(unitPrice),
         quantity,package_type:packageType,package_label:packageLabel,
-        strips_per_box:Math.max(1,Number(perBox)||1),discount_percent:discountPercent,medicine_id:medicineId
+        strips_per_box:Math.max(1,Number(perBox)||1),medicine_id:medicineId
       });
     }
   }
