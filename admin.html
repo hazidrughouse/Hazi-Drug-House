@@ -153,7 +153,7 @@ main{max-width:1500px;margin:0 auto;padding:24px 26px}.card{background:var(--whi
     </p>
     <div class="grid">
       <div>
-        <div class="grid"><div><label for="stripsPerBox">এক Box-এ Strip</label><input id="stripsPerBox" type="number" min="1" step="1" value="10" placeholder="যেমন 10"></div><div><label for="stripPrice">প্রতি Strip-এর MRP (৳)</label><input id="stripPrice" type="number" min="0" step="0.01" value="0" placeholder="Strip price"></div></div><label for="stripDiscount">Strip Discount (%)</label><input id="stripDiscount" type="number" min="0" max="100" step="any" value="0"><p class="small">Strip price 0 থাকলে Box-এর বিক্রয়মূল্য ÷ Strip সংখ্যা অনুযায়ী দাম হিসাব হবে।</p><label for="stock">Stock (পরিমাণ)</label>
+        <label for="unitType">ছোট ইউনিটের ধরন (Tablet/Capsule = Strip, Syrup = Bottle, Cream = Tube)</label><select id="unitType"><option value="strip">Strip (Tablet / Capsule)</option><option value="bottle">Bottle (Syrup)</option><option value="tube">Tube (Cream / Ointment)</option></select><div class="grid"><div><label for="stripsPerBox" id="stripsPerBoxLabel">এক Box-এ Strip</label><input id="stripsPerBox" type="number" min="1" step="1" value="10" placeholder="যেমন 10"></div><div><label for="stripPrice" id="stripPriceLabel">প্রতি Strip-এর MRP (৳)</label><input id="stripPrice" type="number" min="0" step="0.01" value="0" placeholder="Strip price"></div></div><label for="stripDiscount" id="stripDiscountLabel">Strip Discount (%)</label><input id="stripDiscount" type="number" min="0" max="100" step="any" value="0"><p class="small">Strip price 0 থাকলে Box-এর বিক্রয়মূল্য ÷ Strip সংখ্যা অনুযায়ী দাম হিসাব হবে।</p><label for="stock">Stock (পরিমাণ)</label>
         <input id="stock" type="number" min="0" step="1" value="0" placeholder="Stock">
       </div>
       <div>
@@ -440,6 +440,7 @@ document.getElementById("medicineForm").addEventListener("submit", async e => {
       price,
       discount_percent: discount,
       stock,
+      unit_type: document.getElementById("unitType").value,
       strips_per_box: Math.max(1, Number(document.getElementById("stripsPerBox").value) || 1),
       strip_price: Math.max(0, Number(document.getElementById("stripPrice").value) || 0),
       strip_discount_percent: Math.max(0, Math.min(100, Number(document.getElementById("stripDiscount").value) || 0))
@@ -462,6 +463,15 @@ document.getElementById("medicineForm").addEventListener("submit", async e => {
     saveButton.textContent = "ওষুধ Save করো";
   }
 });
+
+function updateUnitLabels() {
+  const t = document.getElementById("unitType").value;
+  const n = t === "bottle" ? "Bottle" : (t === "tube" ? "Tube" : "Strip");
+  document.getElementById("stripsPerBoxLabel").textContent = "এক Box-এ " + n;
+  document.getElementById("stripPriceLabel").textContent = "প্রতি " + n + "-এর MRP (৳)";
+  document.getElementById("stripDiscountLabel").textContent = n + " Discount (%)";
+}
+document.getElementById("unitType").addEventListener("change", updateUnitLabels);
 function editMedicine(id) {
   const m = medicines.find(x => String(x.id) === String(id));
   if (!m) return;
@@ -469,6 +479,8 @@ function editMedicine(id) {
   ["name", "company", "strength", "category", "price", "stock"].forEach(k => {
     document.getElementById(k).value = m[k] ?? "";
   });
+  document.getElementById("unitType").value = m.unit_type || "strip";
+  updateUnitLabels();
   document.getElementById("stripsPerBox").value = m.strips_per_box ?? 10;
   document.getElementById("stripPrice").value = m.strip_price ?? 0;
   document.getElementById("stripDiscount").value = m.strip_discount_percent ?? 0;
@@ -498,6 +510,8 @@ function resetForm() {
   document.getElementById("medicineForm").reset();
   discountMode.value = "percentage";
   discountInput.value = "0";
+  document.getElementById("unitType").value = "strip";
+  updateUnitLabels();
   document.getElementById("stripsPerBox").value = 10;
   document.getElementById("stripPrice").value = 0;
   document.getElementById("stripDiscount").value = 0;
