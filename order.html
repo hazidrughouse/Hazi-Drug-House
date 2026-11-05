@@ -69,7 +69,7 @@ th,td{text-align:left;border-bottom:1px solid #e5ece7;padding:9px 5px}
 <main>
   <section id="login" class="panel">
     <h2>Admin Login</h2>
-    <p class="muted">তোমার Supabase Admin account দিয়ে লগইন করো।</p>
+    <p class="muted">&#2468;&#2507;&#2478;&#2494;&#2480; Supabase Admin account &#2470;&#2495;&#2479;&#2492;&#2503; &#2482;&#2455;&#2439;&#2472; &#2453;&#2480;&#2507;à¥¤</p>
     <input id="email" type="email" placeholder="Admin email" autocomplete="username">
     <input id="password" type="password" placeholder="Password" autocomplete="current-password">
     <button id="loginBtn" onclick="login()">Login to Dashboard</button>
@@ -79,12 +79,12 @@ th,td{text-align:left;border-bottom:1px solid #e5ece7;padding:9px 5px}
   <section id="dashboard">
     <div class="row no-print" style="margin-bottom:15px">
       <div>
-        <h2 style="margin-bottom:5px">অর্ডার ম্যানেজমেন্ট</h2>
-        <div class="muted">নতুন অর্ডার এলে তালিকা আপডেট হবে। প্রয়োজনে Refresh চাপো।</div>
-        <p><span id="connectionStatus" class="connection">Realtime পরীক্ষা হচ্ছে...</span></p>
+        <h2 style="margin-bottom:5px">&#2437;&#2480;&#2509;&#2465;&#2494;&#2480; &#2478;&#2509;&#2479;&#2494;&#2472;&#2503;&#2460;&#2478;&#2503;&#2472;&#2509;&#2463;</h2>
+        <div class="muted">&#2472;&#2468;&#2497;&#2472; &#2437;&#2480;&#2509;&#2465;&#2494;&#2480; &#2447;&#2482;&#2503; &#2468;&#2494;&#2482;&#2495;&#2453;&#2494; &#2438;&#2474;&#2465;&#2503;&#2463; &#2489;&#2476;&#2503;à¥¤ &#2474;&#2509;&#2480;&#2479;&#2492;&#2507;&#2460;&#2472;&#2503; Refresh &#2458;&#2494;&#2474;&#2507;à¥¤</div>
+        <p><span id="connectionStatus" class="connection">Realtime &#2474;&#2480;&#2496;&#2453;&#2509;&#2487;&#2494; &#2489;&#2458;&#2509;&#2459;&#2503;...</span></p>
       </div>
       <div class="actions">
-        <button class="secondary" onclick="enableNotifications()">Notification চালু</button>
+        <button class="secondary" onclick="enableNotifications()">Notification &#2458;&#2494;&#2482;&#2497;</button>
         <button onclick="loadOrders()">Refresh</button>
         <button class="danger" onclick="logout()">Logout</button>
       </div>
@@ -92,7 +92,7 @@ th,td{text-align:left;border-bottom:1px solid #e5ece7;padding:9px 5px}
 
     <div class="grid">
       <div class="stat">
-        <span class="muted">দেখানো অর্ডার</span>
+        <span class="muted">&#2470;&#2503;&#2454;&#2494;&#2472;&#2507; &#2437;&#2480;&#2509;&#2465;&#2494;&#2480;</span>
         <strong id="totalCount">0</strong>
       </div>
       <div class="stat">
@@ -100,17 +100,17 @@ th,td{text-align:left;border-bottom:1px solid #e5ece7;padding:9px 5px}
         <strong id="pendingCount">0</strong>
       </div>
       <div class="stat">
-        <span class="muted">দেখানো অর্ডারের মোট মূল্য</span>
-        <strong id="totalAmount">৳0</strong>
+        <span class="muted">&#2470;&#2503;&#2454;&#2494;&#2472;&#2507; &#2437;&#2480;&#2509;&#2465;&#2494;&#2480;&#2503;&#2480; &#2478;&#2507;&#2463; &#2478;&#2498;&#2482;&#2509;&#2479;</span>
+        <strong id="totalAmount">&#2547;0</strong>
       </div>
     </div>
 
     <div class="panel no-print">
       <div class="filters">
-        <input id="search" placeholder="অর্ডার নম্বর / ফার্মেসি / ফোন দিয়ে খুঁজুন" oninput="renderOrders()">
-        <input id="dateFilter" type="date" aria-label="তারিখ অনুযায়ী অর্ডার" onchange="renderOrders()">
+        <input id="search" placeholder="&#2437;&#2480;&#2509;&#2465;&#2494;&#2480; &#2472;&#2478;&#2509;&#2476;&#2480; / &#2475;&#2494;&#2480;&#2509;&#2478;&#2503;&#2488;&#2495; / &#2475;&#2507;&#2472; &#2470;&#2495;&#2479;&#2492;&#2503; &#2454;&#2497;&#2433;&#2460;&#2497;&#2472;" oninput="renderOrders()">
+        <input id="dateFilter" type="date" aria-label="&#2468;&#2494;&#2480;&#2495;&#2454; &#2437;&#2472;&#2497;&#2479;&#2494;&#2479;&#2492;&#2496; &#2437;&#2480;&#2509;&#2465;&#2494;&#2480;" onchange="renderOrders()">
         <select id="filter" onchange="renderOrders()">
-          <option value="">সব Status</option>
+          <option value="">&#2488;&#2476; Status</option>
           <option value="pending">Pending</option>
           <option value="confirmed">Confirmed</option>
           <option value="processing">Processing</option>
@@ -120,11 +120,11 @@ th,td{text-align:left;border-bottom:1px solid #e5ece7;padding:9px 5px}
         </select>
       </div>
       <div class="actions" style="margin-top:10px">
-        <button class="secondary" onclick="clearFilters()">সব তারিখের অর্ডার</button>
+        <button class="secondary" onclick="clearFilters()">&#2488;&#2476; &#2468;&#2494;&#2480;&#2495;&#2454;&#2503;&#2480; &#2437;&#2480;&#2509;&#2465;&#2494;&#2480;</button>
       </div>
     </div>
 
-    <div id="ordersList"><p class="muted">অর্ডার লোড হচ্ছে...</p></div>
+    <div id="ordersList"><p class="muted">&#2437;&#2480;&#2509;&#2465;&#2494;&#2480; &#2482;&#2507;&#2465; &#2489;&#2458;&#2509;&#2459;&#2503;...</p></div>
   </section>
 </main>
 
@@ -149,7 +149,7 @@ function msg(text){
 }
 
 function money(value){
-  return "৳" + Number(value || 0).toLocaleString("en-BD", {
+  return "\u09F3" + Number(value || 0).toLocaleString("en-BD", {
     maximumFractionDigits: 2
   });
 }
@@ -190,7 +190,7 @@ function showBrowserNotification(title, body, id){
   if(!("Notification" in window)) return;
   if(Notification.permission !== "granted") return;
 
-  // একই order ID-এর জন্য একই session-এ বারবার notification আটকায়।
+  // \u098F\u0995\u0987 order ID-\u098F\u09B0 \u099C\u09A8\u09CD\u09AF \u098F\u0995\u0987 session-\u098F \u09AC\u09BE\u09B0\u09AC\u09BE\u09B0 notification \u0986\u099F\u0995\u09BE\u09AF\u09BCà¥¤
   const key = String(id);
   if(notifiedIds.has(key)) return;
   notifiedIds.add(key);
@@ -208,12 +208,12 @@ async function login(){
   const btn = document.getElementById("loginBtn");
 
   if(!email || !password){
-    msg("Email ও password দাও।");
+    msg("Email \u0993 password \u09A6\u09BE\u0993à¥¤");
     return;
   }
 
   btn.disabled = true;
-  msg("Login হচ্ছে...");
+  msg("Login \u09B9\u099A\u09CD\u099B\u09C7...");
 
   try{
     const { data, error } = await db.auth.signInWithPassword({
@@ -222,7 +222,7 @@ async function login(){
     });
 
     if(error) throw error;
-    if(!data.session) throw new Error("Login session তৈরি হয়নি।");
+    if(!data.session) throw new Error("Login session \u09A4\u09C8\u09B0\u09BF \u09B9\u09AF\u09BC\u09A8\u09BFà¥¤");
 
     document.getElementById("login").style.display = "none";
     document.getElementById("dashboard").style.display = "block";
@@ -231,7 +231,7 @@ async function login(){
     await loadOrders();
     subscribeOrders();
   }catch(error){
-    msg("Login হয়নি: " + error.message);
+    msg("Login \u09B9\u09AF\u09BC\u09A8\u09BF: " + error.message);
   }finally{
     btn.disabled = false;
   }
@@ -247,7 +247,7 @@ async function logout(){
   document.getElementById("dashboard").style.display = "none";
   document.getElementById("login").style.display = "block";
   document.getElementById("password").value = "";
-  setConnectionStatus("লগইন করা নেই", true);
+  setConnectionStatus("\u09B2\u0997\u0987\u09A8 \u0995\u09B0\u09BE \u09A8\u09C7\u0987", true);
 }
 
 async function stopOrderSubscription(){
@@ -278,7 +278,7 @@ async function loadOrders(){
 
   loadingOrders = true;
   const list = document.getElementById("ordersList");
-  list.innerHTML = '<div class="panel">অর্ডার লোড হচ্ছে...</div>';
+  list.innerHTML = '<div class="panel">\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u09B2\u09CB\u09A1 \u09B9\u099A\u09CD\u099B\u09C7...</div>';
 
   try{
     const { data, error } = await db
@@ -297,12 +297,12 @@ async function loadOrders(){
       }
 
       try{
-        // আগে থেকেই URL থাকলে সেটি ব্যবহার করো।
+        // \u0986\u0997\u09C7 \u09A5\u09C7\u0995\u09C7\u0987 URL \u09A5\u09BE\u0995\u09B2\u09C7 \u09B8\u09C7\u099F\u09BF \u09AC\u09CD\u09AF\u09AC\u09B9\u09BE\u09B0 \u0995\u09B0\u09CBà¥¤
         if(/^https?:\/\//i.test(path)){
           return { ...order, customerImageSignedUrl: path };
         }
 
-        // Private Storage bucket থেকে সাময়িক signed URL তৈরি।
+        // Private Storage bucket \u09A5\u09C7\u0995\u09C7 \u09B8\u09BE\u09AE\u09AF\u09BC\u09BF\u0995 signed URL \u09A4\u09C8\u09B0\u09BFà¥¤
         const { data: signed, error: signedError } = await db
           .storage
           .from("customer-medicine-photos")
@@ -327,9 +327,9 @@ async function loadOrders(){
     renderOrders();
   }catch(error){
     list.innerHTML =
-      '<div class="panel">অর্ডার লোড হয়নি: ' +
+      '<div class="panel">\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u09B2\u09CB\u09A1 \u09B9\u09AF\u09BC\u09A8\u09BF: ' +
       escapeHtml(error.message) +
-      '<p class="muted">Admin SELECT policy, orders টেবিলের কলাম এবং login session পরীক্ষা করো।</p></div>';
+      '<p class="muted">Admin SELECT policy, orders \u099F\u09C7\u09AC\u09BF\u09B2\u09C7\u09B0 \u0995\u09B2\u09BE\u09AE \u098F\u09AC\u0982 login session \u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE \u0995\u09B0\u09CBà¥¤</p></div>';
 
     console.error("Order loading failed:", error);
   }finally{
@@ -374,7 +374,7 @@ function renderOrders(){
   const list = document.getElementById("ordersList");
 
   if(!shown.length){
-    list.innerHTML = '<div class="panel empty">এই ফিল্টারে কোনো অর্ডার পাওয়া যায়নি।</div>';
+    list.innerHTML = '<div class="panel empty">\u098F\u0987 \u09AB\u09BF\u09B2\u09CD\u099F\u09BE\u09B0\u09C7 \u0995\u09CB\u09A8\u09CB \u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u09AA\u09BE\u0993\u09AF\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BFà¥¤</div>';
     return;
   }
 
@@ -385,37 +385,37 @@ function renderOrders(){
     const itemRows = items.length ? items.map(item => {
       const qty = Number(item.quantity ?? item.qty ?? 0);
       const price = Number(item.unit_price ?? item.price ?? item.sale_price ?? 0);
-      const packageType = item.package_type === "strip" ? "Strip" : (item.package_type === "box" ? "Box" : "অজানা");
+      const packageType = item.package_label || (item.package_type === "strip" ? "Strip" : (item.package_type === "box" ? "Box" : "\u0985\u099C\u09BE\u09A8\u09BE"));
       const quantityLabel = `${qty} ${packageType}`;
 
       return `<tr>
-        <td>${escapeHtml(item.name || item.medicine_name || item.product_name || "ওষুধ")}</td>
+        <td>${escapeHtml(item.name || item.medicine_name || item.product_name || "\u0993\u09B7\u09C1\u09A7")}</td>
         <td>${escapeHtml(item.company || item.company_name || "-")}</td>
         <td><span class="package-tag">${quantityLabel}</span></td>
         <td>${money(price)} / ${packageType}</td>
         <td>${money(qty * price)}</td>
       </tr>`;
-    }).join("") : '<tr><td colspan="5">এই অর্ডারের items তালিকা পাওয়া যায়নি।</td></tr>';
+    }).join("") : '<tr><td colspan="5">\u098F\u0987 \u0985\u09B0\u09CD\u09A1\u09BE\u09B0\u09C7\u09B0 items \u09A4\u09BE\u09B2\u09BF\u0995\u09BE \u09AA\u09BE\u0993\u09AF\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BFà¥¤</td></tr>';
 
     const photoSection = order.customerImageSignedUrl
       ? `<div class="customer-photo">
-          <h4>Customer-এর অতিরিক্ত ওষুধের ছবি</h4>
+          <h4>Customer-\u098F\u09B0 \u0985\u09A4\u09BF\u09B0\u09BF\u0995\u09CD\u09A4 \u0993\u09B7\u09C1\u09A7\u09C7\u09B0 \u099B\u09AC\u09BF</h4>
           <a href="${escapeHtml(order.customerImageSignedUrl)}" target="_blank" rel="noopener noreferrer">
             <img src="${escapeHtml(order.customerImageSignedUrl)}" alt="Customer uploaded medicine photo" loading="lazy">
           </a>
-          <a href="${escapeHtml(order.customerImageSignedUrl)}" target="_blank" rel="noopener noreferrer">ছবিটি বড় করে দেখুন ↗</a>
+          <a href="${escapeHtml(order.customerImageSignedUrl)}" target="_blank" rel="noopener noreferrer">\u099B\u09AC\u09BF\u099F\u09BF \u09AC\u09A1\u09BC \u0995\u09B0\u09C7 \u09A6\u09C7\u0996\u09C1\u09A8 â</a>
         </div>`
       : (order.customer_image_url
           ? `<div class="customer-photo">
-              <h4>Customer-এর অতিরিক্ত ওষুধের ছবি</h4>
-              <p class="photo-missing">ছবিটি খোলা যাচ্ছে না। Admin login এবং Storage SELECT policy পরীক্ষা করো।</p>
+              <h4>Customer-\u098F\u09B0 \u0985\u09A4\u09BF\u09B0\u09BF\u0995\u09CD\u09A4 \u0993\u09B7\u09C1\u09A7\u09C7\u09B0 \u099B\u09AC\u09BF</h4>
+              <p class="photo-missing">\u099B\u09AC\u09BF\u099F\u09BF \u0996\u09CB\u09B2\u09BE \u09AF\u09BE\u099A\u09CD\u099B\u09C7 \u09A8\u09BEà¥¤ Admin login \u098F\u09AC\u0982 Storage SELECT policy \u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE \u0995\u09B0\u09CBà¥¤</p>
             </div>`
           : "");
 
     return `<article class="order" data-order-id="${escapeHtml(order.id)}">
       <div class="row">
         <div>
-          <h3>অর্ডার #${escapeHtml(order.id)}</h3>
+          <h3>\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 #${escapeHtml(order.id)}</h3>
           <span class="muted">${escapeHtml(formatDate(order.created_at))}</span>
         </div>
         <span class="tag">${escapeHtml(status.toUpperCase())}</span>
@@ -423,23 +423,23 @@ function renderOrders(){
 
       <hr style="border:0;border-top:1px solid #e5ece7;margin:14px 0">
 
-      <p><b>অর্ডারকারীর নাম:</b> ${escapeHtml(order.customer_name || "-")}</p>
-      <p><b>ফার্মেসি:</b> ${escapeHtml(order.pharmacy_name || "-")}</p>
-      <p><b>ফোন:</b> ${escapeHtml(order.phone || "-")}</p>
-      <p><b>ঠিকানা:</b> ${escapeHtml(order.address || "-")}</p>
+      <p><b>\u0985\u09B0\u09CD\u09A1\u09BE\u09B0\u0995\u09BE\u09B0\u09C0\u09B0 \u09A8\u09BE\u09AE:</b> ${escapeHtml(order.customer_name || "-")}</p>
+      <p><b>\u09AB\u09BE\u09B0\u09CD\u09AE\u09C7\u09B8\u09BF:</b> ${escapeHtml(order.pharmacy_name || "-")}</p>
+      <p><b>\u09AB\u09CB\u09A8:</b> ${escapeHtml(order.phone || "-")}</p>
+      <p><b>\u09A0\u09BF\u0995\u09BE\u09A8\u09BE:</b> ${escapeHtml(order.address || "-")}</p>
 
       ${photoSection}
 
-      <h3>ওষুধের তালিকা</h3>
+      <h3>\u0993\u09B7\u09C1\u09A7\u09C7\u09B0 \u09A4\u09BE\u09B2\u09BF\u0995\u09BE</h3>
       <div class="tablewrap">
         <table>
           <thead>
             <tr>
-              <th>ওষুধ</th>
-              <th>কোম্পানি</th>
-              <th>প্যাকেজ ও পরিমাণ</th>
-              <th>একক দাম</th>
-              <th>মোট</th>
+              <th>\u0993\u09B7\u09C1\u09A7</th>
+              <th>\u0995\u09CB\u09AE\u09CD\u09AA\u09BE\u09A8\u09BF</th>
+              <th>\u09AA\u09CD\u09AF\u09BE\u0995\u09C7\u099C \u0993 \u09AA\u09B0\u09BF\u09AE\u09BE\u09A3</th>
+              <th>\u098F\u0995\u0995 \u09A6\u09BE\u09AE</th>
+              <th>\u09AE\u09CB\u099F</th>
             </tr>
           </thead>
           <tbody>${itemRows}</tbody>
@@ -447,9 +447,9 @@ function renderOrders(){
       </div>
 
       <div class="row" style="margin-top:14px">
-        <b>অর্ডারের মোট: ${money(order.total_amount)}</b>
+        <b>\u0985\u09B0\u09CD\u09A1\u09BE\u09B0\u09C7\u09B0 \u09AE\u09CB\u099F: ${money(order.total_amount)}</b>
         <div class="actions no-print">
-          <select class="status-select" aria-label="অর্ডারের Status">
+          <select class="status-select" aria-label="\u0985\u09B0\u09CD\u09A1\u09BE\u09B0\u09C7\u09B0 Status">
             <option value="pending" ${status==="pending"?"selected":""}>Pending</option>
             <option value="confirmed" ${status==="confirmed"?"selected":""}>Confirmed</option>
             <option value="processing" ${status==="processing"?"selected":""}>Processing</option>
@@ -490,14 +490,14 @@ async function updateStatus(button){
 
     if(!data){
       throw new Error(
-        "কোনো row update হয়নি। Admin UPDATE policy এবং RLS পরীক্ষা করো।"
+        "\u0995\u09CB\u09A8\u09CB row update \u09B9\u09AF\u09BC\u09A8\u09BFà¥¤ Admin UPDATE policy \u098F\u09AC\u0982 RLS \u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE \u0995\u09B0\u09CBà¥¤"
       );
     }
 
-    alert("স্ট্যাটাস আপডেট হয়েছে: " + status.toUpperCase());
+    alert("\u09B8\u09CD\u099F\u09CD\u09AF\u09BE\u099F\u09BE\u09B8 \u0986\u09AA\u09A1\u09C7\u099F \u09B9\u09AF\u09BC\u09C7\u099B\u09C7: " + status.toUpperCase());
     await loadOrders();
   }catch(error){
-    alert("স্ট্যাটাস পরিবর্তন হয়নি: " + error.message);
+    alert("\u09B8\u09CD\u099F\u09CD\u09AF\u09BE\u099F\u09BE\u09B8 \u09AA\u09B0\u09BF\u09AC\u09B0\u09CD\u09A4\u09A8 \u09B9\u09AF\u09BC\u09A8\u09BF: " + error.message);
   }finally{
     button.disabled = false;
     button.textContent = originalText;
@@ -511,14 +511,14 @@ async function deleteOrder(button){
   const id = card.dataset.orderId;
 
   const confirmed = confirm(
-    `সতর্কতা!\n\nঅর্ডার #${id} স্থায়ীভাবে ডিলিট করতে চাও?\n\nএই কাজ ফিরিয়ে আনা যাবে না।`
+    `\u09B8\u09A4\u09B0\u09CD\u0995\u09A4\u09BE!\n\n\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 #${id} \u09B8\u09CD\u09A5\u09BE\u09AF\u09BC\u09C0\u09AD\u09BE\u09AC\u09C7 \u09A1\u09BF\u09B2\u09BF\u099F \u0995\u09B0\u09A4\u09C7 \u099A\u09BE\u0993?\n\n\u098F\u0987 \u0995\u09BE\u099C \u09AB\u09BF\u09B0\u09BF\u09AF\u09BC\u09C7 \u0986\u09A8\u09BE \u09AF\u09BE\u09AC\u09C7 \u09A8\u09BEà¥¤`
   );
 
   if(!confirmed) return;
 
   button.disabled = true;
   const originalText = button.textContent;
-  button.textContent = "ডিলিট হচ্ছে...";
+  button.textContent = "\u09A1\u09BF\u09B2\u09BF\u099F \u09B9\u099A\u09CD\u099B\u09C7...";
 
   try{
     const { data, error } = await db
@@ -532,17 +532,17 @@ async function deleteOrder(button){
 
     if(!data){
       throw new Error(
-        "অর্ডার ডিলিট হয়নি। Admin DELETE/SELECT policy এবং RLS পরীক্ষা করো।"
+        "\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u09A1\u09BF\u09B2\u09BF\u099F \u09B9\u09AF\u09BC\u09A8\u09BFà¥¤ Admin DELETE/SELECT policy \u098F\u09AC\u0982 RLS \u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE \u0995\u09B0\u09CBà¥¤"
       );
     }
 
     orders = orders.filter(order => String(order.id) !== String(id));
     renderOrders();
 
-    alert(`অর্ডার #${id} সফলভাবে ডিলিট হয়েছে।`);
+    alert(`\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 #${id} \u09B8\u09AB\u09B2\u09AD\u09BE\u09AC\u09C7 \u09A1\u09BF\u09B2\u09BF\u099F \u09B9\u09AF\u09BC\u09C7\u099B\u09C7à¥¤`);
   }catch(error){
     console.error("Order delete failed:", error);
-    alert("অর্ডার ডিলিট করা যায়নি:\n" + error.message);
+    alert("\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u09A1\u09BF\u09B2\u09BF\u099F \u0995\u09B0\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BF:\n" + error.message);
   }finally{
     button.disabled = false;
     button.textContent = originalText;
@@ -557,7 +557,7 @@ function printReceipt(button){
   const order = orders.find(item => String(item.id) === String(id));
 
   if(!order){
-    alert("অর্ডার পাওয়া যায়নি। Refresh করে আবার চেষ্টা করো।");
+    alert("\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u09AA\u09BE\u0993\u09AF\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BFà¥¤ Refresh \u0995\u09B0\u09C7 \u0986\u09AC\u09BE\u09B0 \u099A\u09C7\u09B7\u09CD\u099F\u09BE \u0995\u09B0\u09CBà¥¤");
     return;
   }
 
@@ -566,10 +566,10 @@ function printReceipt(button){
   const rows = items.map(item => {
     const qty = Number(item.quantity ?? item.qty ?? 0);
     const price = Number(item.unit_price ?? item.price ?? item.sale_price ?? 0);
-    const packageType = item.package_type === "strip" ? "Strip" : "Box";
+    const packageType = item.package_label || (item.package_type === "strip" ? "Strip" : "Box");
 
     return `<tr>
-      <td>${escapeHtml(item.name || item.medicine_name || item.product_name || "ওষুধ")}</td>
+      <td>${escapeHtml(item.name || item.medicine_name || item.product_name || "\u0993\u09B7\u09C1\u09A7")}</td>
       <td>${escapeHtml(item.company || item.company_name || "-")}</td>
       <td><span class="package-tag">${qty} ${packageType}</span></td>
       <td>${money(price)} / ${packageType}</td>
@@ -580,7 +580,7 @@ function printReceipt(button){
   const w = window.open("", "_blank", "width=850,height=700");
 
   if(!w){
-    alert("Receipt খুলতে browser popup allow করো।");
+    alert("Receipt \u0996\u09C1\u09B2\u09A4\u09C7 browser popup allow \u0995\u09B0\u09CBà¥¤");
     return;
   }
 
@@ -614,20 +614,20 @@ function printReceipt(button){
       <div><b>Order ID:</b> #${escapeHtml(order.id)}<br><b>Order Date:</b> ${escapeHtml(formatDate(order.created_at))}</div>
       <div><b>Status:</b> ${escapeHtml(String(order.status || "pending").toUpperCase())}</div>
     </div>
-    <h2>অর্ডারকারীর তথ্য</h2>
+    <h2>\u0985\u09B0\u09CD\u09A1\u09BE\u09B0\u0995\u09BE\u09B0\u09C0\u09B0 \u09A4\u09A5\u09CD\u09AF</h2>
     <div class="info">
-      <p><b>নাম:</b> ${escapeHtml(order.customer_name || "-")}</p>
-      <p><b>ফার্মেসির নাম:</b> ${escapeHtml(order.pharmacy_name || "-")}</p>
-      <p><b>মোবাইল:</b> ${escapeHtml(order.phone || "-")}</p>
-      <p><b>ঠিকানা:</b> ${escapeHtml(order.address || "-")}</p>
+      <p><b>\u09A8\u09BE\u09AE:</b> ${escapeHtml(order.customer_name || "-")}</p>
+      <p><b>\u09AB\u09BE\u09B0\u09CD\u09AE\u09C7\u09B8\u09BF\u09B0 \u09A8\u09BE\u09AE:</b> ${escapeHtml(order.pharmacy_name || "-")}</p>
+      <p><b>\u09AE\u09CB\u09AC\u09BE\u0987\u09B2:</b> ${escapeHtml(order.phone || "-")}</p>
+      <p><b>\u09A0\u09BF\u0995\u09BE\u09A8\u09BE:</b> ${escapeHtml(order.address || "-")}</p>
     </div>
-    <h2>অর্ডার করা পণ্য</h2>
+    <h2>\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u0995\u09B0\u09BE \u09AA\u09A3\u09CD\u09AF</h2>
     <table>
-      <thead><tr><th>পণ্যের নাম</th><th>কোম্পানি</th><th>প্যাকেজ ও পরিমাণ</th><th>একক মূল্য</th><th>মোট</th></tr></thead>
-      <tbody>${rows || '<tr><td colspan="5">এই অর্ডারের পণ্যের বিস্তারিত সংরক্ষিত নেই।</td></tr>'}</tbody>
+      <thead><tr><th>\u09AA\u09A3\u09CD\u09AF\u09C7\u09B0 \u09A8\u09BE\u09AE</th><th>\u0995\u09CB\u09AE\u09CD\u09AA\u09BE\u09A8\u09BF</th><th>\u09AA\u09CD\u09AF\u09BE\u0995\u09C7\u099C \u0993 \u09AA\u09B0\u09BF\u09AE\u09BE\u09A3</th><th>\u098F\u0995\u0995 \u09AE\u09C2\u09B2\u09CD\u09AF</th><th>\u09AE\u09CB\u099F</th></tr></thead>
+      <tbody>${rows || '<tr><td colspan="5">\u098F\u0987 \u0985\u09B0\u09CD\u09A1\u09BE\u09B0\u09C7\u09B0 \u09AA\u09A3\u09CD\u09AF\u09C7\u09B0 \u09AC\u09BF\u09B8\u09CD\u09A4\u09BE\u09B0\u09BF\u09A4 \u09B8\u0982\u09B0\u0995\u09CD\u09B7\u09BF\u09A4 \u09A8\u09C7\u0987à¥¤</td></tr>'}</tbody>
     </table>
-    <div class="total">সর্বমোট: ${money(order.total_amount)}</div>
-    <p class="muted">এই রসিদটি Medispot BD অর্ডার রেকর্ড থেকে তৈরি।</p>
+    <div class="total">\u09B8\u09B0\u09CD\u09AC\u09AE\u09CB\u099F: ${money(order.total_amount)}</div>
+    <p class="muted">\u098F\u0987 \u09B0\u09B8\u09BF\u09A6\u099F\u09BF Medispot BD \u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u09B0\u09C7\u0995\u09B0\u09CD\u09A1 \u09A5\u09C7\u0995\u09C7 \u09A4\u09C8\u09B0\u09BFà¥¤</p>
     <button class="print" onclick="window.print()">Print / Save as PDF</button>
   </body>
   </html>`);
@@ -637,7 +637,7 @@ function printReceipt(button){
 
 async function enableNotifications(){
   if(!("Notification" in window)){
-    alert("এই ব্রাউজারে সাধারণ Browser Notification সমর্থিত নয়।");
+    alert("\u098F\u0987 \u09AC\u09CD\u09B0\u09BE\u0989\u099C\u09BE\u09B0\u09C7 \u09B8\u09BE\u09A7\u09BE\u09B0\u09A3 Browser Notification \u09B8\u09AE\u09B0\u09CD\u09A5\u09BF\u09A4 \u09A8\u09AF\u09BCà¥¤");
     return;
   }
 
@@ -646,20 +646,20 @@ async function enableNotifications(){
     notificationPermissionAsked = true;
 
     if(permission === "granted"){
-      alert("Browser Notification অনুমতি দেওয়া হয়েছে। নতুন অর্ডারের Notification পেতে Dashboard খোলা রাখতে হবে।");
+      alert("Browser Notification \u0985\u09A8\u09C1\u09AE\u09A4\u09BF \u09A6\u09C7\u0993\u09AF\u09BC\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7à¥¤ \u09A8\u09A4\u09C1\u09A8 \u0985\u09B0\u09CD\u09A1\u09BE\u09B0\u09C7\u09B0 Notification \u09AA\u09C7\u09A4\u09C7 Dashboard \u0996\u09CB\u09B2\u09BE \u09B0\u09BE\u0996\u09A4\u09C7 \u09B9\u09AC\u09C7à¥¤");
     }else{
-      alert("Notification অনুমতি দেওয়া হয়নি। Browser বা device settings-এ অনুমতি পরীক্ষা করো।");
+      alert("Notification \u0985\u09A8\u09C1\u09AE\u09A4\u09BF \u09A6\u09C7\u0993\u09AF\u09BC\u09BE \u09B9\u09AF\u09BC\u09A8\u09BFà¥¤ Browser \u09AC\u09BE device settings-\u098F \u0985\u09A8\u09C1\u09AE\u09A4\u09BF \u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE \u0995\u09B0\u09CBà¥¤");
     }
   }catch(error){
-    alert("Notification চালু করা যায়নি: " + error.message);
+    alert("Notification \u099A\u09BE\u09B2\u09C1 \u0995\u09B0\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BF: " + error.message);
   }
 }
 
 function subscribeOrders(){
-  // একই Dashboard-এ একাধিক channel তৈরি হওয়া আটকাও।
+  // \u098F\u0995\u0987 Dashboard-\u098F \u098F\u0995\u09BE\u09A7\u09BF\u0995 channel \u09A4\u09C8\u09B0\u09BF \u09B9\u0993\u09AF\u09BC\u09BE \u0986\u099F\u0995\u09BE\u0993à¥¤
   if(ordersChannel) return;
 
-  setConnectionStatus("Realtime সংযোগ হচ্ছে...", true);
+  setConnectionStatus("Realtime \u09B8\u0982\u09AF\u09CB\u0997 \u09B9\u099A\u09CD\u099B\u09C7...", true);
 
   ordersChannel = db
     .channel("orders-dashboard")
@@ -676,13 +676,13 @@ function subscribeOrders(){
 
         if(id !== undefined && id !== null){
           showBrowserNotification(
-            "Medispot BD: নতুন অর্ডার",
-            "অর্ডার #" + id + " এসেছে।",
+            "Medispot BD: \u09A8\u09A4\u09C1\u09A8 \u0985\u09B0\u09CD\u09A1\u09BE\u09B0",
+            "\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 #" + id + " \u098F\u09B8\u09C7\u099B\u09C7à¥¤",
             id
           );
         }
 
-        // নতুন অর্ডার তালিকায় দেখানোর জন্য পুনরায় লোড।
+        // \u09A8\u09A4\u09C1\u09A8 \u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u09A4\u09BE\u09B2\u09BF\u0995\u09BE\u09AF\u09BC \u09A6\u09C7\u0996\u09BE\u09A8\u09CB\u09B0 \u099C\u09A8\u09CD\u09AF \u09AA\u09C1\u09A8\u09B0\u09BE\u09AF\u09BC \u09B2\u09CB\u09A1à¥¤
         loadOrders();
       }
     )
@@ -690,13 +690,13 @@ function subscribeOrders(){
       console.log("Orders Realtime status:", status);
 
       if(status === "SUBSCRIBED"){
-        setConnectionStatus("Realtime সংযুক্ত");
+        setConnectionStatus("Realtime \u09B8\u0982\u09AF\u09C1\u0995\u09CD\u09A4");
       }else if(status === "CHANNEL_ERROR"){
-        setConnectionStatus("Realtime সংযোগে সমস্যা", true);
+        setConnectionStatus("Realtime \u09B8\u0982\u09AF\u09CB\u0997\u09C7 \u09B8\u09AE\u09B8\u09CD\u09AF\u09BE", true);
       }else if(status === "TIMED_OUT"){
-        setConnectionStatus("Realtime timeout — Refresh করো", true);
+        setConnectionStatus("Realtime timeout â Refresh \u0995\u09B0\u09CB", true);
       }else if(status === "CLOSED"){
-        setConnectionStatus("Realtime বন্ধ", true);
+        setConnectionStatus("Realtime \u09AC\u09A8\u09CD\u09A7", true);
       }else{
         setConnectionStatus("Realtime: " + status, true);
       }
@@ -722,7 +722,7 @@ db.auth.getSession().then(async ({ data, error }) => {
   }
 });
 
-// লগইন অন্য ট্যাব থেকে শেষ হলে বা session শেষ হলে UI আপডেট।
+// \u09B2\u0997\u0987\u09A8 \u0985\u09A8\u09CD\u09AF \u099F\u09CD\u09AF\u09BE\u09AC \u09A5\u09C7\u0995\u09C7 \u09B6\u09C7\u09B7 \u09B9\u09B2\u09C7 \u09AC\u09BE session \u09B6\u09C7\u09B7 \u09B9\u09B2\u09C7 UI \u0986\u09AA\u09A1\u09C7\u099Fà¥¤
 db.auth.onAuthStateChange((event, session) => {
   if(event === "SIGNED_OUT"){
     stopOrderSubscription();
