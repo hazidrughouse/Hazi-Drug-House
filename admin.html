@@ -129,7 +129,7 @@ main{max-width:1500px;margin:0 auto;padding:24px 26px}.card{background:var(--whi
         <input id="category" placeholder="Category">
       </div>
       <div>
-        <label for="price">MRP / Regular Price (৳) *</label>
+        <label for="price" id="priceLabel">MRP / Regular Price (৳) *</label>
         <input id="price" type="number" min="0.01" step="0.01" placeholder="যেমন 980" required>
       </div>
     </div>
@@ -153,7 +153,7 @@ main{max-width:1500px;margin:0 auto;padding:24px 26px}.card{background:var(--whi
     </p>
     <div class="grid">
       <div>
-        <label for="unitType">ছোট ইউনিটের ধরন (Tablet/Capsule = Strip, Syrup = Bottle, Cream = Tube)</label><select id="unitType"><option value="strip">Strip (Tablet / Capsule)</option><option value="bottle">Bottle (Syrup)</option><option value="tube">Tube (Cream / Ointment)</option></select><div class="grid"><div><label for="stripsPerBox" id="stripsPerBoxLabel">এক Box-এ Strip</label><input id="stripsPerBox" type="number" min="1" step="1" value="10" placeholder="যেমন 10"></div><div><label for="stripPrice" id="stripPriceLabel">প্রতি Strip-এর MRP (৳)</label><input id="stripPrice" type="number" min="0" step="0.01" value="0" placeholder="Strip price"></div></div><label for="stripDiscount" id="stripDiscountLabel">Strip Discount (%)</label><input id="stripDiscount" type="number" min="0" max="100" step="any" value="0"><p class="small">Strip price 0 থাকলে Box-এর বিক্রয়মূল্য ÷ Strip সংখ্যা অনুযায়ী দাম হিসাব হবে।</p><label for="stock">Stock (পরিমাণ)</label>
+        <label for="unitType">ছোট ইউনিটের ধরন (Tablet/Capsule = Strip, Syrup = Bottle, Cream = Tube)</label><select id="unitType"><option value="strip">Strip (Tablet / Capsule)</option><option value="bottle">Bottle (Syrup)</option><option value="tube">Tube (Cream / Ointment)</option></select><div id="stripFields"><div class="grid"><div><label for="stripsPerBox" id="stripsPerBoxLabel">এক Box-এ Strip</label><input id="stripsPerBox" type="number" min="1" step="1" value="10" placeholder="যেমন 10"></div><div><label for="stripPrice" id="stripPriceLabel">প্রতি Strip-এর MRP (৳)</label><input id="stripPrice" type="number" min="0" step="0.01" value="0" placeholder="Strip price"></div></div><label for="stripDiscount" id="stripDiscountLabel">Strip Discount (%)</label><input id="stripDiscount" type="number" min="0" max="100" step="any" value="0"><p class="small">Strip price 0 থাকলে Box-এর বিক্রয়মূল্য ÷ Strip সংখ্যা অনুযায়ী দাম হিসাব হবে।</p></div><label for="stock">Stock (পরিমাণ)</label>
         <input id="stock" type="number" min="0" step="1" value="0" placeholder="Stock">
       </div>
       <div>
@@ -467,6 +467,9 @@ document.getElementById("medicineForm").addEventListener("submit", async e => {
 function updateUnitLabels() {
   const t = document.getElementById("unitType").value;
   const n = t === "bottle" ? "Bottle" : (t === "tube" ? "Tube" : "Strip");
+  const single = t === "bottle" || t === "tube";
+  document.getElementById("stripFields").style.display = single ? "none" : "";
+  document.getElementById("priceLabel").textContent = single ? "প্রতি " + n + "-এর MRP (৳) *" : "MRP / Regular Price (৳) *";
   document.getElementById("stripsPerBoxLabel").textContent = "এক Box-এ " + n;
   document.getElementById("stripPriceLabel").textContent = "প্রতি " + n + "-এর MRP (৳)";
   document.getElementById("stripDiscountLabel").textContent = n + " Discount (%)";
