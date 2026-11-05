@@ -805,7 +805,7 @@ body.cart-open{overflow:hidden}
       cartItemsEl.innerHTML = cart.map(item => {
         const product = allProducts.find(p => String(p.id) === String(item.medicine_id));
         const discountPercent = product
-          ? (item.package_type === "strip"
+          ? ((item.package_type === "strip" && !isSingleUnit(product))
               ? Math.max(0, Math.min(100, Number(product.strip_discount_percent) || 0))
               : Math.max(0, Math.min(100, Number(getPrices(product).discount) || 0)))
           : Math.max(0, Math.min(100, Number(item.discount_percent) || 0));
@@ -967,9 +967,11 @@ body.cart-open{overflow:hidden}
 
   const UNIT_NAMES = {strip:"Strip", bottle:"Bottle", tube:"Tube"};
   function unitName(product){ return UNIT_NAMES[product && product.unit_type] || "Strip"; }
+  function isSingleUnit(p){ return !!p && (p.unit_type==="bottle" || p.unit_type==="tube"); }
   function unitIcon(product){ const t = product && product.unit_type; return t==="bottle" ? "🧴" : (t==="tube" ? "🧴" : "💊"); }
   function packagePrices(product){
     const box = getPrices(product).finalPrice;
+    if (isSingleUnit(product)) return {box:0, strip:(box>0?box:null), perBox:1};
     const perBox = Math.max(1, Number(product.strips_per_box || 1));
     const stripBase = Number(product.strip_price || 0);
     const stripDiscount = Math.max(0,Math.min(100,Number(product.strip_discount_percent || 0)));
@@ -980,7 +982,8 @@ body.cart-open{overflow:hidden}
     if(!packageChoiceProduct)return;
     const prices=packagePrices(packageChoiceProduct);
     const boxDiscount=Math.max(0,Math.min(100,Number(getPrices(packageChoiceProduct).discount)||0));
-    const stripDiscount=Math.max(0,Math.min(100,Number(packageChoiceProduct.strip_discount_percent)||0));
+    const single=isSingleUnit(packageChoiceProduct);
+    const stripDiscount=single?boxDiscount:Math.max(0,Math.min(100,Number(packageChoiceProduct.strip_discount_percent)||0));
     document.getElementById("packageBoxDiscount").textContent=boxDiscount>0?boxDiscount.toLocaleString("en-US",{maximumFractionDigits:2})+"% ছাড়":"";
     document.getElementById("packageStripDiscount").textContent=stripDiscount>0?stripDiscount.toLocaleString("en-US",{maximumFractionDigits:2})+"% ছাড়":"";
     document.getElementById("packageBoxPrice").textContent=prices.box>0?packageMoney(prices.box)+" / Box":"দাম দেওয়া নেই";
@@ -994,7 +997,10 @@ body.cart-open{overflow:hidden}
   }
   function openPackageChoice(product,qty=1){
     packageChoiceProduct=product;packageChoiceQty=Math.max(1,Math.min(999,Math.floor(Number(qty)||1)));
-    packageChoiceType="box";
+    const single=isSingleUnit(product);
+    packageChoiceType=single?"strip":"box";
+    document.querySelector('.package-choice-option[data-package="box"]').style.display=single?"none":"";
+    document.querySelector('.package-choice-option[data-package="strip"]').style.gridColumn=single?"1 / -1":"";
     document.getElementById("packageChoiceMedicine").textContent=String(product.name||"ওষুধ")+" · "+String(product.company||"");
     packageChoiceInput.value=packageChoiceQty;
     const pp=packagePrices(product);
@@ -1021,6 +1027,7 @@ body.cart-open{overflow:hidden}
   function convertCompleteStripQuantity(stripItem) {
     const product = allProducts.find(p => String(p.id) === String(stripItem.medicine_id));
     if (!product) return;
+    if (isSingleUnit(product)) return;
     const prices = packagePrices(product);
     const perBox = Math.max(1, Number(stripItem.strips_per_box || prices.perBox || 1));
     const fullBoxes = Math.floor(stripItem.quantity / perBox);
@@ -1037,7 +1044,7 @@ body.cart-open{overflow:hidden}
     const medicineId=String(product.id);
     const id=medicineId+"-"+packageType;
     const packageLabel=packageType==="strip"?unitName(product):"Box";
-    const discountPercent=packageType==="strip"
+    const discountPercent=(packageType==="strip" && !isSingleUnit(product))
       ? Math.max(0,Math.min(100,Number(product.strip_discount_percent)||0))
       : Math.max(0,Math.min(100,Number(getPrices(product).discount)||0));
     const existing=cart.find(item=>item.id===id);
@@ -1062,6 +1069,13 @@ body.cart-open{overflow:hidden}
   function addToCart(product, qty = 1, packageType = "box") {
     const prices=packagePrices(product);
     const amount=Math.max(1,Math.min(999,Math.floor(Number(qty))||1));
+    if(isSingleUnit(product)) {
+      if(!(prices.strip>0)){alert("এই ওষুধের দাম দেওয়া নেই।");return;}
+      addCartLine(product,amount,"strip",prices.strip,1);
+      renderCart();checkoutMessage.textContent="";
+      showPremiumToast(String(product.name||"ওষুধ")+" · "+amount+" "+unitName(product));
+      return;
+    }
     if(packageType==="strip") {
       if(!(prices.strip>0)){alert("এই ওষুধের "+unitName(product)+" বিক্রয়মূল্য দেওয়া নেই।");return;}
       // পূর্ণ Strip-এর সংখ্যা Box-এর সমান হলে Box price/discount প্রযোজ্য।
@@ -1257,7 +1271,7 @@ body.cart-open{overflow:hidden}
           strength,
           price:row.price,
           discount_percent:Number(row.discount_percent) || 0,
-          unit:"প্রতি বক্স",
+          unit:(row.unit_type==="bottle"?"প্রতি Bottle":(row.unit_type==="tube"?"প্রতি Tube":"প্রতি বক্স")),
           image_url:row.image_url || "",
           category:row.category || "",
           stock:row.stock,
