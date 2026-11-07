@@ -36,6 +36,35 @@ header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid 
 .login-btn{display:flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:24px;padding:10px 20px;color:var(--text);text-decoration:none;font-weight:600;background:#fff}
 .login-btn:hover{background:var(--light)}
 
+
+
+/* Updated compact header: no HDH mark, always-visible search shortcut */
+.navbar{grid-template-columns:minmax(0,1fr) auto auto;gap:12px}
+.brand{min-width:0}
+.brand-name{font-size:24px;white-space:nowrap}
+.brand-subtitle{font-size:13px;white-space:nowrap}
+.nav-actions{gap:10px}
+.header-account-btn,.header-search-btn{
+  width:44px;height:44px;flex:0 0 44px;display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--border);border-radius:50%;background:#fff;color:var(--green);padding:0;
+}
+.header-account-btn span{display:none}
+.header-search-btn:hover{background:var(--light)}
+@media(max-width:850px){
+  .navbar{grid-template-columns:minmax(0,1fr) auto;gap:8px}
+  .nav-actions{gap:7px}
+  .brand-name{font-size:20px}
+  .brand-subtitle{font-size:11px}
+  .header-account-btn,.header-search-btn,.cart-icon-btn{width:40px;height:40px;flex-basis:40px}
+  .cart-icon-btn svg{width:23px;height:23px}
+}
+@media(max-width:390px){
+  .brand-name{font-size:17px}
+  .brand-subtitle{font-size:10px}
+  .nav-actions{gap:5px}
+  .header-account-btn,.header-search-btn,.cart-icon-btn{width:36px;height:36px;flex-basis:36px}
+}
+
 /* Hero */
 .hero2{position:relative;background:radial-gradient(circle at 88% 20%,#c4ebd8 0,transparent 38%),linear-gradient(100deg,#dcf2e8 0%,#eaf8f2 55%,#d3eee0 100%);padding:34px 0 34px;overflow:hidden}
 .hero2 .container{position:relative}
@@ -383,7 +412,6 @@ body.cart-open{overflow:hidden}
 <header>
   <div class="container navbar">
     <a class="brand" href="#">
-      <span class="brand-mark">HDH</span>
       <div>
         <div class="brand-name">Hazi Drug House</div>
         <div class="brand-subtitle">Medicine Marketplace</div>
@@ -395,13 +423,17 @@ body.cart-open{overflow:hidden}
       <a href="#" data-open-cart>অর্ডার</a>
     </nav>
     <div class="nav-actions">
+      <button class="login-btn header-account-btn" id="accountBtn" type="button" aria-label="একাউন্ট">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+        <span id="accountLabel">লগইন</span>
+      </button>
+      <button class="header-search-btn" id="headerSearchBtn" type="button" aria-label="ওষুধ সার্চ করুন" title="ওষুধ সার্চ করুন">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </button>
       <button class="cart-icon-btn" id="cartOpenBtn" type="button" aria-label="কার্ট দেখুন">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.7 12.4a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6"/></svg>
         <span class="cart-badge" id="cartCount">0</span>
       </button>
-      <button class="login-btn" id="accountBtn" type="button" aria-label="একাউন্ট">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
-        <span id="accountLabel">লগইন</span></button>
     </div>
   </div>
 </header>
@@ -1211,6 +1243,13 @@ body.cart-open{overflow:hidden}
     selectedCompany = button.dataset.company;
     renderCompanyFilters();
     renderProducts();
+  });
+
+  // Header search stays available while scrolling; tap it to jump to and focus the existing search.
+  document.getElementById("headerSearchBtn").addEventListener("click", () => {
+    const searchSection = document.querySelector(".hero2");
+    if (searchSection) searchSection.scrollIntoView({behavior:"smooth", block:"start"});
+    window.setTimeout(() => searchInput.focus({preventScroll:true}), 350);
   });
 
   searchInput.addEventListener("input", renderProducts);
