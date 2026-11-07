@@ -3,21 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hazi Drug House | Wholesale Medicine Marketplace</title>
+<title>Hazi Drug House | Medicine Marketplace</title>
 <meta name="description" content="Hazi Drug House — ফার্মেসির জন্য ওষুধ খোঁজা ও পাইকারি দামের তথ্য পাওয়ার সহজ প্ল্যাটফর্ম।">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-:root{--green:#142B4A;--dark:#0B1E36;--light:#EAF0F7;--text:#172437;--muted:#68778A;--bg:#F5F7FB;--border:#DCE4EF;--gold:#C9A44C;--gold-soft:#F8F1DF;--shadow:0 14px 32px rgba(20,43,74,.14)}
+:root{--green:#0b6b4f;--dark:#064c37;--light:#e6f4ee;--text:#10261e;--muted:#667a70;--bg:#f4f9f7;--border:#dcebe4;--shadow:0 14px 32px rgba(11,107,79,.14)}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:"Hind Siliguri","Noto Sans Bengali",-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#fff;color:var(--text);line-height:1.5;-webkit-font-smoothing:antialiased}
 button,input,textarea{font:inherit}
 button{cursor:pointer}
 button:disabled{opacity:.6;cursor:not-allowed}
-:focus-visible{outline:3px solid #C9A44C;outline-offset:2px}
+:focus-visible{outline:3px solid #7fd6b4;outline-offset:2px}
 .container{width:min(1160px,92%);margin:auto}
 
 /* Header */
@@ -26,7 +26,7 @@ header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid 
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--green)}
 .brand-mark{font-size:36px;font-weight:800;letter-spacing:-2px;line-height:1;color:var(--green)}
 .brand-name{font-size:24px;font-weight:700;color:var(--green);line-height:1.1}
-.brand-subtitle{color:#536F95;font-size:13px;letter-spacing:.3px}
+.brand-subtitle{color:#2f8a6e;font-size:13px;letter-spacing:.3px}
 .nav-menu{display:flex;gap:44px}
 .nav-menu a{text-decoration:none;color:var(--text);font-weight:600;font-size:17px;padding:10px 4px;border-bottom:3px solid transparent}
 .nav-menu a.active,.nav-menu a:hover{color:var(--green);border-color:var(--green)}
@@ -36,12 +36,41 @@ header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid 
 .login-btn{display:flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:24px;padding:10px 20px;color:var(--text);text-decoration:none;font-weight:600;background:#fff}
 .login-btn:hover{background:var(--light)}
 
+
+
+/* Updated compact header: no HDH mark, always-visible search shortcut */
+.navbar{grid-template-columns:minmax(0,1fr) auto auto;gap:12px}
+.brand{min-width:0}
+.brand-name{font-size:24px;white-space:nowrap}
+.brand-subtitle{font-size:13px;white-space:nowrap}
+.nav-actions{gap:10px}
+.header-account-btn,.header-search-btn{
+  width:44px;height:44px;flex:0 0 44px;display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--border);border-radius:50%;background:#fff;color:var(--green);padding:0;
+}
+.header-account-btn span{display:none}
+.header-search-btn:hover{background:var(--light)}
+@media(max-width:850px){
+  .navbar{grid-template-columns:minmax(0,1fr) auto;gap:8px}
+  .nav-actions{gap:7px}
+  .brand-name{font-size:20px}
+  .brand-subtitle{font-size:11px}
+  .header-account-btn,.header-search-btn,.cart-icon-btn{width:40px;height:40px;flex-basis:40px}
+  .cart-icon-btn svg{width:23px;height:23px}
+}
+@media(max-width:390px){
+  .brand-name{font-size:17px}
+  .brand-subtitle{font-size:10px}
+  .nav-actions{gap:5px}
+  .header-account-btn,.header-search-btn,.cart-icon-btn{width:36px;height:36px;flex-basis:36px}
+}
+
 /* Hero */
-.hero2{position:relative;background:radial-gradient(circle at 88% 20%,#EAF0F7 0,transparent 38%),linear-gradient(100deg,#EAF0F7 0%,#F7F9FC 55%,#E2EAF4 100%);padding:34px 0 34px;overflow:hidden}
+.hero2{position:relative;background:radial-gradient(circle at 88% 20%,#c4ebd8 0,transparent 38%),linear-gradient(100deg,#dcf2e8 0%,#eaf8f2 55%,#d3eee0 100%);padding:34px 0 34px;overflow:hidden}
 .hero2 .container{position:relative}
-.hero2 h1{position:relative;z-index:2;font-size:clamp(32px,4.4vw,54px);line-height:1.3;font-weight:700;color:#142B4A;max-width:560px}
+.hero2 h1{position:relative;z-index:2;font-size:clamp(32px,4.4vw,54px);line-height:1.3;font-weight:700;color:#0b4a36;max-width:560px}
 .hero2 p{position:relative;z-index:2;margin-top:14px;font-size:20px;line-height:1.7;color:#264a3c;max-width:480px}
-.hero-search{position:relative;z-index:3;margin-top:0;display:flex;align-items:center;background:#fff;border-radius:18px;padding:8px;box-shadow:0 14px 38px rgba(20,43,74,.20);max-width:940px}
+.hero-search{position:relative;z-index:3;margin-top:0;display:flex;align-items:center;background:#fff;border-radius:18px;padding:8px;box-shadow:0 14px 38px rgba(11,107,79,.2);max-width:940px}
 .hero-cat{display:flex;align-items:center;gap:10px;padding:0 18px;border-right:1px solid var(--border);color:var(--green)}
 .hero-cat select{appearance:none;-webkit-appearance:none;border:0;background:transparent;font-weight:600;font-size:16px;color:var(--text);padding:14px 22px 14px 0;outline:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%2310261e' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='m1 1 5 5 5-5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right center}
 .hero-search input{flex:1;min-width:0;border:0;outline:0;background:transparent;padding:14px 18px;font-size:16px;color:var(--text)}
@@ -50,27 +79,27 @@ header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid 
 
 /* Features */
 .features{padding:20px 0 6px}
-.features-grid{display:grid;grid-template-columns:repeat(4,1fr);background:#F3F6FB;border:1px solid #DCE4EF;border-radius:16px;padding:26px 10px}
-.feature{text-align:center;padding:4px 18px;border-left:1px solid #DCE4EF}
+.features-grid{display:grid;grid-template-columns:repeat(4,1fr);background:#eef8f4;border:1px solid #e0efe8;border-radius:16px;padding:26px 10px}
+.feature{text-align:center;padding:4px 18px;border-left:1px solid #d3e8de}
 .feature:first-child{border-left:0}
 .feature svg{width:42px;height:42px;color:var(--green)}
 .feature strong{display:block;color:var(--green);font-size:17px;margin-top:10px}
 .feature span{display:block;color:var(--muted);font-size:14px;margin-top:3px}
 
 /* Light header */
-header{background-color:#F6F8FC;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='42' height='42'%3E%3Cg stroke='%23142B4A' stroke-opacity='.09' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M21 15v12M15 21h12'/%3E%3C/g%3E%3Cg fill='%23142B4A' fill-opacity='.08'%3E%3Ccircle cx='0' cy='0' r='1.3'/%3E%3Ccircle cx='42' cy='0' r='1.3'/%3E%3Ccircle cx='0' cy='42' r='1.3'/%3E%3Ccircle cx='42' cy='42' r='1.3'/%3E%3C/g%3E%3C/svg%3E");background-size:42px 42px;background-position:0 0;border-bottom:1px solid #DCE4EF;box-shadow:none}
+header{background-color:#f3fbf7;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='42' height='42'%3E%3Cg stroke='%230b6b4f' stroke-opacity='.09' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M21 15v12M15 21h12'/%3E%3C/g%3E%3Cg fill='%230b6b4f' fill-opacity='.08'%3E%3Ccircle cx='0' cy='0' r='1.3'/%3E%3Ccircle cx='42' cy='0' r='1.3'/%3E%3Ccircle cx='0' cy='42' r='1.3'/%3E%3Ccircle cx='42' cy='42' r='1.3'/%3E%3C/g%3E%3C/svg%3E");background-size:42px 42px;background-position:0 0;border-bottom:1px solid #dcebe4;box-shadow:none}
 .brand-mark{background:none;-webkit-text-fill-color:var(--green);color:var(--green)}
 .brand-name{color:var(--green)}
-.brand-subtitle{color:#536F95}
+.brand-subtitle{color:#2f8a6e}
 .nav-menu a{color:var(--text)}
 .nav-menu a.active,.nav-menu a:hover{color:var(--green);border-color:var(--green)}
 .cart-icon-btn{background:#fff;border:1px solid var(--border);color:var(--text);border-radius:50%}
 .cart-icon-btn:hover{background:var(--light)}
-.cart-badge{background:var(--green);color:#fff;box-shadow:0 0 0 2px #F6F8FC}
+.cart-badge{background:var(--green);color:#fff;box-shadow:0 0 0 2px #f3fbf7}
 .login-btn{background:#fff;color:var(--text);border:1px solid var(--border);box-shadow:none}
 .login-btn:hover{background:var(--light);color:var(--green)}
-.hero2{background-color:#F2F5FA;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='42' height='42'%3E%3Cg stroke='%23142B4A' stroke-opacity='.09' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M21 15v12M15 21h12'/%3E%3C/g%3E%3Cg fill='%23142B4A' fill-opacity='.08'%3E%3Ccircle cx='0' cy='0' r='1.3'/%3E%3Ccircle cx='42' cy='0' r='1.3'/%3E%3Ccircle cx='0' cy='42' r='1.3'/%3E%3Ccircle cx='42' cy='42' r='1.3'/%3E%3C/g%3E%3C/svg%3E"),linear-gradient(180deg,#F6F8FC 0%,#EAF0F7 100%);background-size:42px 42px,auto;background-position:0 -84px,0 0;background-repeat:repeat,no-repeat;border-radius:0 0 28px 28px;padding:16px 0 32px}
-.hero-search{box-shadow:0 12px 30px rgba(20,43,74,.16)}
+.hero2{background-color:#e6f6ee;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='42' height='42'%3E%3Cg stroke='%230b6b4f' stroke-opacity='.09' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M21 15v12M15 21h12'/%3E%3C/g%3E%3Cg fill='%230b6b4f' fill-opacity='.08'%3E%3Ccircle cx='0' cy='0' r='1.3'/%3E%3Ccircle cx='42' cy='0' r='1.3'/%3E%3Ccircle cx='0' cy='42' r='1.3'/%3E%3Ccircle cx='42' cy='42' r='1.3'/%3E%3C/g%3E%3C/svg%3E"),linear-gradient(180deg,#f3fbf7 0%,#e1f3e9 100%);background-size:42px 42px,auto;background-position:0 -84px,0 0;background-repeat:repeat,no-repeat;border-radius:0 0 28px 28px;padding:16px 0 32px}
+.hero-search{box-shadow:0 12px 30px rgba(11,107,79,.16)}
 .hero-search button{background:var(--green)}
 @media(max-width:850px){.hero2{padding:12px 0 24px;border-radius:0 0 22px 22px}}
 @media(max-width:650px){header{background-size:35px 35px}.hero2{background-size:35px 35px,auto;background-position:0 -70px,0 0}}
@@ -78,7 +107,7 @@ header{background-color:#F6F8FC;background-image:url("data:image/svg+xml,%3Csvg 
 /* Products section */
 .products-section{padding:34px 0 60px}
 .section-heading{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:20px}
-.section-heading h2{font-size:clamp(26px,3vw,34px);color:#142B4A;font-weight:700}
+.section-heading h2{font-size:clamp(26px,3vw,34px);color:#0b4a36;font-weight:700}
 .result-count{font-size:13px;color:var(--green);background:var(--light);border-radius:30px;padding:7px 14px;white-space:nowrap;font-weight:600}
 .filters{display:flex;gap:8px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:8px;margin-bottom:16px;scrollbar-width:none}
 .filters::-webkit-scrollbar{display:none}
@@ -94,10 +123,10 @@ header{background-color:#F6F8FC;background-image:url("data:image/svg+xml,%3Csvg 
 .product-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;align-items:start}
 #flashSale{display:none;padding:28px 0 8px}
 .flash-sale-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
-.flash-sale-heading h2{font-size:clamp(22px,3vw,30px);color:#142B4A}
+.flash-sale-heading h2{font-size:clamp(22px,3vw,30px);color:#0b4a36}
 .flash-sale-heading p{color:var(--muted);font-size:13px;margin-top:2px}
 .flash-sale-label{color:#b42318;background:#fff0ed;border:1px solid #ffd4cc;border-radius:30px;padding:7px 12px;font-size:12px;font-weight:700;white-space:nowrap}
-#flashSaleGrid{display:grid;grid-auto-flow:column;grid-auto-columns:240px;grid-template-columns:none;gap:14px;overflow-x:auto;overflow-y:hidden;padding:4px 3px 14px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:#B7C7DB transparent}
+#flashSaleGrid{display:grid;grid-auto-flow:column;grid-auto-columns:240px;grid-template-columns:none;gap:14px;overflow-x:auto;overflow-y:hidden;padding:4px 3px 14px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:#a8d9c1 transparent}
 #flashSaleGrid .product-card{width:100%;min-width:0;scroll-snap-align:start}
 .product-card{overflow:hidden;background:#fff;border:1px solid var(--border);border-radius:12px;transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column;min-width:0}
 .product-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
@@ -144,15 +173,15 @@ header{background-color:#F6F8FC;background-image:url("data:image/svg+xml,%3Csvg 
 
 /* Account */
 .login-btn.on{border-color:var(--green);color:var(--green)}
-.login-prompt{margin:14px 0 4px;padding:18px;background:#F5F7FB;border:1px dashed #C9A44C;border-radius:15px;text-align:center}
+.login-prompt{margin:14px 0 4px;padding:18px;background:#f4faf7;border:1px dashed #8acbb0;border-radius:15px;text-align:center}
 .login-prompt strong{display:block;color:var(--green);font-size:17px}
 .login-prompt p{color:var(--muted);font-size:13px;margin:6px 0 12px}
 .auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--light);border-radius:12px;padding:4px;margin-bottom:6px}
 .auth-tabs button{border:0;background:transparent;border-radius:9px;padding:10px;font-weight:700;color:var(--muted)}
-.auth-tabs button.active{background:#fff;color:var(--green);box-shadow:0 2px 8px rgba(20,43,74,.12)}
+.auth-tabs button.active{background:#fff;color:var(--green);box-shadow:0 2px 8px rgba(11,107,79,.12)}
 #authForm label,#profileForm label{display:block;font-size:13px;font-weight:600;margin:12px 0 5px}
 #authForm input,#authForm textarea,#profileForm input,#profileForm textarea{width:100%;padding:12px;border:1px solid #dce8e0;border-radius:12px;outline:none;background:#fff;color:var(--text);transition:.2s}
-#authForm input:focus,#authForm textarea:focus,#profileForm input:focus,#profileForm textarea:focus{border-color:var(--green);box-shadow:0 0 0 4px rgba(20,43,74,.12)}
+#authForm input:focus,#authForm textarea:focus,#profileForm input:focus,#profileForm textarea:focus{border-color:var(--green);box-shadow:0 0 0 4px rgba(11,107,79,.12)}
 #profileForm input[readonly]{background:var(--bg);color:var(--muted)}
 #authMessage,#profileMessage{font-size:13px;margin-top:12px;overflow-wrap:anywhere;white-space:pre-wrap}
 .auth-hint{color:var(--muted);font-size:12px;margin-top:8px}
@@ -166,7 +195,7 @@ header{background-color:#F6F8FC;background-image:url("data:image/svg+xml,%3Csvg 
 .my-order .amt{font-weight:700;margin-top:4px}
 
 /* Footer */
-.site-footer{background:linear-gradient(180deg,#142B4A,#075a42);color:#fff;padding:48px 0 0}
+.site-footer{background:linear-gradient(180deg,#0b6b4f,#075a42);color:#fff;padding:48px 0 0}
 .footer-cols{display:grid;grid-template-columns:1.3fr 1fr 1.3fr}
 .footer-col{padding:0 36px;border-left:1px solid #ffffff2e}
 .footer-col:first-child{padding-left:0;border-left:0}
@@ -196,7 +225,7 @@ header{background-color:#F6F8FC;background-image:url("data:image/svg+xml,%3Csvg 
 .cart-product-no-image{width:68px;height:68px;flex:0 0 68px;display:grid;place-items:center;border:1px solid var(--border);border-radius:12px;background:var(--bg);font-size:24px}
 .cart-product-info{min-width:0}
 .cart-product-info small{display:block;margin:3px 0}
-.customer-medicine-upload{margin:16px 0 4px;padding:16px;background:#F5F7FB;border:1px dashed #C9A44C;border-radius:15px}
+.customer-medicine-upload{margin:16px 0 4px;padding:16px;background:#f4faf7;border:1px dashed #8acbb0;border-radius:15px}
 .customer-medicine-upload h3{margin:0 0 6px;color:var(--green);font-size:16px}
 .customer-medicine-upload p{margin:0 0 12px;color:var(--muted);font-size:12px;line-height:1.6}
 .photo-upload-label{display:inline-flex;align-items:center;gap:8px;padding:11px 14px;background:var(--green);color:#fff;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600}
@@ -211,7 +240,7 @@ header{background-color:#F6F8FC;background-image:url("data:image/svg+xml,%3Csvg 
 .checkout-title{margin:10px 0 12px;font-size:18px}
 #checkoutForm label{display:block;font-size:13px;font-weight:600;margin:12px 0 5px}
 #checkoutForm input,#checkoutForm textarea{width:100%;padding:12px;border:1px solid #dce8e0;border-radius:12px;outline:none;background:#fff;color:var(--text);transition:.2s}
-#checkoutForm input:focus,#checkoutForm textarea:focus{border-color:var(--green);box-shadow:0 0 0 4px rgba(20,43,74,.12)}
+#checkoutForm input:focus,#checkoutForm textarea:focus{border-color:var(--green);box-shadow:0 0 0 4px rgba(11,107,79,.12)}
 .cart-empty{padding:22px 0;text-align:center;color:var(--muted)}
 .checkout-hint{color:var(--muted);font-size:12px;margin-top:8px}
 #checkoutMessage{font-size:13px;margin-top:12px;overflow-wrap:anywhere;white-space:pre-wrap}
@@ -219,7 +248,7 @@ body.cart-open{overflow:hidden}
 
 /* Toast */
 .premium-toast-host{position:fixed;top:22px;right:22px;z-index:10050;width:min(390px,calc(100vw - 28px));pointer-events:none}
-.premium-toast{position:relative;display:flex;align-items:flex-start;gap:12px;padding:16px 42px 15px 15px;background:#fff;border:1px solid #dcefe5;border-radius:18px;box-shadow:0 16px 46px rgba(20,43,74,.19);color:var(--text);opacity:0;transform:translateY(-12px) scale(.97);transition:opacity .26s ease,transform .26s cubic-bezier(.2,.8,.2,1);pointer-events:auto;overflow:hidden}
+.premium-toast{position:relative;display:flex;align-items:flex-start;gap:12px;padding:16px 42px 15px 15px;background:#fff;border:1px solid #dcefe5;border-radius:18px;box-shadow:0 16px 46px rgba(10,55,39,.19);color:var(--text);opacity:0;transform:translateY(-12px) scale(.97);transition:opacity .26s ease,transform .26s cubic-bezier(.2,.8,.2,1);pointer-events:auto;overflow:hidden}
 .premium-toast.visible{opacity:1;transform:translateY(0) scale(1)}
 .premium-toast-icon{width:42px;height:42px;flex:0 0 42px;display:grid;place-items:center;border-radius:14px;background:linear-gradient(145deg,#e6f8ee,#d3f1e1);color:var(--green);font-size:23px;font-weight:700}
 .premium-toast-copy{min-width:0;flex:1}
@@ -230,7 +259,7 @@ body.cart-open{overflow:hidden}
 .premium-toast-cart-link{border:0;background:var(--green);color:#fff;font-weight:700;font-size:12px;padding:8px 12px;border-radius:10px}
 .premium-toast-close{position:absolute;top:8px;right:9px;width:26px;height:26px;border:0;border-radius:8px;background:#f3f7f5;color:var(--muted);font-size:17px;line-height:1;display:grid;place-items:center}
 .premium-toast-progress{position:absolute;bottom:0;left:0;right:0;height:3px;background:#e5f1eb;overflow:hidden}
-.premium-toast-progress span{display:block;height:100%;width:100%;background:linear-gradient(90deg,#142B4A,#C9A44C);transform-origin:left;animation:toastProgress 3s linear forwards}
+.premium-toast-progress span{display:block;height:100%;width:100%;background:linear-gradient(90deg,#0b6b4f,#41bd8b);transform-origin:left;animation:toastProgress 3s linear forwards}
 @keyframes toastProgress{from{transform:scaleX(1)}to{transform:scaleX(0)}}
 
 /* Responsive */
@@ -317,23 +346,23 @@ body.cart-open{overflow:hidden}
 
 /* Premium Box / Strip selector */
 .package-choice-overlay{position:fixed;inset:0;z-index:10040;background:rgba(8,28,19,.58);display:none;align-items:center;justify-content:center;padding:16px}
-.package-choice-card{width:min(390px,100%);background:#fff;border:1px solid #DCE4EF;border-radius:20px;padding:20px;box-shadow:0 20px 65px #0003}
+.package-choice-card{width:min(390px,100%);background:#fff;border:1px solid #dcebe4;border-radius:20px;padding:20px;box-shadow:0 20px 65px #0003}
 .package-choice-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
-.package-choice-head h3{margin:0;color:#0B1E36;font-size:19px}
-.package-choice-close{border:0;background:#EAF0F7;color:#142B4A;border-radius:9px;padding:7px 11px}
+.package-choice-head h3{margin:0;color:#064c37;font-size:19px}
+.package-choice-close{border:0;background:#e6f4ee;color:#0b6b4f;border-radius:9px;padding:7px 11px}
 .package-choice-sub{font-size:12px;color:#667a70;margin:5px 0 14px}
 .package-choice-options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.package-choice-option{border:1px solid #DCE4EF;border-radius:14px;background:#fff;padding:13px 10px;text-align:left;cursor:pointer;color:#10261e}
-.package-choice-option.active{border:2px solid #142B4A;background:#F8F1DF}
-.package-choice-option strong{display:block;font-size:15px;color:#142B4A}
+.package-choice-option{border:1px solid #dcebe4;border-radius:14px;background:#fff;padding:13px 10px;text-align:left;cursor:pointer;color:#10261e}
+.package-choice-option.active{border:2px solid #0b6b4f;background:#f0faf5}
+.package-choice-option strong{display:block;font-size:15px;color:#0b6b4f}
 .package-discount{display:inline-block;vertical-align:middle;margin-left:5px;padding:3px 6px;border-radius:6px;background:#fff0f1;color:#d7192d;font-size:10px;font-weight:800;white-space:nowrap}
 .package-discount:empty{display:none}
 .package-choice-option small{display:block;color:#667a70;font-size:11px;margin-top:5px}
 .package-choice-qty{display:flex;align-items:center;justify-content:space-between;margin-top:15px;padding:10px 12px;background:#f5faf7;border-radius:12px}
-.package-choice-qty button{border:1px solid #DCE4EF;background:white;border-radius:8px;width:34px;height:34px;font-size:18px;color:#142B4A}
-.package-choice-qty input{width:55px;text-align:center;border:1px solid #DCE4EF;border-radius:8px;padding:7px}
+.package-choice-qty button{border:1px solid #dcebe4;background:white;border-radius:8px;width:34px;height:34px;font-size:18px;color:#0b6b4f}
+.package-choice-qty input{width:55px;text-align:center;border:1px solid #dcebe4;border-radius:8px;padding:7px}
 .package-choice-total{display:flex;justify-content:space-between;margin:14px 0;font-weight:700}
-.package-choice-add{width:100%;border:0;border-radius:12px;background:#142B4A;color:white;padding:13px;font-weight:700}
+.package-choice-add{width:100%;border:0;border-radius:12px;background:#0b6b4f;color:white;padding:13px;font-weight:700}
 
 
 /* Cart image and homepage-style red discount badge */
@@ -376,255 +405,50 @@ body.cart-open{overflow:hidden}
 }
 
 
-/* ===== HDH Premium Wholesale redesign: Navy / White / Gold ===== */
-.premium-toast-icon{background:linear-gradient(145deg,#F8F1DF,#E8D39C);color:#142B4A}
-.premium-toast-product{color:#142B4A}
-.premium-toast-close{background:#F5F7FB}
-.cart-total strong{color:#142B4A}
-.login-prompt{background:#F5F7FB;border-color:#C9A44C}
-.login-prompt strong{color:#142B4A}
-.auth-tabs{background:#EAF0F7}
-.auth-tabs button.active{color:#142B4A}
-.status-pill.ok{background:#EAF0F7;color:#142B4A}
-.package-choice-qty input{border-color:#DCE4EF}
-.filter-btn.company-logo-btn{border-color:#DCE4EF}
-
-.hero2{background:linear-gradient(135deg,#142B4A 0%,#1D3B61 58%,#10233D 100%);padding:44px 0 38px;border-radius:0 0 30px 30px;overflow:hidden}
-.hero2:before{content:"";position:absolute;width:430px;height:430px;border:1px solid rgba(255,255,255,.08);border-radius:50%;right:-120px;top:-210px;box-shadow:0 0 0 45px rgba(255,255,255,.025),0 0 0 90px rgba(255,255,255,.02)}
-.hero-copy{position:relative;z-index:2;margin-bottom:24px;max-width:760px}
-.hero-kicker{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid rgba(201,164,76,.45);background:rgba(201,164,76,.12);color:#E8D39C;border-radius:30px;font-size:12px;font-weight:700;letter-spacing:1px}
-.hero-kicker-dot{width:7px;height:7px;border-radius:50%;background:#C9A44C;box-shadow:0 0 0 4px rgba(201,164,76,.16)}
-.hero2 h1{color:#fff;max-width:760px;font-size:clamp(30px,4.2vw,52px);line-height:1.28;margin-top:15px}
-.hero2 h1 span{color:#E4C77F}
-.hero2 p{color:#D7E2EF;max-width:680px;font-size:17px;margin-top:12px}
-.hero-trust-tags{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}
-.hero-trust-tags span{border:1px solid rgba(255,255,255,.17);background:rgba(255,255,255,.07);color:#EAF0F7;border-radius:30px;padding:6px 11px;font-size:12px;font-weight:600}
-.hero-search{max-width:100%;border-radius:16px;padding:7px;box-shadow:0 18px 44px rgba(0,0,0,.22)}
-.hero-search button{background:#142B4A;border-radius:12px}
-.hero-search button:hover{background:#0B1E36}
-.hero-cat{color:#142B4A}
-.hero-cat select{max-width:125px}
-header{background:rgba(255,255,255,.97);backdrop-filter:blur(14px);box-shadow:0 6px 24px rgba(20,43,74,.06);border-bottom:1px solid #DCE4EF}
-.brand-mark,.brand-name{color:#142B4A!important;-webkit-text-fill-color:#142B4A!important}
-.brand-subtitle{color:#7A6330!important}
-.nav-menu a.active,.nav-menu a:hover{color:#142B4A;border-color:#C9A44C}
-.cart-icon-btn{border-color:#DCE4EF;color:#142B4A}
-.cart-badge{background:#142B4A;box-shadow:0 0 0 2px #fff}
-.login-btn{border-color:#DCE4EF;color:#142B4A}
-.login-btn:hover{background:#F8F1DF;color:#142B4A}
-.section-heading h2{color:#142B4A}
-.section-heading{align-items:flex-end}
-.section-eyebrow{display:block;color:#8B6C25;font-size:10px;font-weight:800;letter-spacing:1.6px;margin-bottom:4px}
-.section-subtitle{font-size:14px;color:#68778A;margin-top:4px}
-.section-link,.category-reset{border:0;background:transparent;color:#142B4A;font-size:13px;font-weight:800;text-decoration:none;white-space:nowrap}
-.section-link:hover,.category-reset:hover{color:#8B6C25}
-.category-section{padding:34px 0 10px}
-.category-heading{margin-bottom:18px}
-.category-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
-.category-card{min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:18px 10px;border:1px solid #DCE4EF;border-radius:16px;background:linear-gradient(180deg,#fff,#F8FAFD);color:#142B4A;transition:transform .18s,border-color .18s,box-shadow .18s}
-.category-card:hover,.category-card.active{transform:translateY(-3px);border-color:#C9A44C;box-shadow:0 10px 24px rgba(20,43,74,.09);background:#fff}
-.category-icon{width:48px;height:48px;display:grid;place-items:center;border-radius:14px;background:#EAF0F7;font-size:25px;margin-bottom:4px}
-.category-card strong{font-size:15px;line-height:1.2}
-.category-card small{font-size:12px;color:#68778A}
-.flash-sale-section{padding:30px 0 8px}
-.flash-sale-section .container{background:linear-gradient(135deg,#F8F1DF,#FFFDF7);border:1px solid #E8D9B4;border-radius:22px;padding:24px}
-.flash-sale-heading h2{color:#142B4A}
-.flash-sale-label{background:#142B4A;color:#F8E7B5;border:1px solid #142B4A}
-#flashSaleGrid{scrollbar-color:#C9A44C transparent}
-.collection-section{padding:30px 0 8px}
-.recent-section{padding-top:24px}
-.featured-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
-.products-section{padding-top:34px}
-.catalog-tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-.sort-control{display:flex;align-items:center;gap:7px;color:#68778A;font-size:12px;font-weight:700}
-.sort-control select{border:1px solid #DCE4EF;border-radius:10px;padding:8px 10px;background:#fff;color:#142B4A;font-size:12px;max-width:180px}
-.filter-toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 12px}
-.discount-filter-btn{border:1px solid #E8D9B4;background:#FFFDF7;color:#7A5B1C;border-radius:11px;padding:8px 12px;font-size:12px;font-weight:800}
-.discount-filter-btn.active{background:#142B4A;border-color:#142B4A;color:#fff}
-.filter-note{font-size:12px;color:#68778A}
-.filter-btn.active{background:#142B4A;border-color:#142B4A}
-.filter-btn:hover{border-color:#C9A44C;color:#142B4A}
-.filter-btn.company-logo-btn.active{background:#F8F1DF;border-color:#C9A44C;color:#142B4A}
-.product-card{border-color:#DCE4EF;border-radius:15px;box-shadow:0 4px 16px rgba(20,43,74,.035)}
-.product-card:hover{box-shadow:0 15px 32px rgba(20,43,74,.12)}
-.product-image{background:linear-gradient(180deg,#F8FAFD,#EAF0F7)}
-.product-category{background:#EAF0F7;color:#142B4A}
-.product-name{color:#172437}
-.product-price{color:#142B4A}
-.order-btn{background:#142B4A;border-radius:10px}
-.order-btn:hover{background:#0B1E36}
-.savings-amount{grid-column:1/-1;color:#8B6C25;font-size:11px;font-weight:800;background:#F8F1DF;border-radius:7px;padding:4px 7px;display:inline-flex;width:max-content;max-width:100%}
-.product-bottom{row-gap:6px}
-.product-price.small{color:#68778A}
-.site-footer{background:linear-gradient(135deg,#142B4A,#0B1E36);border-top:3px solid #C9A44C}
-.site-footer a:hover{color:#E8D39C}
-.f-brand .mk{color:#E8D39C}
-.f-brand small{color:#D7E2EF}
-.package-choice-card{border-color:#DCE4EF}
-.package-choice-head h3,.package-choice-option strong{color:#142B4A}
-.package-choice-close{background:#EAF0F7;color:#142B4A}
-.package-choice-option.active{border-color:#C9A44C;background:#F8F1DF}
-.package-choice-qty{background:#F5F7FB}
-.package-choice-qty button{color:#142B4A}
-.package-choice-add{background:#142B4A}
-.premium-toast-cart-link{background:#142B4A}
-.premium-toast-progress{background:#EAF0F7}
-.premium-toast-progress span{background:linear-gradient(90deg,#142B4A,#C9A44C)}
-.mobile-bottom-nav{display:none}
-@media(max-width:950px){.category-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.featured-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:650px){
-  body{padding-bottom:72px}
-  .hero2{padding:26px 0 24px;border-radius:0 0 22px 22px}
-  .hero2 h1{font-size:30px;line-height:1.3;margin-top:12px}
-  .hero2 p{font-size:14px;line-height:1.65}
-  .hero-trust-tags{gap:6px}
-  .hero-trust-tags span{font-size:10px;padding:5px 8px}
-  .hero-search{padding:5px;border-radius:13px}
-  .hero-cat select{font-size:12px;max-width:85px;padding-right:15px}
-  .hero-search input{font-size:13px;min-width:0}
-  .hero-search button{padding:12px 13px}
-  .category-section{padding:24px 0 5px}
-  .category-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-  .category-card{padding:12px 5px;border-radius:12px}
-  .category-icon{width:38px;height:38px;font-size:21px;border-radius:11px}
-  .category-card strong{font-size:12px}
-  .category-card small{font-size:10px}
-  .section-heading{align-items:flex-start}
-  .section-heading h2{font-size:23px}
-  .section-subtitle{font-size:11px}
-  .section-link,.category-reset{font-size:11px}
-  .flash-sale-section .container{padding:15px;border-radius:16px}
-  .flash-sale-heading h2{font-size:21px}
-  .collection-section{padding:22px 0 4px}
-  .featured-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-  .catalog-tools{justify-content:flex-start;width:100%;margin-top:8px}
-  .sort-control{flex:1;justify-content:flex-end}
-  .sort-control select{max-width:150px}
-  .filter-toolbar{gap:7px}
-  .filter-note{font-size:10px}
-  .mobile-bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:60;display:grid;grid-template-columns:repeat(5,1fr);gap:0;padding:7px 4px calc(7px + env(safe-area-inset-bottom));background:rgba(255,255,255,.97);backdrop-filter:blur(14px);border-top:1px solid #DCE4EF;box-shadow:0 -8px 26px rgba(20,43,74,.09)}
-  .mobile-nav-item{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:0;border:0;background:transparent;color:#68778A;text-decoration:none;font-size:18px;padding:2px}
-  .mobile-nav-item small{font-size:9px;font-weight:700;line-height:1.2}
-  .mobile-nav-item:active,.mobile-nav-item:hover{color:#142B4A}
-  .mobile-nav-item b{position:absolute;top:-1px;right:calc(50% - 20px);min-width:15px;height:15px;border-radius:9px;background:#C9A44C;color:#142B4A;font-size:9px;display:grid;place-items:center;padding:0 3px}
+/* Premium HDH logo header — curved green swoosh (selected design #1) */
+.hdh-brand{display:flex;align-items:center;gap:10px;min-width:0;}
+.hdh-logo{display:block;width:82px;height:52px;flex:0 0 82px;overflow:visible;}
+.hdh-logo-text{font-family:Arial,Helvetica,sans-serif;font-size:43px;font-weight:900;font-style:italic;letter-spacing:-4px;fill:var(--green);}
+.hdh-swoosh-top,.hdh-swoosh-bottom{fill:none;stroke:#16a66d;stroke-width:4.2;stroke-linecap:round;stroke-linejoin:round;}
+.hdh-swoosh-bottom{stroke:#0b6b4f;stroke-width:3.8;}
+.hdh-brand-divider{height:42px;width:1px;flex:0 0 1px;background:#9acdb8;}
+.hdh-brand-copy{display:flex;flex-direction:column;min-width:0;}
+.hdh-brand-copy .brand-name{font-size:23px;line-height:1.12;white-space:nowrap;}
+.hdh-brand-copy .brand-subtitle{font-size:13px;line-height:1.3;white-space:nowrap;}
+@media(max-width:850px){
+  .hdh-brand{gap:7px;}
+  .hdh-logo{width:60px;height:42px;flex-basis:60px;}
+  .hdh-logo-text{font-size:43px;letter-spacing:-4px;}
+  .hdh-brand-divider{height:34px;}
+  .hdh-brand-copy .brand-name{font-size:17px;}
+  .hdh-brand-copy .brand-subtitle{font-size:10px;letter-spacing:0;}
 }
-
-
-/* Arogga-inspired pharmacy marketplace visual refresh — HDH branding */
-:root{
- --green:#078A5B;--dark:#056644;--light:#EAF7F1;--text:#172B24;
- --muted:#6B7D75;--bg:#F7FAF8;--border:#E1EBE5;--gold:#D6B65B;
- --gold-soft:#FFF8E7;--shadow:0 8px 24px rgba(5,102,68,.10)
+@media(max-width:390px){
+  .hdh-brand{gap:5px;}
+  .hdh-logo{width:52px;height:38px;flex-basis:52px;}
+  .hdh-brand-divider{height:30px;}
+  .hdh-brand-copy .brand-name{font-size:15px;}
+  .hdh-brand-copy .brand-subtitle{font-size:9px;}
 }
-body{background:#fff;color:var(--text)}
-.container{width:min(1240px,94%)}
-header{background:#fff!important;background-image:none!important;border-bottom:1px solid #e8eee9!important;box-shadow:0 2px 10px rgba(10,60,40,.04)!important}
-.navbar{min-height:72px;grid-template-columns:auto 1fr auto;gap:28px}
-.brand{gap:9px}
-.brand-mark{font-size:32px;color:var(--green)!important;-webkit-text-fill-color:var(--green)!important}
-.brand-name{font-size:22px;color:#173d2e!important}
-.brand-subtitle{color:#71857a!important}
-.nav-menu{justify-content:center;gap:28px}
-.nav-menu a{font-size:15px;border-bottom:0;padding:8px 0}
-.nav-menu a.active,.nav-menu a:hover{color:var(--green);border-color:transparent}
-.cart-icon-btn{border:0;background:#f1f8f4;border-radius:12px;color:var(--green)}
-.cart-badge{background:#f04438;box-shadow:none}
-.login-btn{border:0;background:var(--green);color:#fff;border-radius:8px;padding:10px 18px}
-.login-btn:hover{background:var(--dark);color:#fff}
-.hero2{background:#F4FAF6!important;background-image:linear-gradient(135deg,#F4FAF6,#E8F6EE)!important;border-radius:0!important;padding:28px 0 34px}
-.hero2 h1{color:#143c2b;font-size:clamp(28px,3.5vw,42px);max-width:780px}
-.hero2 p{color:#5a7165;font-size:17px;max-width:720px}
-.hero-search{max-width:100%;border:1px solid #dcebe2;border-radius:10px;box-shadow:0 5px 18px rgba(20,70,45,.08);padding:6px}
-.hero-cat{color:var(--green);border-color:#e4eee7}
-.hero-search input{font-size:15px}
-.hero-search button{background:var(--green);border-radius:8px;padding:13px 25px}
-.hero-search button:hover{background:var(--dark)}
-.features{padding:18px 0 4px}
-.features-grid{background:#fff;border:1px solid #e5eee8;border-radius:12px;padding:18px 8px}
-.feature{border-color:#e7eee9}
-.feature svg,.feature strong{color:var(--green)}
-.feature span{font-size:13px}
-.section-heading h2,.flash-sale-heading h2{color:#173d2e}
-.result-count{background:#eaf7f1;color:#08794f}
-.filters{gap:9px}
-.filter-btn{border-radius:8px;border-color:#e0eae4;color:#50675b;background:#fff}
-.filter-btn.active{background:var(--green);border-color:var(--green)}
-.filter-btn.company-logo-btn{border-radius:9px}
-.filter-btn.company-logo-btn.active{background:#eaf7f1;border-color:var(--green)}
-.product-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
-.product-card{border:1px solid #e5ece7;border-radius:10px;box-shadow:0 2px 8px rgba(20,60,40,.03)}
-.product-card:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(10,80,50,.10)}
-.product-image{height:190px;background:#fff!important;border-bottom:1px solid #f0f3f1;padding:12px}
-.discount-badge{background:#e53935;border-radius:5px;font-size:11px;padding:6px 9px;top:9px;left:9px}
-.product-info{padding:12px}
-.product-name{font-size:16px;font-weight:700;line-height:1.35;color:#20382c}
-.company-row{font-size:12px;color:#718178;margin-top:6px}
-.product-category{background:#edf7f1;color:#08794f;border-radius:5px;padding:2px 8px;font-size:11px}
-.product-bottom{margin-top:8px}
-.price-label{font-size:10px}
-.mrp{font-size:12px}
-.product-price{font-size:18px;color:#078A5B}
-.qty{height:36px;margin-top:9px;border-radius:6px}
-.qty button{font-size:17px;color:var(--green)}
-.order-btn{background:var(--green);border-radius:6px;font-size:13px;padding:10px;margin-top:8px}
-.order-btn:hover{background:var(--dark)}
-#flashSaleGrid{grid-auto-columns:220px}
-.empty-state{border-radius:10px}
-footer{background:#f5faf7!important}
-.mobile-bottom-nav{background:#fff!important;border-top:1px solid #e1ebe5!important}
-.mobile-nav-item{color:#62766b!important}
-.mobile-nav-item.active,.mobile-nav-item:hover{color:var(--green)!important}
-@media(max-width:1050px){.product-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.navbar{grid-template-columns:auto 1fr auto;gap:14px}.nav-menu{gap:16px}}
-@media(max-width:760px){
- .navbar{min-height:62px;grid-template-columns:1fr auto;gap:8px}
- .nav-menu{display:none}
- .brand-mark{font-size:28px}
- .brand-name{font-size:19px}
- .hero2{padding:20px 0 24px}
- .hero2 h1{font-size:27px;line-height:1.35}
- .hero2 p{font-size:15px;margin-top:8px}
- .hero-search{display:flex;flex-wrap:wrap;gap:4px}
- .hero-cat{width:100%;border-right:0;border-bottom:1px solid #e6eee9;padding:0 8px}
- .hero-cat select{padding:8px 20px 8px 0;font-size:14px}
- .hero-search input{padding:10px 8px;font-size:14px;flex:1 1 60%}
- .hero-search button{padding:10px 15px;font-size:14px}
- .features-grid{grid-template-columns:repeat(2,1fr);padding:12px 4px}
- .feature{padding:10px 6px;border-left:0}
- .feature:nth-child(even){border-left:1px solid #e7eee9}
- .feature:nth-child(n+3){border-top:1px solid #e7eee9}
- .feature svg{width:30px;height:30px}
- .feature strong{font-size:14px;margin-top:5px}
- .feature span{font-size:11px}
- .products-section{padding:24px 0 44px}
- .section-heading{align-items:flex-start;flex-wrap:wrap;margin-bottom:12px}
- .section-heading h2{font-size:23px}
- .product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
- .product-image{height:145px;padding:8px}
- .product-info{padding:9px}
- .product-name{font-size:14px}
- .company-row{font-size:11px;gap:5px}
- .company-row img{width:20px;height:20px;flex-basis:20px}
- .product-price{font-size:16px}
- .mrp{font-size:11px}
- .discount-badge{font-size:10px;padding:5px 7px}
- .order-btn{font-size:12px;padding:9px 5px}
-}
-@media(max-width:380px){.container{width:95%}.product-grid{gap:8px}.product-image{height:130px}.product-name{font-size:13px}}
-
 </style>
 </head>
 
-<body id="top">
+<body>
 <div id="premiumToastHost" class="premium-toast-host" aria-live="polite" aria-atomic="true"></div>
 
 <header>
   <div class="container navbar">
-    <a class="brand" href="#">
-      <span class="brand-mark">HDH</span>
-      <div>
-        <div class="brand-name">Hazi Drug House</div>
-        <div class="brand-subtitle">Medicine Marketplace</div>
-      </div>
+    <a class="brand hdh-brand" href="#" aria-label="Hazi Drug House — Medicine Marketplace">
+      <svg class="hdh-logo" viewBox="0 0 112 64" role="img" aria-label="HDH">
+        <path class="hdh-swoosh-top" d="M8 22 C25 4, 57 2, 91 7 C76 10, 57 14, 42 23" />
+        <text x="10" y="47" class="hdh-logo-text">HDH</text>
+        <path class="hdh-swoosh-bottom" d="M7 48 C27 60, 63 58, 101 45 C78 52, 48 54, 31 53" />
+      </svg>
+      <span class="hdh-brand-divider" aria-hidden="true"></span>
+      <span class="hdh-brand-copy">
+        <span class="brand-name">Hazi Drug House</span>
+        <span class="brand-subtitle">Medicine Marketplace</span>
+      </span>
     </a>
     <nav class="nav-menu">
       <a class="active" href="#">হোম</a>
@@ -632,13 +456,17 @@ footer{background:#f5faf7!important}
       <a href="#" data-open-cart>অর্ডার</a>
     </nav>
     <div class="nav-actions">
+      <button class="login-btn header-account-btn" id="accountBtn" type="button" aria-label="একাউন্ট">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+        <span id="accountLabel">লগইন</span>
+      </button>
+      <button class="header-search-btn" id="headerSearchBtn" type="button" aria-label="ওষুধ সার্চ করুন" title="ওষুধ সার্চ করুন">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </button>
       <button class="cart-icon-btn" id="cartOpenBtn" type="button" aria-label="কার্ট দেখুন">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.7 12.4a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6"/></svg>
         <span class="cart-badge" id="cartCount">0</span>
       </button>
-      <button class="login-btn" id="accountBtn" type="button" aria-label="একাউন্ট">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
-        <span id="accountLabel">লগইন</span></button>
     </div>
   </div>
 </header>
@@ -646,18 +474,11 @@ footer{background:#f5faf7!important}
 <main>
   <section class="hero2">
     <div class="container">
-      <div class="hero-copy">
-        <span class="hero-kicker"><span class="hero-kicker-dot"></span> HDH WHOLESALE MEDICINE</span>
-        <h1>আপনার ফার্মেসির জন্য<br><span>পাইকারি ওষুধ</span> এক জায়গায়</h1>
-        <p>ফার্মেসির প্রয়োজনীয় ওষুধ খুঁজুন, পাইকারি দাম ও ছাড় দেখুন, তারপর সহজেই অর্ডার করুন।</p>
-        <div class="hero-trust-tags"><span>✓ Pharmacy-focused</span><span>✓ Box & Strip Order</span><span>✓ Wholesale Offers</span></div>
-      </div>
       <form class="hero-search" id="heroSearchForm">
         <div class="hero-cat"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
           <select id="searchField" aria-label="কীভাবে খুঁজবেন">
             <option value="all">ওষুধ</option>
             <option value="company">কোম্পানি</option>
-            <option value="category">ক্যাটাগরি</option>
           </select>
         </div>
         <input id="searchInput" type="search" placeholder="ওষুধ বা কোম্পানির নাম লিখুন..." aria-label="ওষুধ খুঁজুন">
@@ -666,31 +487,16 @@ footer{background:#f5faf7!important}
     </div>
   </section>
 
-  <section class="category-section" id="medicineCategories">
-    <div class="container">
-      <div class="section-heading category-heading">
-        <div><span class="section-eyebrow">BROWSE BY CATEGORY</span><h2>ওষুধের ক্যাটাগরি</h2><p>প্রয়োজন অনুযায়ী দ্রুত ওষুধ খুঁজুন</p></div>
-        <button type="button" class="category-reset" data-category="all">সব ক্যাটাগরি দেখুন →</button>
-      </div>
-      <div class="category-grid" id="categoryGrid">
-        <button class="category-card" type="button" data-category="tablet"><span class="category-icon">💊</span><strong>Tablet</strong><small>ট্যাবলেট</small></button>
-        <button class="category-card" type="button" data-category="syrup"><span class="category-icon">🧴</span><strong>Syrup</strong><small>সিরাপ</small></button>
-        <button class="category-card" type="button" data-category="injection"><span class="category-icon">💉</span><strong>Injection</strong><small>ইনজেকশন</small></button>
-        <button class="category-card" type="button" data-category="capsule"><span class="category-icon">🟠</span><strong>Capsule</strong><small>ক্যাপসুল</small></button>
-        <button class="category-card" type="button" data-category="drops"><span class="category-icon">💧</span><strong>Drops</strong><small>ড্রপ</small></button>
-        <button class="category-card" type="button" data-category="cream"><span class="category-icon">🧴</span><strong>Cream & Ointment</strong><small>ক্রিম ও মলম</small></button>
-      </div>
-    </div>
-  </section>
+
 
   <section class="flash-sale-section" id="flashSale" style="display:none;">
     <div class="container">
       <div class="flash-sale-heading">
         <div>
-          <h2>বিশেষ পাইকারি অফার</h2>
-          <p>Admin Panel থেকে নির্বাচিত Discount-যুক্ত ওষুধ</p>
+          <h2>⚡ Flash Sale</h2>
+          <p>বিশেষ অফারের ওষুধগুলো এখানে দেখুন</p>
         </div>
-        <span class="flash-sale-label">HDH SPECIAL OFFER</span>
+        <span class="flash-sale-label">SPECIAL OFFER</span>
       </div>
       <div id="flashSaleGrid">
         <div class="empty-state"><div class="empty-icon">⚡</div><strong>Flash Sale লোড হচ্ছে</strong>একটু অপেক্ষা করুন...</div>
@@ -699,39 +505,15 @@ footer{background:#f5faf7!important}
     </div>
   </section>
 
-  <section class="collection-section" id="popularMedicines">
-    <div class="container">
-      <div class="section-heading">
-        <div><span class="section-eyebrow">WHOLESALE PICKS</span><h2>জনপ্রিয় পাইকারি ওষুধ</h2><p class="section-subtitle">ফার্মেসির জন্য নির্বাচিত ওষুধ ও আকর্ষণীয় ছাড়</p></div>
-        <a class="section-link" href="#products">সব ওষুধ দেখুন →</a>
-      </div>
-      <div class="product-grid featured-grid" id="popularGrid"><div class="empty-state">ওষুধ লোড হচ্ছে...</div></div>
-    </div>
-  </section>
-
-  <section class="collection-section recent-section" id="recentlyAdded">
-    <div class="container">
-      <div class="section-heading">
-        <div><span class="section-eyebrow">LATEST FROM HDH</span><h2>নতুন যুক্ত হওয়া ওষুধ</h2><p class="section-subtitle">সাম্প্রতিক সময়ে তালিকায় যুক্ত হওয়া ওষুধ</p></div>
-        <a class="section-link" href="#products">সব ওষুধ দেখুন →</a>
-      </div>
-      <div class="product-grid featured-grid" id="recentGrid"><div class="empty-state">ওষুধ লোড হচ্ছে...</div></div>
-    </div>
-  </section>
-
   <section class="products-section" id="products">
     <div class="container">
       <div class="section-heading">
         <div>
-          <span class="section-eyebrow">HDH WHOLESALE CATALOG</span><h2>সব পাইকারি ওষুধ</h2><p class="section-subtitle">ওষুধ, কোম্পানি, ক্যাটাগরি ও ছাড় অনুযায়ী খুঁজুন</p>
+          <h2>জনপ্রিয় ওষুধ</h2>
         </div>
-        <div class="catalog-tools">
-          <div class="result-count" id="resultCount">লোড হচ্ছে...</div>
-          <label class="sort-control"><span>Sort:</span><select id="sortSelect" aria-label="ওষুধ সাজান"><option value="name_asc">Name A–Z</option><option value="price_asc">Price: Low to High</option><option value="price_desc">Price: High to Low</option><option value="newest">Recently Added</option></select></label>
-        </div>
+        <div class="result-count" id="resultCount">লোড হচ্ছে...</div>
       </div>
 
-      <div class="filter-toolbar"><button class="discount-filter-btn" id="discountFilterBtn" type="button" aria-pressed="false">🏷️ শুধু Discount-যুক্ত ওষুধ</button><span class="filter-note">Company Logo-তে Click করে কোম্পানি Filter করুন</span></div>
       <div class="filters" id="companyFilters">
         <button class="filter-btn active" data-company="all">সব ওষুধ</button>
       </div>
@@ -871,25 +653,25 @@ footer{background:#f5faf7!important}
     <div class="footer-cols">
       <div class="footer-col">
         <div class="f-brand"><span class="mk">HDH</span><div><b>Hazi Drug House</b><small>Medicine Marketplace</small></div></div>
-        <p>বাংলাদেশের ফার্মেসি মালিকদের জন্য ওষুধ খোঁজা, পাইকারি দাম দেখা এবং Box / Strip অনুযায়ী অর্ডার করার Marketplace — Hazi Drug House।</p>
+        <p>ফার্মেসির জন্য নির্ভরযোগ্য ওষুধের পাইকারি দাম ও সহজ অনুসন্ধানের একমাত্র প্ল্যাটফর্ম — Hazi Drug House।</p>
       </div>
       <div class="footer-col">
-        <h4>Wholesale Services</h4>
-        <a href="#medicineCategories">Medicine Category</a>
-        <a href="#flashSale">Special Wholesale Offers</a>
-        <a href="#products">সব ওষুধ</a>
-        <a href="#" data-open-cart>Cart / Order</a>
+        <h4>দ্রুত লিংক</h4>
+        <a href="#">হোম</a>
+        <a href="#products">ওষুধ খুঁজুন</a>
+        <a href="#" data-open-cart>অর্ডার</a>
+        <a href="#">যোগাযোগ</a>
       </div>
       <div class="footer-col">
-        <h4>ফার্মেসি Owner Support</h4>
-        <p class="f-line"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><span>বাংলাদেশের ফার্মেসি মালিকদের জন্য পাইকারি Marketplace</span></p>
-        <p class="f-line"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h7M7 16h4"/></svg><span>Box / Strip অনুযায়ী ওষুধ অর্ডার করুন</span></p>
-        <p class="f-line"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Account থেকে Order History ও Status দেখুন</span></p>
+        <h4>যোগাযোগ</h4>
+        <p class="f-line"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><span>বাংলাদেশ</span></p>
+        <p class="f-line"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg><span>আপনার-ইমেইল@example.com</span></p>
+        <p class="f-line"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></svg><span>আপনার ফোন নম্বর<br>(সকাল ৯টা – রাত ৯টা)</span></p>
       </div>
     </div>
     <div class="footer-bottom">
       <span>© <span id="currentYear"></span> Hazi Drug House. সর্বস্বত্ব সংরক্ষিত।</span>
-      <span>Pharmacy-first Wholesale Marketplace</span>
+      <span>সুস্থ সমাজ, শক্তিশালী ফার্মেসি</span>
     </div>
   </div>
 </footer>
@@ -902,11 +684,6 @@ footer{background:#f5faf7!important}
   const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
   const grid = document.getElementById("productGrid");
-  const popularGrid = document.getElementById("popularGrid");
-  const recentGrid = document.getElementById("recentGrid");
-  const categoryGrid = document.getElementById("categoryGrid");
-  const sortSelect = document.getElementById("sortSelect");
-  const discountFilterBtn = document.getElementById("discountFilterBtn");
   const flashSaleGrid = document.getElementById("flashSaleGrid");
   const flashSaleSection = document.getElementById("flashSale");
   const searchInput = document.getElementById("searchInput");
@@ -930,11 +707,8 @@ footer{background:#f5faf7!important}
   let customerMedicinePhotoFile = null;
   let customerMedicinePhotoPreviewUrl = "";
   let allProducts = [];
-  let recentProducts = [];
   let companyLogos = {};
   let selectedCompany = "all";
-  let selectedCategory = "all";
-  let discountOnly = false;
   let isSubmittingOrder = false;
   let cart = [];
 
@@ -973,7 +747,6 @@ footer{background:#f5faf7!important}
     renderCompanyFilters();
     renderProducts();
     renderFlashSale();
-    renderFeaturedSections();
   }
 
   function companyDisplayHTML(company) {
@@ -1088,10 +861,7 @@ footer{background:#f5faf7!important}
   }
 
   function renderCart() {
-    const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
-    cartCountEl.textContent = totalQuantity;
-    const mobileCartCount = document.getElementById("mobileCartCount");
-    if (mobileCartCount) mobileCartCount.textContent = totalQuantity;
+    cartCountEl.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
     cartTotalEl.textContent = money(calculateCartTotal());
 
     if (!cart.length) {
@@ -1425,8 +1195,6 @@ footer{background:#f5faf7!important}
 
     const badgeHTML = discount > 0
       ? `<span class="discount-badge">${Number(discount.toFixed(2))}% ছাড়</span>` : "";
-    const savingsHTML = discount > 0 && mrp !== null && finalPrice !== null
-      ? `<div class="savings-amount">সাশ্রয় ${fmt2(Math.max(0, mrp-finalPrice))}</div>` : "";
 
     let priceHTML;
     if (mrp === null) {
@@ -1456,7 +1224,6 @@ footer{background:#f5faf7!important}
           <div class="product-bottom">
             <div class="price-label">${unit}</div>
             ${priceHTML}
-            ${savingsHTML}
             <div class="qty">
               <button type="button" data-qty="-" aria-label="কমান">−</button>
               <span class="qty-val">1</span>
@@ -1468,83 +1235,22 @@ footer{background:#f5faf7!important}
       </article>`;
   }
 
-  const CATEGORY_TERMS = {
-    tablet:["tablet","ট্যাবলেট"],
-    syrup:["syrup","সিরাপ"],
-    injection:["injection","ইনজেকশন"],
-    capsule:["capsule","ক্যাপসুল"],
-    drops:["drop","drops","ড্রপ"],
-    cream:["cream","ointment","ক্রিম","মলম"]
-  };
-
-  function matchesCategory(product, categoryKey) {
-    if (!categoryKey || categoryKey === "all") return true;
-    const terms = CATEGORY_TERMS[categoryKey] || [String(categoryKey).toLowerCase()];
-    const haystack = [product.category, product.name, product.strength, product.unit_type].join(" ").toLowerCase();
-    return terms.some(term => haystack.includes(term.toLowerCase()));
-  }
-
-  function renderFeaturedSections() {
-    if (!popularGrid || !recentGrid) return;
-    const popular = [...allProducts].sort((a,b) => {
-      const discountDiff = getPrices(b).discount - getPrices(a).discount;
-      return discountDiff || String(a.name || "").localeCompare(String(b.name || ""), "en", {sensitivity:"base",numeric:true});
-    }).slice(0,8);
-
-    const recentSource = recentProducts.length ? [...recentProducts] : [...allProducts];
-    const hasDates = recentSource.some(product => product.created_at && Number.isFinite(Date.parse(product.created_at)));
-    const recent = hasDates
-      ? recentSource.sort((a,b) => (Date.parse(b.created_at || "") || 0) - (Date.parse(a.created_at || "") || 0)).slice(0,8)
-      : recentSource.slice(-8).reverse();
-
-    popularGrid.innerHTML = popular.length
-      ? popular.map(product => productCardHTML(product,false)).join("")
-      : '<div class="empty-state"><strong>এখনো ওষুধ যুক্ত করা হয়নি</strong>Admin Panel থেকে ওষুধ যোগ করলে এখানে দেখাবে।</div>';
-    recentGrid.innerHTML = recent.length
-      ? recent.map(product => productCardHTML(product,false)).join("")
-      : '<div class="empty-state"><strong>এখনো নতুন ওষুধ নেই</strong>নতুন ওষুধ যুক্ত হলে এখানে দেখাবে।</div>';
-  }
-
   function renderProducts() {
     const term = searchInput.value.trim().toLowerCase();
 
     const filtered = allProducts.filter(product => {
-      const searchable = (categorySelect.value === "company"
-        ? [product.company]
-        : categorySelect.value === "category"
-          ? [product.category, product.name]
-          : [product.name, product.company, product.strength, product.category]).join(" ").toLowerCase();
-      const companyMatch = selectedCompany === "all" || product.company === selectedCompany;
-      const categoryMatch = matchesCategory(product, selectedCategory);
-      const discountMatch = !discountOnly || getPrices(product).discount > 0;
-      return searchable.includes(term) && companyMatch && categoryMatch && discountMatch;
+      const searchable = (categorySelect.value === "company" ? [product.company] : [product.name, product.company, product.strength, product.category]).join(" ").toLowerCase();
+      return searchable.includes(term) && (selectedCompany === "all" || product.company === selectedCompany);
     });
 
-    const sorted = [...filtered];
-    const sortMode = sortSelect ? sortSelect.value : "name_asc";
-    if (sortMode === "price_asc") {
-      sorted.sort((a,b) => (getPrices(a).finalPrice ?? Number.MAX_SAFE_INTEGER) - (getPrices(b).finalPrice ?? Number.MAX_SAFE_INTEGER));
-    } else if (sortMode === "price_desc") {
-      sorted.sort((a,b) => (getPrices(b).finalPrice ?? -1) - (getPrices(a).finalPrice ?? -1));
-    } else if (sortMode === "newest") {
-      const hasDates = sorted.some(product => product.created_at && Number.isFinite(Date.parse(product.created_at)));
-      if (hasDates) {
-        sorted.sort((a,b) => (Date.parse(b.created_at || "") || 0) - (Date.parse(a.created_at || "") || 0));
-      } else {
-        sorted.sort((a,b) => recentProducts.indexOf(b) - recentProducts.indexOf(a));
-      }
-    } else {
-      sorted.sort((a,b) => String(a.name || "").localeCompare(String(b.name || ""), "en", {sensitivity:"base",numeric:true}));
-    }
+    resultCount.textContent = `${filtered.length}টি পণ্য`;
 
-    resultCount.textContent = `${sorted.length}টি পণ্য`;
-
-    if (!sorted.length) {
-      grid.innerHTML = '<div class="empty-state"><div class="empty-icon">🔎</div><strong>কোনো ওষুধ পাওয়া যায়নি</strong>অন্য নাম দিয়ে সার্চ করুন অথবা Filter পরিবর্তন করুন।</div>';
+    if (!filtered.length) {
+      grid.innerHTML = '<div class="empty-state"><div class="empty-icon">🔎</div><strong>কোনো ওষুধ পাওয়া যায়নি</strong>অন্য নাম দিয়ে সার্চ করুন অথবা অন্য কোম্পানি নির্বাচন করুন।</div>';
       return;
     }
 
-    grid.innerHTML = sorted.map((product, index) => productCardHTML(product, index < 8)).join("");
+    grid.innerHTML = filtered.map((product, index) => productCardHTML(product, index < 8)).join("");
   }
 
   function renderFlashSale() {
@@ -1572,40 +1278,15 @@ footer{background:#f5faf7!important}
     renderProducts();
   });
 
+  // Header search stays available while scrolling; tap it to jump to and focus the existing search.
+  document.getElementById("headerSearchBtn").addEventListener("click", () => {
+    const searchSection = document.querySelector(".hero2");
+    if (searchSection) searchSection.scrollIntoView({behavior:"smooth", block:"start"});
+    window.setTimeout(() => searchInput.focus({preventScroll:true}), 350);
+  });
+
   searchInput.addEventListener("input", renderProducts);
   categorySelect.addEventListener("change", renderProducts);
-  if (sortSelect) sortSelect.addEventListener("change", renderProducts);
-
-  if (discountFilterBtn) {
-    discountFilterBtn.addEventListener("click", () => {
-      discountOnly = !discountOnly;
-      discountFilterBtn.classList.toggle("active", discountOnly);
-      discountFilterBtn.setAttribute("aria-pressed", String(discountOnly));
-      renderProducts();
-    });
-  }
-
-  if (categoryGrid) {
-    categoryGrid.addEventListener("click", event => {
-      const button = event.target.closest("button[data-category]");
-      if (!button) return;
-      selectedCategory = button.dataset.category || "all";
-      categoryGrid.querySelectorAll("button[data-category]").forEach(item => item.classList.toggle("active", item === button));
-      document.querySelectorAll(".category-reset").forEach(item => item.classList.remove("active"));
-      renderProducts();
-      document.getElementById("products").scrollIntoView({behavior:"smooth"});
-    });
-  }
-
-  document.querySelectorAll(".category-reset").forEach(button => {
-    button.addEventListener("click", () => {
-      selectedCategory = "all";
-      if (categoryGrid) categoryGrid.querySelectorAll("button[data-category]").forEach(item => item.classList.remove("active"));
-      button.classList.add("active");
-      renderProducts();
-      document.getElementById("products").scrollIntoView({behavior:"smooth"});
-    });
-  });
 
   heroForm.addEventListener("submit", event => {
     event.preventDefault();
@@ -1637,18 +1318,14 @@ footer{background:#f5faf7!important}
 
   flashSaleGrid.addEventListener("click", handleCardClick);
   grid.addEventListener("click", handleCardClick);
-  if (popularGrid) popularGrid.addEventListener("click", handleCardClick);
-  if (recentGrid) recentGrid.addEventListener("click", handleCardClick);
 
   async function loadProducts() {
     try {
-      const medicineHeaders = { headers: { apikey:SUPABASE_PUBLISHABLE_KEY, Authorization:"Bearer " + SUPABASE_PUBLISHABLE_KEY } };
-      const selectWithCreatedAt = "id,name,company,strength,price,discount_percent,image_url,stock,category,is_flash_sale,strips_per_box,strip_price,strip_discount_percent,unit_type,created_at";
-      const selectWithoutCreatedAt = "id,name,company,strength,price,discount_percent,image_url,stock,category,is_flash_sale,strips_per_box,strip_price,strip_discount_percent,unit_type";
-      let response = await fetch(SUPABASE_URL + "/rest/v1/medicines?select=" + selectWithCreatedAt, medicineHeaders);
-      if (!response.ok && response.status === 400) {
-        response = await fetch(SUPABASE_URL + "/rest/v1/medicines?select=" + selectWithoutCreatedAt, medicineHeaders);
-      }
+      const response = await fetch(
+        SUPABASE_URL + "/rest/v1/medicines?select=id,name,company,strength,price,discount_percent,image_url,stock,category,is_flash_sale,strips_per_box,strip_price,strip_discount_percent,unit_type",
+        { headers: { apikey:SUPABASE_PUBLISHABLE_KEY, Authorization:"Bearer " + SUPABASE_PUBLISHABLE_KEY } }
+      );
+
       if (!response.ok) throw new Error("Medicine request failed: HTTP " + response.status);
 
       const rows = await response.json();
@@ -1669,13 +1346,10 @@ footer{background:#f5faf7!important}
           unit:(row.unit_type==="bottle"?"প্রতি Bottle":(row.unit_type==="tube"?"প্রতি Tube":"প্রতি বক্স")),
           image_url:row.image_url || "",
           category:row.category || "",
-          created_at:row.created_at || "",
           stock:row.stock,
           is_flash_sale:row.is_flash_sale, strips_per_box:row.strips_per_box, strip_price:row.strip_price, strip_discount_percent:Number(row.strip_discount_percent) || 0, unit_type:row.unit_type || "strip"
         };
       });
-
-      recentProducts = databaseProducts.slice();
 
       // A–Z sorting (case-insensitive, numeric-aware)
       databaseProducts.sort((a, b) =>
@@ -1694,7 +1368,6 @@ footer{background:#f5faf7!important}
     renderCompanyFilters();
     renderProducts();
     renderFlashSale();
-    renderFeaturedSections();
   }
 
   checkoutForm.addEventListener("submit", async event => {
@@ -1958,8 +1631,6 @@ footer{background:#f5faf7!important}
   }
 
   accountBtn.addEventListener("click", () => { currentUser ? openAccount() : openAuth("login"); });
-  const mobileAccountBtn = document.getElementById("mobileAccountBtn");
-  if (mobileAccountBtn) mobileAccountBtn.addEventListener("click", () => accountBtn.click());
   document.getElementById("loginPromptBtn").addEventListener("click", () => openAuth("login"));
   document.getElementById("authCloseBtn").addEventListener("click", () => closeModal(authModal));
   document.getElementById("accountCloseBtn").addEventListener("click", () => closeModal(accountModal));
@@ -2074,13 +1745,5 @@ footer{background:#f5faf7!important}
     console.error("Initial loading error:", error);
   });
 </script>
-
-<nav class="mobile-bottom-nav" aria-label="Mobile navigation">
-  <a href="#top" class="mobile-nav-item"><span>⌂</span><small>Home</small></a>
-  <a href="#medicineCategories" class="mobile-nav-item"><span>▦</span><small>Category</small></a>
-  <a href="#products" class="mobile-nav-item"><span>⌕</span><small>Medicines</small></a>
-  <button type="button" class="mobile-nav-item" data-open-cart><span>🛒</span><small>Cart</small><b id="mobileCartCount">0</b></button>
-  <button type="button" class="mobile-nav-item" id="mobileAccountBtn"><span>♙</span><small>Account</small></button>
-</nav>
 </body>
 </html>
