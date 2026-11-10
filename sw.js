@@ -1,24 +1,16 @@
-
 self.addEventListener("push", function (event) {
-  let data = {
-    title: "Medispot BD",
-    body: "আপনার কাছে নতুন অর্ডার এসেছে!",
-    url: "/Medispot-BD/"
-  };
+  let data = {};
 
   if (event.data) {
-    try {
-      data = { ...data, ...event.data.json() };
-    } catch (error) {
-      data.body = event.data.text();
-    }
+    data = event.data.json();
   }
 
   event.waitUntil(
-    self.registration.showNotification(data.title, {
-      body: data.body,
+    self.registration.showNotification(data.title || "Medispot BD", {
+      body: data.body || "নতুন অর্ডার এসেছে!",
+      icon: "/Hazi-Drug-House/favicon.png",
       data: {
-        url: data.url || "/Medispot-BD/"
+        url: data.url || "https://hazidrughouse.github.io/Hazi-Drug-House/order.html"
       }
     })
   );
@@ -27,10 +19,7 @@ self.addEventListener("push", function (event) {
 self.addEventListener("notificationclick", function (event) {
   event.notification.close();
 
-  const targetUrl = new URL(
-    event.notification.data?.url || "/Medispot-BD/",
-    self.location.origin
-  ).href;
-
-  event.waitUntil(clients.openWindow(targetUrl));
+  event.waitUntil(
+    clients.openWindow(event.notification.data.url)
+  );
 });
