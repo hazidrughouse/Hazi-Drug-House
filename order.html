@@ -69,7 +69,7 @@ th,td{text-align:left;border-bottom:1px solid #e5ece7;padding:9px 5px}
 <main>
   <section id="login" class="panel">
     <h2>Admin Login</h2>
-    <p class="muted">&#2468;&#2507;&#2478;&#2494;&#2480; Supabase Admin account &#2470;&#2495;&#2479;&#2492;&#2503; &#2482;&#2455;&#2439;&#2472; &#2453;&#2480;&#2507;à¥¤</p>
+    <p class="muted">&#2468;&#2507;&#2478;&#2494;&#2480; Supabase Admin account &#2470;&#2495;&#2479;&#2492;&#2503; &#2482;&#2455;&#2439;&#2472; &#2453;&#2480;&#2507;Ã Â¥Â¤</p>
     <input id="email" type="email" placeholder="Admin email" autocomplete="username">
     <input id="password" type="password" placeholder="Password" autocomplete="current-password">
     <button id="loginBtn" onclick="login()">Login to Dashboard</button>
@@ -80,7 +80,7 @@ th,td{text-align:left;border-bottom:1px solid #e5ece7;padding:9px 5px}
     <div class="row no-print" style="margin-bottom:15px">
       <div>
         <h2 style="margin-bottom:5px">&#2437;&#2480;&#2509;&#2465;&#2494;&#2480; &#2478;&#2509;&#2479;&#2494;&#2472;&#2503;&#2460;&#2478;&#2503;&#2472;&#2509;&#2463;</h2>
-        <div class="muted">&#2472;&#2468;&#2497;&#2472; &#2437;&#2480;&#2509;&#2465;&#2494;&#2480; &#2447;&#2482;&#2503; &#2468;&#2494;&#2482;&#2495;&#2453;&#2494; &#2438;&#2474;&#2465;&#2503;&#2463; &#2489;&#2476;&#2503;à¥¤ &#2474;&#2509;&#2480;&#2479;&#2492;&#2507;&#2460;&#2472;&#2503; Refresh &#2458;&#2494;&#2474;&#2507;à¥¤</div>
+        <div class="muted">&#2472;&#2468;&#2497;&#2472; &#2437;&#2480;&#2509;&#2465;&#2494;&#2480; &#2447;&#2482;&#2503; &#2468;&#2494;&#2482;&#2495;&#2453;&#2494; &#2438;&#2474;&#2465;&#2503;&#2463; &#2489;&#2476;&#2503;Ã Â¥Â¤ &#2474;&#2509;&#2480;&#2479;&#2492;&#2507;&#2460;&#2472;&#2503; Refresh &#2458;&#2494;&#2474;&#2507;Ã Â¥Â¤</div>
         <p><span id="connectionStatus" class="connection">Realtime &#2474;&#2480;&#2496;&#2453;&#2509;&#2487;&#2494; &#2489;&#2458;&#2509;&#2459;&#2503;...</span></p>
       </div>
       <div class="actions">
@@ -132,6 +132,9 @@ th,td{text-align:left;border-bottom:1px solid #e5ece7;padding:9px 5px}
 const SUPABASE_URL = "https://pnaaqkuzazjiabnnwxjq.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_ckj65sbFnET7xOjxPJOwfw_-KrevOkv";
 
+const VAPID_PUBLIC_KEY = "BHr7eNBmLoxf29havqA5OL213Y-amlT6jzM37BXqE4rvF1Au92APe2w8W8-8hbb3tSqovdGH2_Z2oJLJo0eFkLE";
+const SERVICE_WORKER_PATH = "/Hazi-Drug-House/sw.js";
+
 const db = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_PUBLISHABLE_KEY
@@ -143,6 +146,7 @@ let loadingOrders = false;
 let reloadQueued = false;
 let notifiedIds = new Set();
 let notificationPermissionAsked = false;
+let webPushEnabled = false;
 
 function msg(text){
   document.getElementById("message").textContent = text;
@@ -187,10 +191,11 @@ function setConnectionStatus(text, offline=false){
 }
 
 function showBrowserNotification(title, body, id){
+  if(webPushEnabled) return;
   if(!("Notification" in window)) return;
   if(Notification.permission !== "granted") return;
 
-  // \u098F\u0995\u0987 order ID-\u098F\u09B0 \u099C\u09A8\u09CD\u09AF \u098F\u0995\u0987 session-\u098F \u09AC\u09BE\u09B0\u09AC\u09BE\u09B0 notification \u0986\u099F\u0995\u09BE\u09AF\u09BCà¥¤
+  // \u098F\u0995\u0987 order ID-\u098F\u09B0 \u099C\u09A8\u09CD\u09AF \u098F\u0995\u0987 session-\u098F \u09AC\u09BE\u09B0\u09AC\u09BE\u09B0 notification \u0986\u099F\u0995\u09BE\u09AF\u09BCÃ Â¥Â¤
   const key = String(id);
   if(notifiedIds.has(key)) return;
   notifiedIds.add(key);
@@ -208,7 +213,7 @@ async function login(){
   const btn = document.getElementById("loginBtn");
 
   if(!email || !password){
-    msg("Email \u0993 password \u09A6\u09BE\u0993à¥¤");
+    msg("Email \u0993 password \u09A6\u09BE\u0993Ã Â¥Â¤");
     return;
   }
 
@@ -222,7 +227,7 @@ async function login(){
     });
 
     if(error) throw error;
-    if(!data.session) throw new Error("Login session \u09A4\u09C8\u09B0\u09BF \u09B9\u09AF\u09BC\u09A8\u09BFà¥¤");
+    if(!data.session) throw new Error("Login session \u09A4\u09C8\u09B0\u09BF \u09B9\u09AF\u09BC\u09A8\u09BFÃ Â¥Â¤");
 
     document.getElementById("login").style.display = "none";
     document.getElementById("dashboard").style.display = "block";
@@ -297,12 +302,12 @@ async function loadOrders(){
       }
 
       try{
-        // \u0986\u0997\u09C7 \u09A5\u09C7\u0995\u09C7\u0987 URL \u09A5\u09BE\u0995\u09B2\u09C7 \u09B8\u09C7\u099F\u09BF \u09AC\u09CD\u09AF\u09AC\u09B9\u09BE\u09B0 \u0995\u09B0\u09CBà¥¤
+        // \u0986\u0997\u09C7 \u09A5\u09C7\u0995\u09C7\u0987 URL \u09A5\u09BE\u0995\u09B2\u09C7 \u09B8\u09C7\u099F\u09BF \u09AC\u09CD\u09AF\u09AC\u09B9\u09BE\u09B0 \u0995\u09B0\u09CBÃ Â¥Â¤
         if(/^https?:\/\//i.test(path)){
           return { ...order, customerImageSignedUrl: path };
         }
 
-        // Private Storage bucket \u09A5\u09C7\u0995\u09C7 \u09B8\u09BE\u09AE\u09AF\u09BC\u09BF\u0995 signed URL \u09A4\u09C8\u09B0\u09BFà¥¤
+        // Private Storage bucket \u09A5\u09C7\u0995\u09C7 \u09B8\u09BE\u09AE\u09AF\u09BC\u09BF\u0995 signed URL \u09A4\u09C8\u09B0\u09BFÃ Â¥Â¤
         const { data: signed, error: signedError } = await db
           .storage
           .from("customer-medicine-photos")
@@ -329,7 +334,7 @@ async function loadOrders(){
     list.innerHTML =
       '<div class="panel">\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u09B2\u09CB\u09A1 \u09B9\u09AF\u09BC\u09A8\u09BF: ' +
       escapeHtml(error.message) +
-      '<p class="muted">Admin SELECT policy, orders \u099F\u09C7\u09AC\u09BF\u09B2\u09C7\u09B0 \u0995\u09B2\u09BE\u09AE \u098F\u09AC\u0982 login session \u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE \u0995\u09B0\u09CBà¥¤</p></div>';
+      '<p class="muted">Admin SELECT policy, orders \u099F\u09C7\u09AC\u09BF\u09B2\u09C7\u09B0 \u0995\u09B2\u09BE\u09AE \u098F\u09AC\u0982 login session \u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE \u0995\u09B0\u09CBÃ Â¥Â¤</p></div>';
 
     console.error("Order loading failed:", error);
   }finally{
@@ -374,7 +379,7 @@ function renderOrders(){
   const list = document.getElementById("ordersList");
 
   if(!shown.length){
-    list.innerHTML = '<div class="panel empty">\u098F\u0987 \u09AB\u09BF\u09B2\u09CD\u099F\u09BE\u09B0\u09C7 \u0995\u09CB\u09A8\u09CB \u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u09AA\u09BE\u0993\u09AF\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BFà¥¤</div>';
+    list.innerHTML = '<div class="panel empty">\u098F\u0987 \u09AB\u09BF\u09B2\u09CD\u099F\u09BE\u09B0\u09C7 \u0995\u09CB\u09A8\u09CB \u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u09AA\u09BE\u0993\u09AF\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BFÃ Â¥Â¤</div>';
     return;
   }
 
@@ -395,7 +400,7 @@ function renderOrders(){
         <td>${money(price)} / ${packageType}</td>
         <td>${money(qty * price)}</td>
       </tr>`;
-    }).join("") : '<tr><td colspan="5">\u098F\u0987 \u0985\u09B0\u09CD\u09A1\u09BE\u09B0\u09C7\u09B0 items \u09A4\u09BE\u09B2\u09BF\u0995\u09BE \u09AA\u09BE\u0993\u09AF\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BFà¥¤</td></tr>';
+    }).join("") : '<tr><td colspan="5">\u098F\u0987 \u0985\u09B0\u09CD\u09A1\u09BE\u09B0\u09C7\u09B0 items \u09A4\u09BE\u09B2\u09BF\u0995\u09BE \u09AA\u09BE\u0993\u09AF\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BFÃ Â¥Â¤</td></tr>';
 
     const photoSection = order.customerImageSignedUrl
       ? `<div class="customer-photo">
@@ -403,12 +408,12 @@ function renderOrders(){
           <a href="${escapeHtml(order.customerImageSignedUrl)}" target="_blank" rel="noopener noreferrer">
             <img src="${escapeHtml(order.customerImageSignedUrl)}" alt="Customer uploaded medicine photo" loading="lazy">
           </a>
-          <a href="${escapeHtml(order.customerImageSignedUrl)}" target="_blank" rel="noopener noreferrer">\u099B\u09AC\u09BF\u099F\u09BF \u09AC\u09A1\u09BC \u0995\u09B0\u09C7 \u09A6\u09C7\u0996\u09C1\u09A8 â</a>
+          <a href="${escapeHtml(order.customerImageSignedUrl)}" target="_blank" rel="noopener noreferrer">\u099B\u09AC\u09BF\u099F\u09BF \u09AC\u09A1\u09BC \u0995\u09B0\u09C7 \u09A6\u09C7\u0996\u09C1\u09A8 Ã¢ÂÂ</a>
         </div>`
       : (order.customer_image_url
           ? `<div class="customer-photo">
               <h4>Customer-\u098F\u09B0 \u0985\u09A4\u09BF\u09B0\u09BF\u0995\u09CD\u09A4 \u0993\u09B7\u09C1\u09A7\u09C7\u09B0 \u099B\u09AC\u09BF</h4>
-              <p class="photo-missing">\u099B\u09AC\u09BF\u099F\u09BF \u0996\u09CB\u09B2\u09BE \u09AF\u09BE\u099A\u09CD\u099B\u09C7 \u09A8\u09BEà¥¤ Admin login \u098F\u09AC\u0982 Storage SELECT policy \u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE \u0995\u09B0\u09CBà¥¤</p>
+              <p class="photo-missing">\u099B\u09AC\u09BF\u099F\u09BF \u0996\u09CB\u09B2\u09BE \u09AF\u09BE\u099A\u09CD\u099B\u09C7 \u09A8\u09BEÃ Â¥Â¤ Admin login \u098F\u09AC\u0982 Storage SELECT policy \u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE \u0995\u09B0\u09CBÃ Â¥Â¤</p>
             </div>`
           : "");
 
@@ -490,7 +495,7 @@ async function updateStatus(button){
 
     if(!data){
       throw new Error(
-        "\u0995\u09CB\u09A8\u09CB row update \u09B9\u09AF\u09BC\u09A8\u09BFà¥¤ Admin UPDATE policy \u098F\u09AC\u0982 RLS \u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE \u0995\u09B0\u09CBà¥¤"
+        "\u0995\u09CB\u09A8\u09CB row update \u09B9\u09AF\u09BC\u09A8\u09BFÃ Â¥Â¤ Admin UPDATE policy \u098F\u09AC\u0982 RLS \u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE \u0995\u09B0\u09CBÃ Â¥Â¤"
       );
     }
 
@@ -511,7 +516,7 @@ async function deleteOrder(button){
   const id = card.dataset.orderId;
 
   const confirmed = confirm(
-    `\u09B8\u09A4\u09B0\u09CD\u0995\u09A4\u09BE!\n\n\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 #${id} \u09B8\u09CD\u09A5\u09BE\u09AF\u09BC\u09C0\u09AD\u09BE\u09AC\u09C7 \u09A1\u09BF\u09B2\u09BF\u099F \u0995\u09B0\u09A4\u09C7 \u099A\u09BE\u0993?\n\n\u098F\u0987 \u0995\u09BE\u099C \u09AB\u09BF\u09B0\u09BF\u09AF\u09BC\u09C7 \u0986\u09A8\u09BE \u09AF\u09BE\u09AC\u09C7 \u09A8\u09BEà¥¤`
+    `\u09B8\u09A4\u09B0\u09CD\u0995\u09A4\u09BE!\n\n\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 #${id} \u09B8\u09CD\u09A5\u09BE\u09AF\u09BC\u09C0\u09AD\u09BE\u09AC\u09C7 \u09A1\u09BF\u09B2\u09BF\u099F \u0995\u09B0\u09A4\u09C7 \u099A\u09BE\u0993?\n\n\u098F\u0987 \u0995\u09BE\u099C \u09AB\u09BF\u09B0\u09BF\u09AF\u09BC\u09C7 \u0986\u09A8\u09BE \u09AF\u09BE\u09AC\u09C7 \u09A8\u09BEÃ Â¥Â¤`
   );
 
   if(!confirmed) return;
@@ -532,14 +537,14 @@ async function deleteOrder(button){
 
     if(!data){
       throw new Error(
-        "\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u09A1\u09BF\u09B2\u09BF\u099F \u09B9\u09AF\u09BC\u09A8\u09BFà¥¤ Admin DELETE/SELECT policy \u098F\u09AC\u0982 RLS \u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE \u0995\u09B0\u09CBà¥¤"
+        "\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u09A1\u09BF\u09B2\u09BF\u099F \u09B9\u09AF\u09BC\u09A8\u09BFÃ Â¥Â¤ Admin DELETE/SELECT policy \u098F\u09AC\u0982 RLS \u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE \u0995\u09B0\u09CBÃ Â¥Â¤"
       );
     }
 
     orders = orders.filter(order => String(order.id) !== String(id));
     renderOrders();
 
-    alert(`\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 #${id} \u09B8\u09AB\u09B2\u09AD\u09BE\u09AC\u09C7 \u09A1\u09BF\u09B2\u09BF\u099F \u09B9\u09AF\u09BC\u09C7\u099B\u09C7à¥¤`);
+    alert(`\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 #${id} \u09B8\u09AB\u09B2\u09AD\u09BE\u09AC\u09C7 \u09A1\u09BF\u09B2\u09BF\u099F \u09B9\u09AF\u09BC\u09C7\u099B\u09C7Ã Â¥Â¤`);
   }catch(error){
     console.error("Order delete failed:", error);
     alert("\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u09A1\u09BF\u09B2\u09BF\u099F \u0995\u09B0\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BF:\n" + error.message);
@@ -557,7 +562,7 @@ function printReceipt(button){
   const order = orders.find(item => String(item.id) === String(id));
 
   if(!order){
-    alert("\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u09AA\u09BE\u0993\u09AF\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BFà¥¤ Refresh \u0995\u09B0\u09C7 \u0986\u09AC\u09BE\u09B0 \u099A\u09C7\u09B7\u09CD\u099F\u09BE \u0995\u09B0\u09CBà¥¤");
+    alert("\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u09AA\u09BE\u0993\u09AF\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BFÃ Â¥Â¤ Refresh \u0995\u09B0\u09C7 \u0986\u09AC\u09BE\u09B0 \u099A\u09C7\u09B7\u09CD\u099F\u09BE \u0995\u09B0\u09CBÃ Â¥Â¤");
     return;
   }
 
@@ -580,7 +585,7 @@ function printReceipt(button){
   const w = window.open("", "_blank", "width=850,height=700");
 
   if(!w){
-    alert("Receipt \u0996\u09C1\u09B2\u09A4\u09C7 browser popup allow \u0995\u09B0\u09CBà¥¤");
+    alert("Receipt \u0996\u09C1\u09B2\u09A4\u09C7 browser popup allow \u0995\u09B0\u09CBÃ Â¥Â¤");
     return;
   }
 
@@ -624,10 +629,10 @@ function printReceipt(button){
     <h2>\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u0995\u09B0\u09BE \u09AA\u09A3\u09CD\u09AF</h2>
     <table>
       <thead><tr><th>\u09AA\u09A3\u09CD\u09AF\u09C7\u09B0 \u09A8\u09BE\u09AE</th><th>\u0995\u09CB\u09AE\u09CD\u09AA\u09BE\u09A8\u09BF</th><th>\u09AA\u09CD\u09AF\u09BE\u0995\u09C7\u099C \u0993 \u09AA\u09B0\u09BF\u09AE\u09BE\u09A3</th><th>\u098F\u0995\u0995 \u09AE\u09C2\u09B2\u09CD\u09AF</th><th>\u09AE\u09CB\u099F</th></tr></thead>
-      <tbody>${rows || '<tr><td colspan="5">\u098F\u0987 \u0985\u09B0\u09CD\u09A1\u09BE\u09B0\u09C7\u09B0 \u09AA\u09A3\u09CD\u09AF\u09C7\u09B0 \u09AC\u09BF\u09B8\u09CD\u09A4\u09BE\u09B0\u09BF\u09A4 \u09B8\u0982\u09B0\u0995\u09CD\u09B7\u09BF\u09A4 \u09A8\u09C7\u0987à¥¤</td></tr>'}</tbody>
+      <tbody>${rows || '<tr><td colspan="5">\u098F\u0987 \u0985\u09B0\u09CD\u09A1\u09BE\u09B0\u09C7\u09B0 \u09AA\u09A3\u09CD\u09AF\u09C7\u09B0 \u09AC\u09BF\u09B8\u09CD\u09A4\u09BE\u09B0\u09BF\u09A4 \u09B8\u0982\u09B0\u0995\u09CD\u09B7\u09BF\u09A4 \u09A8\u09C7\u0987Ã Â¥Â¤</td></tr>'}</tbody>
     </table>
     <div class="total">\u09B8\u09B0\u09CD\u09AC\u09AE\u09CB\u099F: ${money(order.total_amount)}</div>
-    <p class="muted">\u098F\u0987 \u09B0\u09B8\u09BF\u09A6\u099F\u09BF Medispot BD \u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u09B0\u09C7\u0995\u09B0\u09CD\u09A1 \u09A5\u09C7\u0995\u09C7 \u09A4\u09C8\u09B0\u09BFà¥¤</p>
+    <p class="muted">\u098F\u0987 \u09B0\u09B8\u09BF\u09A6\u099F\u09BF Medispot BD \u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u09B0\u09C7\u0995\u09B0\u09CD\u09A1 \u09A5\u09C7\u0995\u09C7 \u09A4\u09C8\u09B0\u09BFÃ Â¥Â¤</p>
     <button class="print" onclick="window.print()">Print / Save as PDF</button>
   </body>
   </html>`);
@@ -635,28 +640,73 @@ function printReceipt(button){
   w.document.close();
 }
 
+function urlBase64ToUint8Array(base64String){
+  const padding = "=".repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+  const rawData = atob(base64);
+  return Uint8Array.from([...rawData].map(char => char.charCodeAt(0)));
+}
+
 async function enableNotifications(){
-  if(!("Notification" in window)){
-    alert("\u098F\u0987 \u09AC\u09CD\u09B0\u09BE\u0989\u099C\u09BE\u09B0\u09C7 \u09B8\u09BE\u09A7\u09BE\u09B0\u09A3 Browser Notification \u09B8\u09AE\u09B0\u09CD\u09A5\u09BF\u09A4 \u09A8\u09AF\u09BCà¥¤");
-    return;
-  }
+  const button = document.querySelector('button[onclick="enableNotifications()"]');
+  if(button) button.disabled = true;
 
   try{
+    if(!window.isSecureContext){
+      throw new Error("Push Notification-à¦à¦° à¦à¦¨à§à¦¯ HTTPS à¦ªà§à¦°à§à§à¦à¦¨à¥¤ Safari-à¦¤à§ à¦¸à¦¾à¦à¦à¦à¦¿ à¦à§à¦²à§ à¦à§à¦·à§à¦à¦¾ à¦à¦°à§à¥¤");
+    }
+    if(!("serviceWorker" in navigator) || !("PushManager" in window)){
+      throw new Error("à¦à¦ Browser-à¦ Web Push à¦¸à¦®à¦°à§à¦¥à¦¿à¦¤ à¦¨à§à¥¤ iPhone à¦¹à¦²à§ Safari à¦¥à§à¦à§ Add to Home Screen à¦à¦°à§ à¦¸à§à¦ à¦à¦à¦à¦¨ à¦¦à¦¿à§à§ à¦à§à¦²à¦¤à§ à¦¹à¦¬à§à¥¤");
+    }
+
+    const { data: sessionData, error: sessionError } = await db.auth.getSession();
+    if(sessionError) throw sessionError;
+    if(!sessionData.session) throw new Error("à¦à¦à§ Admin account à¦¦à¦¿à§à§ Login à¦à¦°à§à¥¤");
+
+    const registration = await navigator.serviceWorker.register(SERVICE_WORKER_PATH, {
+      scope: "/Hazi-Drug-House/"
+    });
+    await navigator.serviceWorker.ready;
+
     const permission = await Notification.requestPermission();
     notificationPermissionAsked = true;
-
-    if(permission === "granted"){
-      alert("Browser Notification \u0985\u09A8\u09C1\u09AE\u09A4\u09BF \u09A6\u09C7\u0993\u09AF\u09BC\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7à¥¤ \u09A8\u09A4\u09C1\u09A8 \u0985\u09B0\u09CD\u09A1\u09BE\u09B0\u09C7\u09B0 Notification \u09AA\u09C7\u09A4\u09C7 Dashboard \u0996\u09CB\u09B2\u09BE \u09B0\u09BE\u0996\u09A4\u09C7 \u09B9\u09AC\u09C7à¥¤");
-    }else{
-      alert("Notification \u0985\u09A8\u09C1\u09AE\u09A4\u09BF \u09A6\u09C7\u0993\u09AF\u09BC\u09BE \u09B9\u09AF\u09BC\u09A8\u09BFà¥¤ Browser \u09AC\u09BE device settings-\u098F \u0985\u09A8\u09C1\u09AE\u09A4\u09BF \u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE \u0995\u09B0\u09CBà¥¤");
+    if(permission !== "granted"){
+      throw new Error("Notification permission Allow à¦à¦°à¦¤à§ à¦¹à¦¬à§à¥¤ iPhone Settings à¦¥à§à¦à§à¦ à¦à¦¨à§à¦®à¦¤à¦¿ à¦ªà¦°à§à¦à§à¦·à¦¾ à¦à¦°à§à¥¤");
     }
+
+    let subscription = await registration.pushManager.getSubscription();
+    if(!subscription){
+      subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+      });
+    }
+
+    const subscriptionJson = subscription.toJSON();
+    const userId = sessionData.session.user.id;
+    const { error: saveError } = await db
+      .from("admin_push_subscriptions")
+      .upsert({
+        user_id: userId,
+        endpoint: subscriptionJson.endpoint,
+        p256dh: subscriptionJson.keys?.p256dh,
+        auth: subscriptionJson.keys?.auth
+      }, { onConflict: "endpoint" });
+
+    if(saveError) throw saveError;
+
+    webPushEnabled = true;
+    alert("Push Notification à¦à¦¾à¦²à§ à¦¹à§à§à¦à§! à¦à¦à¦¨ à¦¨à¦¤à§à¦¨ à¦à¦°à§à¦¡à¦¾à¦° à¦à¦²à§ à¦à¦ à¦¡à¦¿à¦­à¦¾à¦à¦¸à§ Notification à¦à¦¸à¦¾à¦° à¦à¦¥à¦¾à¥¤");
   }catch(error){
-    alert("Notification \u099A\u09BE\u09B2\u09C1 \u0995\u09B0\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BF: " + error.message);
+    console.error("Push notification setup failed:", error);
+    alert("Push Notification à¦à¦¾à¦²à§ à¦¹à§à¦¨à¦¿: " + (error.message || error));
+  }finally{
+    if(button) button.disabled = false;
   }
 }
 
 function subscribeOrders(){
-  // \u098F\u0995\u0987 Dashboard-\u098F \u098F\u0995\u09BE\u09A7\u09BF\u0995 channel \u09A4\u09C8\u09B0\u09BF \u09B9\u0993\u09AF\u09BC\u09BE \u0986\u099F\u0995\u09BE\u0993à¥¤
+  // \u098F\u0995\u0987 Dashboard-\u098F \u098F\u0995\u09BE\u09A7\u09BF\u0995 channel \u09A4\u09C8\u09B0\u09BF \u09B9\u0993\u09AF\u09BC\u09BE \u0986\u099F\u0995\u09BE\u0993Ã Â¥Â¤
   if(ordersChannel) return;
 
   setConnectionStatus("Realtime \u09B8\u0982\u09AF\u09CB\u0997 \u09B9\u099A\u09CD\u099B\u09C7...", true);
@@ -677,12 +727,12 @@ function subscribeOrders(){
         if(id !== undefined && id !== null){
           showBrowserNotification(
             "Medispot BD: \u09A8\u09A4\u09C1\u09A8 \u0985\u09B0\u09CD\u09A1\u09BE\u09B0",
-            "\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 #" + id + " \u098F\u09B8\u09C7\u099B\u09C7à¥¤",
+            "\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 #" + id + " \u098F\u09B8\u09C7\u099B\u09C7Ã Â¥Â¤",
             id
           );
         }
 
-        // \u09A8\u09A4\u09C1\u09A8 \u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u09A4\u09BE\u09B2\u09BF\u0995\u09BE\u09AF\u09BC \u09A6\u09C7\u0996\u09BE\u09A8\u09CB\u09B0 \u099C\u09A8\u09CD\u09AF \u09AA\u09C1\u09A8\u09B0\u09BE\u09AF\u09BC \u09B2\u09CB\u09A1à¥¤
+        // \u09A8\u09A4\u09C1\u09A8 \u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u09A4\u09BE\u09B2\u09BF\u0995\u09BE\u09AF\u09BC \u09A6\u09C7\u0996\u09BE\u09A8\u09CB\u09B0 \u099C\u09A8\u09CD\u09AF \u09AA\u09C1\u09A8\u09B0\u09BE\u09AF\u09BC \u09B2\u09CB\u09A1Ã Â¥Â¤
         loadOrders();
       }
     )
@@ -694,7 +744,7 @@ function subscribeOrders(){
       }else if(status === "CHANNEL_ERROR"){
         setConnectionStatus("Realtime \u09B8\u0982\u09AF\u09CB\u0997\u09C7 \u09B8\u09AE\u09B8\u09CD\u09AF\u09BE", true);
       }else if(status === "TIMED_OUT"){
-        setConnectionStatus("Realtime timeout â Refresh \u0995\u09B0\u09CB", true);
+        setConnectionStatus("Realtime timeout Ã¢ÂÂ Refresh \u0995\u09B0\u09CB", true);
       }else if(status === "CLOSED"){
         setConnectionStatus("Realtime \u09AC\u09A8\u09CD\u09A7", true);
       }else{
@@ -722,7 +772,7 @@ db.auth.getSession().then(async ({ data, error }) => {
   }
 });
 
-// \u09B2\u0997\u0987\u09A8 \u0985\u09A8\u09CD\u09AF \u099F\u09CD\u09AF\u09BE\u09AC \u09A5\u09C7\u0995\u09C7 \u09B6\u09C7\u09B7 \u09B9\u09B2\u09C7 \u09AC\u09BE session \u09B6\u09C7\u09B7 \u09B9\u09B2\u09C7 UI \u0986\u09AA\u09A1\u09C7\u099Fà¥¤
+// \u09B2\u0997\u0987\u09A8 \u0985\u09A8\u09CD\u09AF \u099F\u09CD\u09AF\u09BE\u09AC \u09A5\u09C7\u0995\u09C7 \u09B6\u09C7\u09B7 \u09B9\u09B2\u09C7 \u09AC\u09BE session \u09B6\u09C7\u09B7 \u09B9\u09B2\u09C7 UI \u0986\u09AA\u09A1\u09C7\u099FÃ Â¥Â¤
 db.auth.onAuthStateChange((event, session) => {
   if(event === "SIGNED_OUT"){
     stopOrderSubscription();
