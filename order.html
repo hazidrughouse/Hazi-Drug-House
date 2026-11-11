@@ -156,6 +156,19 @@ th,td{text-align:left;border-bottom:1px solid #e5ece7;padding:9px 5px}
     <h3 style="margin:0 0 10px">➕ ওষুধ যোগ করো</h3>
     <input id="editorSearch" placeholder="ওষুধ বা কোম্পানির নাম লিখে খুঁজুন" autocomplete="off">
     <div id="editorResults"></div>
+    <div style="margin-top:16px;padding:12px;border:1px dashed #8acbb0;border-radius:12px;background:#f5fbf7">
+      <h3 style="margin:0 0 4px">✍️ ওয়েবসাইটে নেই এমন ওষুধ (ম্যানুয়াল)</h3>
+      <p class="muted" style="margin:0 0 10px">নাম, দাম ইত্যাদি নিজে লিখে ইনভয়েসে যোগ করো।</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px">
+        <input id="manName" placeholder="ওষুধের নাম *" style="margin:0;grid-column:1/-1">
+        <select id="manUnit" style="padding:11px"><option>Box</option><option>Strip</option><option>Bottle</option><option>Tube</option><option>Pcs</option></select>
+        <input id="manQty" type="number" min="1" step="1" value="1" placeholder="পরিমাণ" style="margin:0">
+        <input id="manBatch" placeholder="Batch no" style="margin:0">
+        <input id="manMrp" type="number" min="0" step="0.01" placeholder="MRP রেট *" style="margin:0">
+        <input id="manDisc" type="number" min="0" max="100" step="any" value="0" placeholder="Discount %" style="margin:0">
+      </div>
+      <button type="button" onclick="addManualMedicine()" style="margin-top:10px">+ ইনভয়েসে যোগ করো</button>
+    </div>
     <div class="actions" style="margin-top:12px">
       <button type="button" onclick="saveInvoiceEditor(false)">Save</button>
       <button type="button" class="secondary" onclick="saveInvoiceEditor(true)">Save করে Invoice খোলো</button>
@@ -867,6 +880,44 @@ document.getElementById("editorResults").addEventListener("click", event => {
   renderEditor();
   document.getElementById("editorMsg").textContent = "✅ ওষুধ যোগ হয়েছে। Batch no দিয়ে Save করো।";
 });
+
+function addManualMedicine(){
+  const msgEl = document.getElementById("editorMsg");
+  const name = document.getElementById("manName").value.trim();
+  const unit = document.getElementById("manUnit").value;
+  const qty = Math.floor(Number(document.getElementById("manQty").value) || 0);
+  const batch = document.getElementById("manBatch").value.trim();
+  const mrp = Number(document.getElementById("manMrp").value);
+  const disc = clampPct(document.getElementById("manDisc").value);
+
+  if(!name){ msgEl.textContent = "ওষুধের নাম লিখো।"; return; }
+  if(qty < 1){ msgEl.textContent = "পরিমাণ ১ বা তার বেশি দাও।"; return; }
+  if(!Number.isFinite(mrp) || mrp <= 0){ msgEl.textContent = "MRP রেট শূন্যের বেশি দাও।"; return; }
+  if(disc >= 100){ msgEl.textContent = "Discount 100%-এর কম হতে হবে।"; return; }
+
+  editorItems.push({
+    id: "manual-" + Date.now(),
+    name,
+    company: "",
+    image_url: "",
+    package_type: unit === "Box" ? "box" : "strip",
+    package_label: unit,
+    strips_per_box: 1,
+    quantity: qty,
+    batch_no: batch,
+    mrp: round2(mrp),
+    discount_percent: disc,
+    unit_price: round2(mrp * (1 - disc / 100)),
+    manual: true
+  });
+
+  ["manName", "manBatch", "manMrp"].forEach(id => { document.getElementById(id).value = ""; });
+  document.getElementById("manQty").value = "1";
+  document.getElementById("manDisc").value = "0";
+
+  renderEditor();
+  msgEl.textContent = "✅ " + name + " যোগ হয়েছে। Save করলে ইনভয়েসে আসবে।";
+}
 
 async function saveInvoiceEditor(openAfter){
   if(savingEditor) return;
