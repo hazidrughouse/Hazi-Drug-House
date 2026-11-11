@@ -593,11 +593,11 @@ async function deleteOrder(button){
 }
 
 /* ===== Hazi Drug House Invoice ===== */
-// এখানে নিজের ঠিকানা ও ড্রাগ লাইসেন্স নম্বর বসাও
+// ড্রাগ লাইসেন্স নম্বর পরে বসালে license এর ভেতরে লিখো (খালি থাকলে ইনভয়েসে লাইনটা আসবে না)
 const INVOICE_SHOP = {
   name: "Hazi Drug House",
-  address: "এখানে দোকানের ঠিকানা লিখুন",
-  license: "Drug Licence No: এখানে লাইসেন্স নম্বর লিখুন"
+  address: "Nayanpur Bazar, Sreepur, Gazipur.",
+  license: ""
 };
 
 let medicineCatalog = [];
@@ -635,12 +635,39 @@ function itemPackageLabel(item){
   return item.package_label || (itemIsStrip(item) ? "Strip" : "Box");
 }
 
+function clampPct(v){
+  return Math.min(100, Math.max(0, Number(v) || 0));
+}
+
+function medSingle(m){
+  return !!m && (m.unit_type === "bottle" || m.unit_type === "tube");
+}
+
+function medUnitName(m){
+  return m && m.unit_type === "bottle" ? "Bottle" : (m && m.unit_type === "tube" ? "Tube" : "Strip");
+}
+
+// ওয়েবসাইটের হিসাবের নিয়মেই MRP ও Discount % বের করে
+function medBase(m, type){
+  const boxMrp = Number(m.price) || 0;
+  const boxDisc = clampPct(m.discount_percent);
+
+  if(type === "box" || medSingle(m)) return { mrp: boxMrp, discount: boxDisc };
+
+  const stripBase = Number(m.strip_price) || 0;
+  if(stripBase > 0) return { mrp: stripBase, discount: clampPct(m.strip_discount_percent) };
+
+  const per = Math.max(1, Number(m.strips_per_box) || 1);
+  return { mrp: round2(boxMrp / per), discount: boxDisc };
+}
+
 function itemMedicine(item){
-  const mid = String(item.id ?? "").replace(/^db-/, "").replace(/:strip$/, "");
+  const raw = String(item.medicine_id || item.id || "");
+  const mid = raw.replace(/^db-/, "").replace(/(-box|-strip|:strip)$/, "");
   return medicineCatalog.find(m => String(m.id) === mid) || null;
 }
 
-// অর্ডারের item থেকে MRP, Discount %, Discount Rate বের করে (ওয়েবসাইটের medicines টেবিলের সাথে মিলিয়ে)
+// অর্ডারের item থেকে MRP, Discount %, Discount Rate বের করে (ওয়েবসাইটের তথ্যের সাথে মিলিয়ে)
 function hydrateItem(item){
   const med = itemMedicine(item);
   const strip = itemIsStrip(item);
@@ -651,23 +678,22 @@ function hydrateItem(item){
     item.discount_percent != null && Number.isFinite(disc);
 
   if(!hasSaved){
-    const medMrp = med ? Number(strip ? med.strip_price : med.price) : 0;
-    mrp = medMrp > 0 ? medMrp : charged;
+    const base = med ? medBase(med, strip ? "strip" : "box") : { mrp: 0, discount: 0 };
+    mrp = base.mrp > 0 ? base.mrp : charged;
     if(mrp > 0 && charged > 0 && charged <= mrp){
       disc = (1 - charged / mrp) * 100;
     }else{
-      disc = med ? (Number(strip ? med.strip_discount_percent : med.discount_percent) || 0) : 0;
+      disc = base.discount;
     }
   }
 
-  disc = Math.min(100, Math.max(0, Number(Number(disc).toFixed(4)) || 0));
+  disc = clampPct(Number(Number(disc).toFixed(4)));
   const rate = charged > 0 ? charged : round2(mrp * (1 - disc / 100));
 
   return {
     ...item,
     quantity: Number(item.quantity ?? item.qty ?? 0) || 0,
     batch_no: String(item.batch_no || ""),
-    unit: strip ? "strip" : "box",
     package_type: strip ? "strip" : "box",
     package_label: itemPackageLabel(item),
     mrp: round2(mrp),
@@ -784,15 +810,19 @@ function renderEditorResults(){
     .slice(0, 8);
 
   box.innerHTML = found.length ? found.map(m => {
-    const strip = Number(m.strips_per_box) >= 2 && Number(m.strip_price) > 0;
     const mid = escapeHtml(m.id);
+    const single = medSingle(m);
+    const canStrip = !single && Number(m.strips_per_box) >= 2;
+    const unitName = medUnitName(m);
+
+    const buttons = single
+      ? `<button type="button" class="secondary" data-add="${mid}" data-unit="strip">+ ${unitName}</button>`
+      : `<button type="button" class="secondary" data-add="${mid}" data-unit="box">+ Box</button>` +
+        (canStrip ? `<button type="button" class="secondary" data-add="${mid}" data-unit="strip">+ ${unitName}</button>` : "");
 
     return `<div class="result-row">
       <div><b>${escapeHtml(m.name)} ${escapeHtml(m.strength || "")}</b><br><span class="muted">${escapeHtml(m.company || "")} · MRP ${money(m.price)}</span></div>
-      <div class="actions">
-        <button type="button" class="secondary" data-add="${mid}" data-unit="box">+ Box</button>
-        ${strip ? `<button type="button" class="secondary" data-add="${mid}" data-unit="strip">+ Strip</button>` : ""}
-      </div>
+      <div class="actions">${buttons}</div>
     </div>`;
   }).join("") : '<p class="muted">কোনো ওষুধ পাওয়া যায়নি।</p>';
 }
@@ -806,32 +836,31 @@ document.getElementById("editorResults").addEventListener("click", event => {
   const m = medicineCatalog.find(x => String(x.id) === btn.dataset.add);
   if(!m) return;
 
-  const strip = btn.dataset.unit === "strip";
-  const id = "db-" + m.id + (strip ? ":strip" : "");
+  const type = btn.dataset.unit === "strip" ? "strip" : "box";
+  const id = "db-" + m.id + "-" + type;
   const existing = editorItems.find(it => String(it.id) === id);
 
   if(existing){
     existing.quantity = (Number(existing.quantity) || 0) + 1;
   }else{
-    const mrp = Number(strip ? m.strip_price : m.price) || 0;
-    const disc = Math.min(100, Math.max(0, Number(strip ? m.strip_discount_percent : m.discount_percent) || 0));
+    const base = medBase(m, type);
     const name = String(m.name || "").trim();
     const strength = String(m.strength || "").trim();
 
     editorItems.push({
       id,
+      medicine_id: "db-" + m.id,
       name: strength && !name.toLowerCase().includes(strength.toLowerCase()) ? name + " " + strength : name,
       company: m.company || "",
       image_url: m.image_url || "",
-      unit: strip ? "strip" : "box",
-      package_type: strip ? "strip" : "box",
-      package_label: strip ? "Strip" : "Box",
-      strips_per_box: Number(m.strips_per_box) || 0,
+      package_type: type,
+      package_label: type === "strip" ? medUnitName(m) : "Box",
+      strips_per_box: medSingle(m) ? 1 : Math.max(1, Number(m.strips_per_box) || 1),
       quantity: 1,
       batch_no: "",
-      mrp,
-      discount_percent: disc,
-      unit_price: round2(mrp * (1 - disc / 100))
+      mrp: round2(base.mrp),
+      discount_percent: clampPct(base.discount),
+      unit_price: round2(base.mrp * (1 - clampPct(base.discount) / 100))
     });
   }
 
@@ -926,71 +955,145 @@ async function showInvoice(id, w){
 
   const rows = (Array.isArray(order.items) ? order.items : []).map(hydrateItem);
   let grand = 0;
+  let mrpTotal = 0;
 
-  const bodyRows = rows.map(it => {
+  const bodyRows = rows.map((it, i) => {
     const line = round2(it.quantity * it.unit_price);
     grand += line;
+    mrpTotal += it.quantity * it.mrp;
 
     return `<tr>
-      <td>${escapeHtml(it.name || it.medicine_name || it.product_name || "ওষুধ")}</td>
-      <td>${it.quantity} ${escapeHtml(itemPackageLabel(it))}</td>
-      <td>${escapeHtml(it.batch_no || "-")}</td>
+      <td class="sl">${i + 1}</td>
+      <td class="pname">${escapeHtml(it.name || it.medicine_name || it.product_name || "ওষুধ")}${it.company ? `<small>${escapeHtml(it.company)}</small>` : ""}</td>
+      <td class="ctr">${it.quantity} ${escapeHtml(itemPackageLabel(it))}</td>
+      <td class="ctr">${escapeHtml(it.batch_no || "-")}</td>
       <td class="num">${money(it.mrp)}</td>
       <td class="num">${Number(Number(it.discount_percent).toFixed(2))}%</td>
       <td class="num">${money(it.unit_price)}</td>
-      <td class="num">${money(line)}</td>
+      <td class="num strong">${money(line)}</td>
     </tr>`;
   }).join("");
+
+  grand = round2(grand);
+  const saved = Math.max(0, round2(mrpTotal - grand));
+  const rawId = String(order.id);
+  const invNo = rawId.length > 8 ? rawId.slice(-6).toUpperCase() : rawId;
+  const licenseHtml = INVOICE_SHOP.license ? `<div class="lic">${escapeHtml(INVOICE_SHOP.license)}</div>` : "";
 
   const html = `<!DOCTYPE html>
   <html lang="bn">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>${escapeHtml(INVOICE_SHOP.name)} Invoice #${escapeHtml(order.id)}</title>
+    <title>${escapeHtml(INVOICE_SHOP.name)} Invoice #${escapeHtml(invNo)}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-      body{font-family:"Noto Sans Bengali","Hind Siliguri",Arial,sans-serif;color:#18352b;max-width:850px;margin:25px auto;padding:20px}
-      header{text-align:center;border-bottom:2px solid #075e46;padding-bottom:14px}
-      h1{margin:0;color:#075e46;font-size:40px;line-height:1.2}
-      .addr{margin-top:6px;font-size:13px;color:#333}
-      .lic{margin-top:3px;font-size:12px;color:#555}
-      .doc-title{margin:14px 0 0;font-size:15px;font-weight:bold;letter-spacing:2px}
-      .line{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}
-      .info{margin:16px 0}
-      .info p{margin:6px 0;font-size:14px}
-      table{width:100%;border-collapse:collapse;margin-top:12px}
-      th,td{border:1px solid #cfd9d3;text-align:left;padding:8px 6px;font-size:13px;vertical-align:top}
-      th{background:#f0f6f2}
+      *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+      body{margin:0;background:#eef3f0;font-family:"Hind Siliguri","Noto Sans Bengali",Arial,sans-serif;color:#17322a;padding:24px 12px}
+      .sheet{max-width:860px;margin:auto;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 10px 40px rgba(7,94,70,.15)}
+      .topbar{height:10px;background:linear-gradient(90deg,#064c37,#0b8a63 60%,#c9a24a)}
+      .inner{padding:28px 32px 26px}
+      .head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap}
+      .brand{display:flex;align-items:center;gap:14px}
+      .mark{width:58px;height:58px;border-radius:16px;background:linear-gradient(145deg,#075e46,#0b8a63);color:#fff;font-size:30px;font-weight:700;display:grid;place-items:center;box-shadow:0 6px 16px rgba(7,94,70,.3)}
+      h1{margin:0;font-size:36px;line-height:1.1;color:#064c37;font-weight:700;letter-spacing:.3px}
+      .addr{margin-top:5px;font-size:13px;color:#4c6258}
+      .lic{margin-top:2px;font-size:12px;color:#66786f}
+      .doc{text-align:right}
+      .doc-title{font-size:30px;font-weight:700;letter-spacing:6px;color:#b08a33;line-height:1}
+      .meta{margin-top:10px;font-size:13px;color:#33493f;line-height:1.7}
+      .meta b{color:#064c37}
+      .rule{height:2px;margin:22px 0;background:linear-gradient(90deg,#075e46,#d7e7df 70%,transparent)}
+      .bill{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;background:#f4faf7;border:1px solid #dcebe4;border-left:5px solid #075e46;border-radius:10px;padding:14px 18px}
+      .bill .label{font-size:11px;letter-spacing:2px;font-weight:700;color:#b08a33;margin-bottom:4px}
+      .bill .nm{font-size:18px;font-weight:700;color:#064c37}
+      .bill p{margin:2px 0;font-size:13px;color:#33493f}
+      .tablewrap{overflow-x:auto;margin-top:22px;border-radius:10px;border:1px solid #dcebe4}
+      table.items{width:100%;border-collapse:collapse;min-width:640px}
+      .items th{background:linear-gradient(180deg,#0a7656,#064c37);color:#fff;font-size:12px;font-weight:600;padding:11px 8px;text-align:left;letter-spacing:.3px}
+      .items td{padding:10px 8px;font-size:13px;border-bottom:1px solid #e6eee9;vertical-align:top}
+      .items tbody tr:nth-child(even){background:#f7fbf9}
+      .items tbody tr:last-child td{border-bottom:0}
+      .sl{width:30px;color:#7a8c83;text-align:center}
+      .pname{font-weight:600;color:#17322a}
+      .pname small{display:block;font-weight:400;color:#7a8c83;font-size:11px;margin-top:1px}
+      .ctr{text-align:center;white-space:nowrap}
       .num{text-align:right;white-space:nowrap}
-      .total{text-align:right;font-size:22px;font-weight:bold;margin-top:20px;border-top:2px solid #075e46;padding-top:14px}
-      .print{margin-top:20px;padding:10px 15px;background:#075e46;color:white;border:0;border-radius:6px;cursor:pointer}
-      @media print{.print{display:none}body{margin:0;padding:0}}
+      .items th.ctr{text-align:center}.items th.num{text-align:right}
+      .strong{font-weight:700;color:#064c37}
+      .summary{margin:20px 0 0 auto;width:min(340px,100%)}
+      .srow{display:flex;justify-content:space-between;padding:7px 4px;font-size:14px;color:#33493f}
+      .srow.save{color:#0a7656;font-weight:600}
+      .grand{display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding:14px 18px;border-radius:10px;background:linear-gradient(135deg,#064c37,#0b8a63);color:#fff;font-size:19px;font-weight:700}
+      .foot{display:flex;justify-content:space-between;gap:20px;margin-top:46px;font-size:12px;color:#5b6f65}
+      .sig{width:200px;text-align:center;border-top:1px solid #9db5aa;padding-top:6px}
+      .thanks{text-align:center;margin-top:28px;padding-top:14px;border-top:1px dashed #cfe0d7;font-size:13px;color:#4c6258}
+      .thanks b{color:#064c37}
+      .actions{max-width:860px;margin:16px auto 0;text-align:center}
+      .print{padding:12px 26px;background:#075e46;color:#fff;border:0;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer}
+      @media(max-width:560px){.inner{padding:20px 16px}h1{font-size:28px}.doc{text-align:left}.doc-title{font-size:24px}}
+      @media print{body{background:#fff;padding:0}.sheet{box-shadow:none;border-radius:0;max-width:none}.actions{display:none}.tablewrap{overflow:visible}@page{margin:10mm}}
     </style>
   </head>
   <body>
-    <header>
-      <h1>${escapeHtml(INVOICE_SHOP.name)}</h1>
-      <div class="addr">${escapeHtml(INVOICE_SHOP.address)}</div>
-      <div class="lic">${escapeHtml(INVOICE_SHOP.license)}</div>
-      <div class="doc-title">INVOICE</div>
-    </header>
-    <div class="line info">
-      <div><b>Order ID:</b> #${escapeHtml(order.id)}<br><b>Date:</b> ${escapeHtml(formatDate(order.created_at))}</div>
-      <div>
-        <b>Name:</b> ${escapeHtml(order.customer_name || "-")}<br>
-        <b>Pharmacy:</b> ${escapeHtml(order.pharmacy_name || "-")}<br>
-        <b>Mobile:</b> ${escapeHtml(order.phone || "-")}<br>
-        <b>Address:</b> ${escapeHtml(order.address || "-")}
+    <div class="sheet">
+      <div class="topbar"></div>
+      <div class="inner">
+        <div class="head">
+          <div class="brand">
+            <div class="mark">H</div>
+            <div>
+              <h1>${escapeHtml(INVOICE_SHOP.name)}</h1>
+              <div class="addr">${escapeHtml(INVOICE_SHOP.address)}</div>
+              ${licenseHtml}
+            </div>
+          </div>
+          <div class="doc">
+            <div class="doc-title">INVOICE</div>
+            <div class="meta"><b>Invoice No:</b> #${escapeHtml(invNo)}<br><b>Date:</b> ${escapeHtml(formatDate(order.created_at))}</div>
+          </div>
+        </div>
+
+        <div class="rule"></div>
+
+        <div class="bill">
+          <div>
+            <div class="label">BILLED TO</div>
+            <div class="nm">${escapeHtml(order.pharmacy_name || order.customer_name || "-")}</div>
+            <p>${escapeHtml(order.customer_name || "-")}</p>
+          </div>
+          <div>
+            <div class="label">CONTACT</div>
+            <p><b>Mobile:</b> ${escapeHtml(order.phone || "-")}</p>
+            <p><b>Address:</b> ${escapeHtml(order.address || "-")}</p>
+          </div>
+        </div>
+
+        <div class="tablewrap">
+          <table class="items">
+            <thead><tr>
+              <th class="ctr">#</th><th>Product Name</th><th class="ctr">Quantity</th><th class="ctr">Batch No</th>
+              <th class="num">MRP Rate</th><th class="num">Discount</th><th class="num">Discount Rate</th><th class="num">Total</th>
+            </tr></thead>
+            <tbody>${bodyRows || '<tr><td colspan="8">এই অর্ডারে কোনো ওষুধ নেই।</td></tr>'}</tbody>
+          </table>
+        </div>
+
+        <div class="summary">
+          <div class="srow"><span>Total MRP</span><span>${money(round2(mrpTotal))}</span></div>
+          <div class="srow save"><span>Total Discount</span><span>- ${money(saved)}</span></div>
+          <div class="grand"><span>Grand Total</span><span>${money(grand)}</span></div>
+        </div>
+
+        <div class="foot">
+          <div class="sig">Receiver's Signature</div>
+          <div class="sig">Authorized Signature</div>
+        </div>
+
+        <div class="thanks"><b>ধন্যবাদ!</b> আপনার ব্যবসার সাফল্য কামনা করি — ${escapeHtml(INVOICE_SHOP.name)}</div>
       </div>
     </div>
-    <table>
-      <thead><tr>
-        <th>Product Name</th><th>Quantity</th><th>Batch No</th><th>MRP Rate</th><th>Discount</th><th>Discount Rate</th><th>Total</th>
-      </tr></thead>
-      <tbody>${bodyRows || '<tr><td colspan="7">এই অর্ডারে কোনো ওষুধ নেই।</td></tr>'}</tbody>
-    </table>
-    <div class="total">Grand Total: ${money(round2(grand))}</div>
-    <button class="print" onclick="window.print()">Print / Save as PDF</button>
+    <div class="actions"><button class="print" onclick="window.print()">Print / Save as PDF</button></div>
   </body>
   </html>`;
 
