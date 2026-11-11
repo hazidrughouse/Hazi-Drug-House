@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -57,857 +56,16 @@ th,td{text-align:left;border-bottom:1px solid #e5ece7;padding:9px 5px}
   .actions select{max-width:100%;width:100%}
 }
 @media print{body{background:white}.no-print{display:none!important}}
-.package-tag{display:inline-block;margin:3px 0;padding:2px 7px;border-radius:6px;background:#e6f4ee;color:#0b6b4f;font-size:11px;font-weight:700}\n</style>
-</head>
-
-<body>
-<header>
-  <h1>Medispot BD</h1>
-  <p>Order Management Dashboard</p>
-</header>
-
-<main>
-  <section id="login" class="panel">
-    <h2>Admin Login</h2>
-    <p class="muted">&#2468;&#2507;&#2478;&#2494;&#2480; Supabase Admin account &#2470;&#2495;&#2479;&#2492;&#2503; &#2482;&#2455;&#2439;&#2472; &#2453;&#2480;&#2507;à¥¤</p>
-    <input id="email" type="email" placeholder="Admin email" autocomplete="username">
-    <input id="password" type="password" placeholder="Password" autocomplete="current-password">
-    <button id="loginBtn" onclick="login()">Login to Dashboard</button>
-    <div id="message"></div>
-  </section>
-
-  <section id="dashboard">
-    <div class="row no-print" style="margin-bottom:15px">
-      <div>
-        <h2 style="margin-bottom:5px">&#2437;&#2480;&#2509;&#2465;&#2494;&#2480; &#2478;&#2509;&#2479;&#2494;&#2472;&#2503;&#2460;&#2478;&#2503;&#2472;&#2509;&#2463;</h2>
-        <div class="muted">&#2472;&#2468;&#2497;&#2472; &#2437;&#2480;&#2509;&#2465;&#2494;&#2480; &#2447;&#2482;&#2503; &#2468;&#2494;&#2482;&#2495;&#2453;&#2494; &#2438;&#2474;&#2465;&#2503;&#2463; &#2489;&#2476;&#2503;à¥¤ &#2474;&#2509;&#2480;&#2479;&#2492;&#2507;&#2460;&#2472;&#2503; Refresh &#2458;&#2494;&#2474;&#2507;à¥¤</div>
-        <p><span id="connectionStatus" class="connection">Realtime &#2474;&#2480;&#2496;&#2453;&#2509;&#2487;&#2494; &#2489;&#2458;&#2509;&#2459;&#2503;...</span></p>
-      </div>
-      <div class="actions">
-        <button class="secondary" onclick="enableNotifications()">Notification &#2458;&#2494;&#2482;&#2497;</button>
-        <button onclick="loadOrders()">Refresh</button>
-        <button class="danger" onclick="logout()">Logout</button>
-      </div>
-    </div>
-
-    <div class="grid">
-      <div class="stat">
-        <span class="muted">&#2470;&#2503;&#2454;&#2494;&#2472;&#2507; &#2437;&#2480;&#2509;&#2465;&#2494;&#2480;</span>
-        <strong id="totalCount">0</strong>
-      </div>
-      <div class="stat">
-        <span class="muted">Pending</span>
-        <strong id="pendingCount">0</strong>
-      </div>
-      <div class="stat">
-        <span class="muted">&#2470;&#2503;&#2454;&#2494;&#2472;&#2507; &#2437;&#2480;&#2509;&#2465;&#2494;&#2480;&#2503;&#2480; &#2478;&#2507;&#2463; &#2478;&#2498;&#2482;&#2509;&#2479;</span>
-        <strong id="totalAmount">&#2547;0</strong>
-      </div>
-    </div>
-
-    <div class="panel no-print">
-      <div class="filters">
-        <input id="search" placeholder="&#2437;&#2480;&#2509;&#2465;&#2494;&#2480; &#2472;&#2478;&#2509;&#2476;&#2480; / &#2475;&#2494;&#2480;&#2509;&#2478;&#2503;&#2488;&#2495; / &#2475;&#2507;&#2472; &#2470;&#2495;&#2479;&#2492;&#2503; &#2454;&#2497;&#2433;&#2460;&#2497;&#2472;" oninput="renderOrders()">
-        <input id="dateFilter" type="date" aria-label="&#2468;&#2494;&#2480;&#2495;&#2454; &#2437;&#2472;&#2497;&#2479;&#2494;&#2479;&#2492;&#2496; &#2437;&#2480;&#2509;&#2465;&#2494;&#2480;" onchange="renderOrders()">
-        <select id="filter" onchange="renderOrders()">
-          <option value="">&#2488;&#2476; Status</option>
-          <option value="pending">Pending</option>
-          <option value="confirmed">Confirmed</option>
-          <option value="processing">Processing</option>
-          <option value="shipped">Shipped</option>
-          <option value="delivered">Delivered</option>
-          <option value="cancelled">Cancelled</option>
-        </select>
-      </div>
-      <div class="actions" style="margin-top:10px">
-        <button class="secondary" onclick="clearFilters()">&#2488;&#2476; &#2468;&#2494;&#2480;&#2495;&#2454;&#2503;&#2480; &#2437;&#2480;&#2509;&#2465;&#2494;&#2480;</button>
-      </div>
-    </div>
-
-    <div id="ordersList"><p class="muted">&#2437;&#2480;&#2509;&#2465;&#2494;&#2480; &#2482;&#2507;&#2465; &#2489;&#2458;&#2509;&#2459;&#2503;...</p></div>
-  </section>
-</main>
-
-<script>
-const SUPABASE_URL = "https://pnaaqkuzazjiabnnwxjq.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_ckj65sbFnET7xOjxPJOwfw_-KrevOkv";
-
-const VAPID_PUBLIC_KEY = "BHr7eNBmLoxf29havqA5OL213Y-amlT6jzM37BXqE4rvF1Au92APe2w8W8-8hbb3tSqovdGH2_Z2oJLJo0eFkLE";
-const SERVICE_WORKER_PATH = "/Hazi-Drug-House/sw.js";
-
-const db = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY
-);
-
-let orders = [];
-let ordersChannel = null;
-let loadingOrders = false;
-let reloadQueued = false;
-let notifiedIds = new Set();
-let notificationPermissionAsked = false;
-let webPushEnabled = false;
-
-function msg(text){
-  document.getElementById("message").textContent = text;
-}
-
-function money(value){
-  return "\u09F3" + Number(value || 0).toLocaleString("en-BD", {
-    maximumFractionDigits: 2
-  });
-}
-
-function escapeHtml(value){
-  return String(value ?? "").replace(/[&<>"']/g, c => ({
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    '"':"&quot;",
-    "'":"&#39;"
-  }[c]));
-}
-
-function dateKey(value){
-  if(!value) return "";
-  const d = new Date(value);
-  if(Number.isNaN(d.getTime())) return "";
-  const y = d.getFullYear();
-  const m = String(d.getMonth()+1).padStart(2,"0");
-  const day = String(d.getDate()).padStart(2,"0");
-  return `${y}-${m}-${day}`;
-}
-
-function formatDate(value){
-  if(!value) return "-";
-  const d = new Date(value);
-  return Number.isNaN(d.getTime()) ? "-" : d.toLocaleString("bn-BD");
-}
-
-function setConnectionStatus(text, offline=false){
-  const el = document.getElementById("connectionStatus");
-  el.textContent = text;
-  el.classList.toggle("offline", offline);
-}
-
-function showBrowserNotification(title, body, id){
-  if(webPushEnabled) return;
-  if(!("Notification" in window)) return;
-  if(Notification.permission !== "granted") return;
-
-  // \u098F\u0995\u0987 order ID-\u098F\u09B0 \u099C\u09A8\u09CD\u09AF \u098F\u0995\u0987 session-\u098F \u09AC\u09BE\u09B0\u09AC\u09BE\u09B0 notification \u0986\u099F\u0995\u09BE\u09AF\u09BCà¥¤
-  const key = String(id);
-  if(notifiedIds.has(key)) return;
-  notifiedIds.add(key);
-
-  try{
-    new Notification(title, { body });
-  }catch(error){
-    console.warn("Browser notification failed:", error);
-  }
-}
-
-async function login(){
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value;
-  const btn = document.getElementById("loginBtn");
-
-  if(!email || !password){
-    msg("Email \u0993 password \u09A6\u09BE\u0993à¥¤");
-    return;
-  }
-
-  btn.disabled = true;
-  msg("Login \u09B9\u099A\u09CD\u099B\u09C7...");
-
-  try{
-    const { data, error } = await db.auth.signInWithPassword({
-      email,
-      password
-    });
-
-    if(error) throw error;
-    if(!data.session) throw new Error("Login session \u09A4\u09C8\u09B0\u09BF \u09B9\u09AF\u09BC\u09A8\u09BFà¥¤");
-
-    document.getElementById("login").style.display = "none";
-    document.getElementById("dashboard").style.display = "block";
-    msg("");
-
-    await loadOrders();
-    subscribeOrders();
-  }catch(error){
-    msg("Login \u09B9\u09AF\u09BC\u09A8\u09BF: " + error.message);
-  }finally{
-    btn.disabled = false;
-  }
-}
-
-async function logout(){
-  await stopOrderSubscription();
-  await db.auth.signOut();
-
-  orders = [];
-  notifiedIds.clear();
-
-  document.getElementById("dashboard").style.display = "none";
-  document.getElementById("login").style.display = "block";
-  document.getElementById("password").value = "";
-  setConnectionStatus("\u09B2\u0997\u0987\u09A8 \u0995\u09B0\u09BE \u09A8\u09C7\u0987", true);
-}
-
-async function stopOrderSubscription(){
-  if(!ordersChannel) return;
-
-  const oldChannel = ordersChannel;
-  ordersChannel = null;
-
-  try{
-    await db.removeChannel(oldChannel);
-  }catch(error){
-    console.warn("Realtime channel close failed:", error);
-  }
-}
-
-function clearFilters(){
-  document.getElementById("search").value = "";
-  document.getElementById("dateFilter").value = "";
-  document.getElementById("filter").value = "";
-  renderOrders();
-}
-
-async function loadOrders(){
-  if(loadingOrders){
-    reloadQueued = true;
-    return;
-  }
-
-  loadingOrders = true;
-  const list = document.getElementById("ordersList");
-  list.innerHTML = '<div class="panel">\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u09B2\u09CB\u09A1 \u09B9\u099A\u09CD\u099B\u09C7...</div>';
-
-  try{
-    const { data, error } = await db
-      .from("orders")
-      .select("id,customer_name,pharmacy_name,phone,address,total_amount,status,created_at,items,customer_image_url")
-      .order("created_at", { ascending: false })
-      .limit(1000);
-
-    if(error) throw error;
-
-    const fresh = await Promise.all((data || []).map(async order => {
-      const path = String(order.customer_image_url || "").trim();
-
-      if(!path){
-        return { ...order, customerImageSignedUrl: "" };
-      }
-
-      try{
-        // \u0986\u0997\u09C7 \u09A5\u09C7\u0995\u09C7\u0987 URL \u09A5\u09BE\u0995\u09B2\u09C7 \u09B8\u09C7\u099F\u09BF \u09AC\u09CD\u09AF\u09AC\u09B9\u09BE\u09B0 \u0995\u09B0\u09CBà¥¤
-        if(/^https?:\/\//i.test(path)){
-          return { ...order, customerImageSignedUrl: path };
-        }
-
-        // Private Storage bucket \u09A5\u09C7\u0995\u09C7 \u09B8\u09BE\u09AE\u09AF\u09BC\u09BF\u0995 signed URL \u09A4\u09C8\u09B0\u09BFà¥¤
-        const { data: signed, error: signedError } = await db
-          .storage
-          .from("customer-medicine-photos")
-          .createSignedUrl(path, 3600);
-
-        if(signedError){
-          console.warn("Customer photo could not be opened:", signedError.message);
-          return { ...order, customerImageSignedUrl: "" };
-        }
-
-        return {
-          ...order,
-          customerImageSignedUrl: signed?.signedUrl || ""
-        };
-      }catch(photoError){
-        console.warn("Customer photo error:", photoError);
-        return { ...order, customerImageSignedUrl: "" };
-      }
-    }));
-
-    orders = fresh;
-    renderOrders();
-  }catch(error){
-    list.innerHTML =
-      '<div class="panel">\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u09B2\u09CB\u09A1 \u09B9\u09AF\u09BC\u09A8\u09BF: ' +
-      escapeHtml(error.message) +
-      '<p class="muted">Admin SELECT policy, orders \u099F\u09C7\u09AC\u09BF\u09B2\u09C7\u09B0 \u0995\u09B2\u09BE\u09AE \u098F\u09AC\u0982 login session \u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE \u0995\u09B0\u09CBà¥¤</p></div>';
-
-    console.error("Order loading failed:", error);
-  }finally{
-    loadingOrders = false;
-
-    if(reloadQueued){
-      reloadQueued = false;
-      loadOrders();
-    }
-  }
-}
-
-function renderOrders(){
-  const search = document.getElementById("search").value.trim().toLowerCase();
-  const filter = document.getElementById("filter").value;
-  const selectedDate = document.getElementById("dateFilter").value;
-
-  const shown = orders.filter(order => {
-    const orderNumber = String(order.id ?? "").toLowerCase();
-
-    return (!search || orderNumber.includes(search)) &&
-      (!filter || String(order.status || "").toLowerCase() === filter) &&
-      (!selectedDate || dateKey(order.created_at) === selectedDate);
-  });
-
-  document.getElementById("totalCount").textContent = shown.length;
-
-  document.getElementById("pendingCount").textContent =
-    shown.filter(order =>
-      String(order.status || "").toLowerCase() === "pending"
-    ).length;
-
-  document.getElementById("totalAmount").textContent = money(
-    shown.reduce((sum, order) => sum + Number(order.total_amount || 0), 0)
-  );
-
-  const list = document.getElementById("ordersList");
-
-  if(!shown.length){
-    list.innerHTML = '<div class="panel empty">\u098F\u0987 \u09AB\u09BF\u09B2\u09CD\u099F\u09BE\u09B0\u09C7 \u0995\u09CB\u09A8\u09CB \u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u09AA\u09BE\u0993\u09AF\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BFà¥¤</div>';
-    return;
-  }
-
-  list.innerHTML = shown.map(order => {
-    const items = Array.isArray(order.items) ? order.items : [];
-    const status = String(order.status || "pending").toLowerCase();
-
-    const itemRows = items.length ? items.map(item => {
-      const qty = Number(item.quantity ?? item.qty ?? 0);
-      const price = Number(item.unit_price ?? item.price ?? item.sale_price ?? 0);
-      const packageType = item.package_label || (item.package_type === "strip" ? "Strip" : (item.package_type === "box" ? "Box" : "\u0985\u099C\u09BE\u09A8\u09BE"));
-      const quantityLabel = `${qty} ${packageType}`;
-
-      return `<tr>
-        <td>${escapeHtml(item.name || item.medicine_name || item.product_name || "\u0993\u09B7\u09C1\u09A7")}</td>
-        <td>${escapeHtml(item.company || item.company_name || "-")}</td>
-        <td><span class="package-tag">${quantityLabel}</span></td>
-        <td>${money(price)} / ${packageType}</td>
-        <td>${money(qty * price)}</td>
-      </tr>`;
-    }).join("") : '<tr><td colspan="5">\u098F\u0987 \u0985\u09B0\u09CD\u09A1\u09BE\u09B0\u09C7\u09B0 items \u09A4\u09BE\u09B2\u09BF\u0995\u09BE \u09AA\u09BE\u0993\u09AF\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BFà¥¤</td></tr>';
-
-    const photoSection = order.customerImageSignedUrl
-      ? `<div class="customer-photo">
-          <h4>Customer-\u098F\u09B0 \u0985\u09A4\u09BF\u09B0\u09BF\u0995\u09CD\u09A4 \u0993\u09B7\u09C1\u09A7\u09C7\u09B0 \u099B\u09AC\u09BF</h4>
-          <a href="${escapeHtml(order.customerImageSignedUrl)}" target="_blank" rel="noopener noreferrer">
-            <img src="${escapeHtml(order.customerImageSignedUrl)}" alt="Customer uploaded medicine photo" loading="lazy">
-          </a>
-          <a href="${escapeHtml(order.customerImageSignedUrl)}" target="_blank" rel="noopener noreferrer">\u099B\u09AC\u09BF\u099F\u09BF \u09AC\u09A1\u09BC \u0995\u09B0\u09C7 \u09A6\u09C7\u0996\u09C1\u09A8 â</a>
-        </div>`
-      : (order.customer_image_url
-          ? `<div class="customer-photo">
-              <h4>Customer-\u098F\u09B0 \u0985\u09A4\u09BF\u09B0\u09BF\u0995\u09CD\u09A4 \u0993\u09B7\u09C1\u09A7\u09C7\u09B0 \u099B\u09AC\u09BF</h4>
-              <p class="photo-missing">\u099B\u09AC\u09BF\u099F\u09BF \u0996\u09CB\u09B2\u09BE \u09AF\u09BE\u099A\u09CD\u099B\u09C7 \u09A8\u09BEà¥¤ Admin login \u098F\u09AC\u0982 Storage SELECT policy \u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE \u0995\u09B0\u09CBà¥¤</p>
-            </div>`
-          : "");
-
-    return `<article class="order" data-order-id="${escapeHtml(order.id)}">
-      <div class="row">
-        <div>
-          <h3>\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 #${escapeHtml(order.id)}</h3>
-          <span class="muted">${escapeHtml(formatDate(order.created_at))}</span>
-        </div>
-        <span class="tag">${escapeHtml(status.toUpperCase())}</span>
-      </div>
-
-      <hr style="border:0;border-top:1px solid #e5ece7;margin:14px 0">
-
-      <p><b>\u0985\u09B0\u09CD\u09A1\u09BE\u09B0\u0995\u09BE\u09B0\u09C0\u09B0 \u09A8\u09BE\u09AE:</b> ${escapeHtml(order.customer_name || "-")}</p>
-      <p><b>\u09AB\u09BE\u09B0\u09CD\u09AE\u09C7\u09B8\u09BF:</b> ${escapeHtml(order.pharmacy_name || "-")}</p>
-      <p><b>\u09AB\u09CB\u09A8:</b> ${escapeHtml(order.phone || "-")}</p>
-      <p><b>\u09A0\u09BF\u0995\u09BE\u09A8\u09BE:</b> ${escapeHtml(order.address || "-")}</p>
-
-      ${photoSection}
-
-      <h3>\u0993\u09B7\u09C1\u09A7\u09C7\u09B0 \u09A4\u09BE\u09B2\u09BF\u0995\u09BE</h3>
-      <div class="tablewrap">
-        <table>
-          <thead>
-            <tr>
-              <th>\u0993\u09B7\u09C1\u09A7</th>
-              <th>\u0995\u09CB\u09AE\u09CD\u09AA\u09BE\u09A8\u09BF</th>
-              <th>\u09AA\u09CD\u09AF\u09BE\u0995\u09C7\u099C \u0993 \u09AA\u09B0\u09BF\u09AE\u09BE\u09A3</th>
-              <th>\u098F\u0995\u0995 \u09A6\u09BE\u09AE</th>
-              <th>\u09AE\u09CB\u099F</th>
-            </tr>
-          </thead>
-          <tbody>${itemRows}</tbody>
-        </table>
-      </div>
-
-      <div class="row" style="margin-top:14px">
-        <b>\u0985\u09B0\u09CD\u09A1\u09BE\u09B0\u09C7\u09B0 \u09AE\u09CB\u099F: ${money(order.total_amount)}</b>
-        <div class="actions no-print">
-          <select class="status-select" aria-label="\u0985\u09B0\u09CD\u09A1\u09BE\u09B0\u09C7\u09B0 Status">
-            <option value="pending" ${status==="pending"?"selected":""}>Pending</option>
-            <option value="confirmed" ${status==="confirmed"?"selected":""}>Confirmed</option>
-            <option value="processing" ${status==="processing"?"selected":""}>Processing</option>
-            <option value="shipped" ${status==="shipped"?"selected":""}>Shipped</option>
-            <option value="delivered" ${status==="delivered"?"selected":""}>Delivered</option>
-            <option value="cancelled" ${status==="cancelled"?"selected":""}>Cancelled</option>
-          </select>
-          <button onclick="updateStatus(this)">Save Status</button>
-          <button class="secondary" onclick="printReceipt(this)">Receipt / PDF</button>
-          <button class="danger" onclick="deleteOrder(this)">Delete Order</button>
-        </div>
-      </div>
-    </article>`;
-  }).join("");
-}
-
-async function updateStatus(button){
-  const card = button.closest(".order");
-  if(!card) return;
-
-  const id = card.dataset.orderId;
-  const select = card.querySelector(".status-select");
-  const status = select.value;
-
-  button.disabled = true;
-  const originalText = button.textContent;
-  button.textContent = "Saving...";
-
-  try{
-    const { data, error } = await db
-      .from("orders")
-      .update({ status })
-      .eq("id", id)
-      .select("id,status")
-      .maybeSingle();
-
-    if(error) throw error;
-
-    if(!data){
-      throw new Error(
-        "\u0995\u09CB\u09A8\u09CB row update \u09B9\u09AF\u09BC\u09A8\u09BFà¥¤ Admin UPDATE policy \u098F\u09AC\u0982 RLS \u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE \u0995\u09B0\u09CBà¥¤"
-      );
-    }
-
-    alert("\u09B8\u09CD\u099F\u09CD\u09AF\u09BE\u099F\u09BE\u09B8 \u0986\u09AA\u09A1\u09C7\u099F \u09B9\u09AF\u09BC\u09C7\u099B\u09C7: " + status.toUpperCase());
-    await loadOrders();
-  }catch(error){
-    alert("\u09B8\u09CD\u099F\u09CD\u09AF\u09BE\u099F\u09BE\u09B8 \u09AA\u09B0\u09BF\u09AC\u09B0\u09CD\u09A4\u09A8 \u09B9\u09AF\u09BC\u09A8\u09BF: " + error.message);
-  }finally{
-    button.disabled = false;
-    button.textContent = originalText;
-  }
-}
-
-async function deleteOrder(button){
-  const card = button.closest(".order");
-  if(!card) return;
-
-  const id = card.dataset.orderId;
-
-  const confirmed = confirm(
-    `\u09B8\u09A4\u09B0\u09CD\u0995\u09A4\u09BE!\n\n\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 #${id} \u09B8\u09CD\u09A5\u09BE\u09AF\u09BC\u09C0\u09AD\u09BE\u09AC\u09C7 \u09A1\u09BF\u09B2\u09BF\u099F \u0995\u09B0\u09A4\u09C7 \u099A\u09BE\u0993?\n\n\u098F\u0987 \u0995\u09BE\u099C \u09AB\u09BF\u09B0\u09BF\u09AF\u09BC\u09C7 \u0986\u09A8\u09BE \u09AF\u09BE\u09AC\u09C7 \u09A8\u09BEà¥¤`
-  );
-
-  if(!confirmed) return;
-
-  button.disabled = true;
-  const originalText = button.textContent;
-  button.textContent = "\u09A1\u09BF\u09B2\u09BF\u099F \u09B9\u099A\u09CD\u099B\u09C7...";
-
-  try{
-    const { data, error } = await db
-      .from("orders")
-      .delete()
-      .eq("id", id)
-      .select("id")
-      .maybeSingle();
-
-    if(error) throw error;
-
-    if(!data){
-      throw new Error(
-        "\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u09A1\u09BF\u09B2\u09BF\u099F \u09B9\u09AF\u09BC\u09A8\u09BFà¥¤ Admin DELETE/SELECT policy \u098F\u09AC\u0982 RLS \u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE \u0995\u09B0\u09CBà¥¤"
-      );
-    }
-
-    orders = orders.filter(order => String(order.id) !== String(id));
-    renderOrders();
-
-    alert(`\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 #${id} \u09B8\u09AB\u09B2\u09AD\u09BE\u09AC\u09C7 \u09A1\u09BF\u09B2\u09BF\u099F \u09B9\u09AF\u09BC\u09C7\u099B\u09C7à¥¤`);
-  }catch(error){
-    console.error("Order delete failed:", error);
-    alert("\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u09A1\u09BF\u09B2\u09BF\u099F \u0995\u09B0\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BF:\n" + error.message);
-  }finally{
-    button.disabled = false;
-    button.textContent = originalText;
-  }
-}
-
-function printReceipt(button){
-  const card = button.closest(".order");
-  if(!card) return;
-
-  const id = card.dataset.orderId;
-  const order = orders.find(item => String(item.id) === String(id));
-  if(!order){
-    alert("অর্ডারটি পাওয়া যায়নি। Refresh করে আবার চেষ্টা করুন।");
-    return;
-  }
-
-  const sourceItems = Array.isArray(order.items) ? order.items : [];
-  const invoiceItems = sourceItems.map(item => {
-    const quantity = Number(item.quantity ?? item.qty ?? 0);
-    const saleRate = Number(item.unit_price ?? item.price ?? item.sale_price ?? 0);
-    const mrp = Number(item.mrp_rate ?? item.mrp ?? item.mrp_price ?? saleRate);
-    const discount = Number(item.discount_percent ?? item.discount ?? 0);
-    const discountRate = Number(item.discount_rate ?? saleRate);
-    return {
-      name: item.name || item.medicine_name || item.product_name || "",
-      quantity,
-      batch: item.batch_no || item.batch || "",
-      mrp,
-      discount,
-      discountRate
-    };
-  });
-
-  const w = window.open("", "_blank", "width=1000,height=800");
-  if(!w){
-    alert("Invoice খুলতে browser popup allow করুন।");
-    return;
-  }
-
-  const safe = value => escapeHtml(value);
-  const initialRows = invoiceItems.map(item => `
-    <tr>
-      <td><input class="product-name" value="${safe(item.name)}" placeholder="Product name"></td>
-      <td><input class="qty" type="number" min="0" step="any" value="${item.quantity}"></td>
-      <td><input class="batch" value="${safe(item.batch)}" placeholder="Batch no"></td>
-      <td><input class="mrp" type="number" min="0" step="any" value="${item.mrp}"></td>
-      <td><input class="discount" type="number" min="0" max="100" step="any" value="${item.discount}"></td>
-      <td><input class="discount-rate" type="number" min="0" step="any" value="${item.discountRate}"></td>
-      <td class="row-total">৳0.00</td>
-      <td class="no-print"><button type="button" class="remove-row">Remove</button></td>
-    </tr>`).join("");
-
-  w.document.write(`<!DOCTYPE html>
-  <html lang="bn">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Hazi Drug House Invoice #${safe(order.id)}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-      *{box-sizing:border-box}
-      body{font-family:"Noto Sans Bengali","Hind Siliguri",Arial,sans-serif;color:#18352b;max-width:1100px;margin:22px auto;padding:18px}
-      header{text-align:center;border-bottom:2px solid #075e46;padding:0 0 14px;margin-bottom:16px}
-      h1{margin:0;color:#075e46;font-size:30px}
-      header p{margin:5px 0;font-size:14px}
-      .line{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
-      .info{margin:16px 0}
-      .info p{margin:5px 0}
-      h2{font-size:17px;margin:18px 0 8px}
-      .table-wrap{overflow-x:auto}
-      table{width:100%;border-collapse:collapse;margin-top:10px;min-width:850px}
-      th,td{border:1px solid #cfded5;text-align:left;padding:7px 6px;font-size:12px;vertical-align:middle}
-      th{background:#edf6f0;color:#075e46;white-space:nowrap}
-      td input{width:100%;min-width:65px;padding:7px 5px;border:1px solid #d4e1d9;border-radius:5px;font:inherit;font-size:12px;margin:0}
-      td .product-name{min-width:140px}
-      td .batch{min-width:95px}
-      .row-total{font-weight:700;white-space:nowrap}
-      .total{text-align:right;font-size:21px;font-weight:bold;margin-top:18px;border-top:2px solid #075e46;padding-top:12px}
-      .muted{color:#666;font-size:12px}
-      button{padding:9px 13px;background:#075e46;color:white;border:0;border-radius:6px;cursor:pointer;font:inherit;margin:8px 6px 0 0}
-      .remove-row{background:#a72c2c;padding:6px 8px;font-size:11px}
-      .toolbar{margin:14px 0}
-      @media print{body{margin:0;padding:8px;max-width:none}.no-print{display:none!important}td input{border:0;padding:0;background:transparent;color:#18352b}table{min-width:0}th,td{font-size:10px;padding:5px 3px}header{padding-bottom:8px}h1{font-size:24px}}
-    </style>
-  </head>
-  <body>
-    <header>
-      <h1>HAZI DRUG HOUSE</h1>
-      <p>Nayanpur Bazar, Sreepur, Gazipur.</p>
-    </header>
-    <div class="line info">
-      <div><b>Order No:</b> #${safe(order.id)}<br><b>Order Date:</b> ${safe(formatDate(order.created_at))}</div>
-      <div><b>Customer:</b> ${safe(order.customer_name || "-")}<br><b>Pharmacy:</b> ${safe(order.pharmacy_name || "-")}<br><b>Mobile:</b> ${safe(order.phone || "-")}<br><b>Address:</b> ${safe(order.address || "-")}</div>
-    </div>
-    <h2>Product Details</h2>
-    <div class="table-wrap">
-      <table id="invoiceTable">
-        <thead><tr>
-          <th>Product Name</th><th>Quantity</th><th>Batch No</th><th>MRP Rate (৳)</th><th>Discount (%)</th><th>Discount Rate (৳)</th><th>Total (৳)</th><th class="no-print">Action</th>
-        </tr></thead>
-        <tbody>${initialRows}</tbody>
-      </table>
-    </div>
-    <div class="toolbar no-print">
-      <button type="button" id="addRow">+ Add Medicine</button>
-      <button type="button" id="printBtn">Print / Save as PDF</button>
-    </div>
-    <div class="total">Grand Total: <span id="grandTotal">৳0.00</span></div>
-    <p class="muted">Batch No. নিজে লিখুন। অতিরিক্ত ওষুধ যোগ বা তথ্য পরিবর্তন করে তারপর Print / Save as PDF করুন।</p>
-    <script>
-      const tbody = document.querySelector("#invoiceTable tbody");
-      const money = value => "৳" + (Number(value)||0).toLocaleString("en-BD",{minimumFractionDigits:2,maximumFractionDigits:2});
-      function updateTotals(){
-        let grand = 0;
-        tbody.querySelectorAll("tr").forEach(row => {
-          const qty = Number(row.querySelector(".qty").value)||0;
-          const rate = Number(row.querySelector(".discount-rate").value)||0;
-          const total = qty * rate;
-          row.querySelector(".row-total").textContent = money(total);
-          grand += total;
-        });
-        document.getElementById("grandTotal").textContent = money(grand);
-      }
-      function addRow(item={}){
-        const tr = document.createElement("tr");
-        const esc = value => String(value ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-        tr.innerHTML = '<td><input class="product-name" placeholder="Product name" value="' + esc(item.name) + '"></td>' +
-          '<td><input class="qty" type="number" min="0" step="any" value="' + (item.quantity ?? 1) + '"></td>' +
-          '<td><input class="batch" placeholder="Batch no"></td>' +
-          '<td><input class="mrp" type="number" min="0" step="any" value="' + (item.mrp ?? 0) + '"></td>' +
-          '<td><input class="discount" type="number" min="0" max="100" step="any" value="' + (item.discount ?? 0) + '"></td>' +
-          '<td><input class="discount-rate" type="number" min="0" step="any" value="' + (item.discountRate ?? 0) + '"></td>' +
-          '<td class="row-total">৳0.00</td>' +
-          '<td class="no-print"><button type="button" class="remove-row">Remove</button></td>';
-        tbody.appendChild(tr);
-        updateTotals();
-      }
-      tbody.addEventListener("input", event => {
-        const row = event.target.closest("tr");
-        if(!row) return;
-        if(event.target.classList.contains("mrp") || event.target.classList.contains("discount")){
-          const mrp = Number(row.querySelector(".mrp").value)||0;
-          const discount = Number(row.querySelector(".discount").value)||0;
-          row.querySelector(".discount-rate").value = (mrp - mrp*discount/100).toFixed(2);
-        }
-        updateTotals();
-      });
-      tbody.addEventListener("click", event => {
-        if(event.target.classList.contains("remove-row")){
-          event.target.closest("tr").remove();
-          updateTotals();
-        }
-      });
-      document.getElementById("addRow").addEventListener("click",()=>addRow());
-      document.getElementById("printBtn").addEventListener("click",()=>window.print());
-      updateTotals();
-    <\/script>
-  </body>
-  </html>`);
-  w.document.close();
-}
-
-function urlBase64ToUint8Array(base64String){
-  const padding = "=".repeat((4 - base64String.length % 4) % 4);
-  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
-  const rawData = atob(base64);
-  return Uint8Array.from([...rawData].map(char => char.charCodeAt(0)));
-}
-
-async function enableNotifications(){
-  const button = document.querySelector('button[onclick="enableNotifications()"]');
-  if(button) button.disabled = true;
-
-  try{
-    if(!window.isSecureContext){
-      throw new Error("Push Notification-এর জন্য HTTPS প্রয়োজন। Safari-তে সাইটটি খুলে চেষ্টা করো।");
-    }
-    if(!("serviceWorker" in navigator) || !("PushManager" in window)){
-      throw new Error("এই Browser-এ Web Push সমর্থিত নয়। iPhone হলে Safari থেকে Add to Home Screen করে সেই আইকন দিয়ে খুলতে হবে।");
-    }
-
-    const { data: sessionData, error: sessionError } = await db.auth.getSession();
-    if(sessionError) throw sessionError;
-    if(!sessionData.session) throw new Error("আগে Admin account দিয়ে Login করো।");
-
-    const registration = await navigator.serviceWorker.register(SERVICE_WORKER_PATH, {
-      scope: "/Hazi-Drug-House/"
-    });
-    await navigator.serviceWorker.ready;
-
-    const permission = await Notification.requestPermission();
-    notificationPermissionAsked = true;
-    if(permission !== "granted"){
-      throw new Error("Notification permission Allow করতে হবে। iPhone Settings থেকেও অনুমতি পরীক্ষা করো।");
-    }
-
-    let subscription = await registration.pushManager.getSubscription();
-    if(!subscription){
-      subscription = await registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
-      });
-    }
-
-    const subscriptionJson = subscription.toJSON();
-    const userId = sessionData.session.user.id;
-    const { error: saveError } = await db
-      .from("admin_push_subscriptions")
-      .upsert({
-        user_id: userId,
-        endpoint: subscriptionJson.endpoint,
-        p256dh: subscriptionJson.keys?.p256dh,
-        auth: subscriptionJson.keys?.auth
-      }, { onConflict: "endpoint" });
-
-    if(saveError) throw saveError;
-
-    webPushEnabled = true;
-    alert("Push Notification চালু হয়েছে! এখন নতুন অর্ডার এলে এই ডিভাইসে Notification আসার কথা।");
-  }catch(error){
-    console.error("Push notification setup failed:", error);
-    alert("Push Notification চালু হয়নি: " + (error.message || error));
-  }finally{
-    if(button) button.disabled = false;
-  }
-}
-
-function subscribeOrders(){
-  // \u098F\u0995\u0987 Dashboard-\u098F \u098F\u0995\u09BE\u09A7\u09BF\u0995 channel \u09A4\u09C8\u09B0\u09BF \u09B9\u0993\u09AF\u09BC\u09BE \u0986\u099F\u0995\u09BE\u0993à¥¤
-  if(ordersChannel) return;
-
-  setConnectionStatus("Realtime \u09B8\u0982\u09AF\u09CB\u0997 \u09B9\u099A\u09CD\u099B\u09C7...", true);
-
-  ordersChannel = db
-    .channel("orders-dashboard")
-    .on(
-      "postgres_changes",
-      {
-        event: "INSERT",
-        schema: "public",
-        table: "orders"
-      },
-      payload => {
-        const newOrder = payload.new || {};
-        const id = newOrder.id;
-
-        if(id !== undefined && id !== null){
-          showBrowserNotification(
-            "Medispot BD: \u09A8\u09A4\u09C1\u09A8 \u0985\u09B0\u09CD\u09A1\u09BE\u09B0",
-            "\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 #" + id + " \u098F\u09B8\u09C7\u099B\u09C7à¥¤",
-            id
-          );
-        }
-
-        // \u09A8\u09A4\u09C1\u09A8 \u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u09A4\u09BE\u09B2\u09BF\u0995\u09BE\u09AF\u09BC \u09A6\u09C7\u0996\u09BE\u09A8\u09CB\u09B0 \u099C\u09A8\u09CD\u09AF \u09AA\u09C1\u09A8\u09B0\u09BE\u09AF\u09BC \u09B2\u09CB\u09A1à¥¤
-        loadOrders();
-      }
-    )
-    .subscribe(status => {
-      console.log("Orders Realtime status:", status);
-
-      if(status === "SUBSCRIBED"){
-        setConnectionStatus("Realtime \u09B8\u0982\u09AF\u09C1\u0995\u09CD\u09A4");
-      }else if(status === "CHANNEL_ERROR"){
-        setConnectionStatus("Realtime \u09B8\u0982\u09AF\u09CB\u0997\u09C7 \u09B8\u09AE\u09B8\u09CD\u09AF\u09BE", true);
-      }else if(status === "TIMED_OUT"){
-        setConnectionStatus("Realtime timeout â Refresh \u0995\u09B0\u09CB", true);
-      }else if(status === "CLOSED"){
-        setConnectionStatus("Realtime \u09AC\u09A8\u09CD\u09A7", true);
-      }else{
-        setConnectionStatus("Realtime: " + status, true);
-      }
-    });
-}
-
-async function startDashboard(){
-  document.getElementById("login").style.display = "none";
-  document.getElementById("dashboard").style.display = "block";
-
-  await loadOrders();
-  subscribeOrders();
-}
-
-db.auth.getSession().then(async ({ data, error }) => {
-  if(error){
-    console.error("Session check failed:", error);
-    return;
-  }
-
-  if(data.session){
-    await startDashboard();
-  }
-});
-
-// \u09B2\u0997\u0987\u09A8 \u0985\u09A8\u09CD\u09AF \u099F\u09CD\u09AF\u09BE\u09AC \u09A5\u09C7\u0995\u09C7 \u09B6\u09C7\u09B7 \u09B9\u09B2\u09C7 \u09AC\u09BE session \u09B6\u09C7\u09B7 \u09B9\u09B2\u09C7 UI \u0986\u09AA\u09A1\u09C7\u099Fà¥¤
-db.auth.onAuthStateChange((event, session) => {
-  if(event === "SIGNED_OUT"){
-    stopOrderSubscription();
-    document.getElementById("dashboard").style.display = "none";
-    document.getElementById("login").style.display = "block";
-  }
-});
-</script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="bn">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Medispot BD | Order Management</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<style>
-*{box-sizing:border-box}
-body{margin:0;background:#f3f7f5;color:#18352b;font-family:"Noto Sans Bengali","Hind Siliguri",Arial,sans-serif}
-header{background:#075e46;color:white;padding:22px 16px}
-header h1{margin:0;font-size:23px}
-header p{margin:7px 0 0;color:#d5f3e6;font-size:13px}
-main{max-width:1100px;margin:auto;padding:18px}
-.panel,.stat,.order{background:white;border:1px solid #e1ebe5;border-radius:14px;padding:17px;margin-bottom:15px}
-h2{font-size:18px;margin:0 0 15px}
-input,button,select{font:inherit;padding:11px;border-radius:9px;border:1px solid #d4e1d9}
-input{width:100%;margin-bottom:10px}
-button{cursor:pointer;background:#087653;color:white;border:0;font-weight:bold}
-button:disabled{opacity:.5;cursor:wait}
-.secondary{background:#e7f3ed;color:#075e46}
-.danger{background:#a72c2c;color:white}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.stat strong{display:block;font-size:25px;margin-top:8px}
-.muted{color:#6c7c73;font-size:13px}
-.row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-.order h3{margin:0 0 8px;font-size:17px}
-.order table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
-th,td{text-align:left;border-bottom:1px solid #e5ece7;padding:9px 5px}
-.tablewrap{overflow-x:auto}
-.tag{background:#e6f5ed;color:#075e46;padding:5px 8px;border-radius:7px;font-size:12px}
-#dashboard{display:none}
-#message{white-space:pre-wrap;font-size:13px;margin-top:10px}
-.filters{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px}
-.filters input,.filters select{width:100%;margin:0}
-.actions{display:flex;gap:8px;flex-wrap:wrap}
-.actions select{max-width:160px}
-.customer-photo{margin:14px 0;padding:13px;border:1px solid #cfe6d8;border-radius:12px;background:#f5fbf7}
-.customer-photo h4{margin:0 0 8px;color:#075e46;font-size:14px}
-.customer-photo img{display:block;width:auto;max-width:100%;max-height:320px;object-fit:contain;border-radius:9px;border:1px solid #dce8e0;background:#fff}
-.customer-photo a{display:inline-block;margin-top:8px;color:#075e46;font-weight:bold;font-size:13px}
-.photo-missing{font-size:13px;color:#6c7c73}
-.connection{font-size:12px;padding:6px 9px;border-radius:7px;background:#e7f3ed;color:#075e46}
-.connection.offline{background:#fff0e8;color:#9b451d}
-.empty{padding:25px;text-align:center}
-@media(max-width:650px){
-  .grid{grid-template-columns:1fr 1fr}
-  .filters{grid-template-columns:1fr}
-  main{padding:12px}
-  .panel,.order{padding:13px}
-  .actions select{max-width:100%;width:100%}
-}
-@media print{body{background:white}.no-print{display:none!important}}
-.package-tag{display:inline-block;margin:3px 0;padding:2px 7px;border-radius:6px;background:#e6f4ee;color:#0b6b4f;font-size:11px;font-weight:700}\n</style>
+.package-tag{display:inline-block;margin:3px 0;padding:2px 7px;border-radius:6px;background:#e6f4ee;color:#0b6b4f;font-size:11px;font-weight:700}
+.editor-overlay{position:fixed;inset:0;z-index:100;background:rgba(10,30,20,.62);padding:12px;overflow-y:auto}
+.editor-panel{background:#fff;width:min(980px,100%);margin:10px auto;padding:18px;border-radius:16px}
+.editor-table input{width:88px;margin:0;padding:8px}
+.editor-table input[data-f="batch_no"]{width:115px}
+.editor-table td,.editor-table th{white-space:nowrap;vertical-align:middle}
+.result-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px;border:1px solid #e1ebe5;border-radius:10px;margin-bottom:8px}
+.grand{text-align:right;font-size:18px;margin:12px 0}
+@media print{.editor-overlay{display:none!important}}
+</style>
 </head>
 
 <body>
@@ -977,6 +135,34 @@ th,td{text-align:left;border-bottom:1px solid #e5ece7;padding:9px 5px}
     <div id="ordersList"><p class="muted">&#2437;&#2480;&#2509;&#2465;&#2494;&#2480; &#2482;&#2507;&#2465; &#2489;&#2458;&#2509;&#2459;&#2503;...</p></div>
   </section>
 </main>
+
+<div id="invoiceEditor" class="editor-overlay no-print" style="display:none">
+  <section class="editor-panel" role="dialog" aria-modal="true">
+    <div class="row" style="margin-bottom:10px">
+      <h2 id="editorTitle" style="margin:0">Invoice Edit</h2>
+      <button type="button" class="secondary" onclick="closeInvoiceEditor()">✕ বন্ধ</button>
+    </div>
+    <p class="muted">Batch no, পরিমাণ, MRP ও Discount বদলাতে পারবে। নিচ থেকে নতুন ওষুধও যোগ করা যাবে।</p>
+    <div class="tablewrap">
+      <table class="editor-table">
+        <thead><tr>
+          <th>Product</th><th>Quantity</th><th>Batch No</th><th>MRP Rate</th><th>Discount %</th><th>Discount Rate</th><th>Total</th><th></th>
+        </tr></thead>
+        <tbody id="editorRows"></tbody>
+      </table>
+    </div>
+    <div class="grand">মোট: <b id="editorTotal">৳0</b></div>
+    <hr style="border:0;border-top:1px solid #e5ece7;margin:14px 0">
+    <h3 style="margin:0 0 10px">➕ ওষুধ যোগ করো</h3>
+    <input id="editorSearch" placeholder="ওষুধ বা কোম্পানির নাম লিখে খুঁজুন" autocomplete="off">
+    <div id="editorResults"></div>
+    <div class="actions" style="margin-top:12px">
+      <button type="button" onclick="saveInvoiceEditor(false)">Save</button>
+      <button type="button" class="secondary" onclick="saveInvoiceEditor(true)">Save করে Invoice খোলো</button>
+    </div>
+    <div id="editorMsg" class="muted" style="margin-top:10px;white-space:pre-wrap"></div>
+  </section>
+</div>
 
 <script>
 const SUPABASE_URL = "https://pnaaqkuzazjiabnnwxjq.supabase.co";
@@ -1132,6 +318,7 @@ async function loadOrders(){
   }
 
   loadingOrders = true;
+  loadMedicineCatalog();
   const list = document.getElementById("ordersList");
   list.innerHTML = '<div class="panel">\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u09B2\u09CB\u09A1 \u09B9\u099A\u09CD\u099B\u09C7...</div>';
 
@@ -1240,7 +427,7 @@ function renderOrders(){
     const itemRows = items.length ? items.map(item => {
       const qty = Number(item.quantity ?? item.qty ?? 0);
       const price = Number(item.unit_price ?? item.price ?? item.sale_price ?? 0);
-      const packageType = item.package_label || (item.package_type === "strip" ? "Strip" : (item.package_type === "box" ? "Box" : "\u0985\u099C\u09BE\u09A8\u09BE"));
+      const packageType = item.package_label || ((item.package_type === "strip" || item.unit === "strip") ? "Strip" : ((item.package_type === "box" || item.unit === "box") ? "Box" : "\u0985\u099C\u09BE\u09A8\u09BE"));
       const quantityLabel = `${qty} ${packageType}`;
 
       return `<tr>
@@ -1313,7 +500,8 @@ function renderOrders(){
             <option value="cancelled" ${status==="cancelled"?"selected":""}>Cancelled</option>
           </select>
           <button onclick="updateStatus(this)">Save Status</button>
-          <button class="secondary" onclick="printReceipt(this)">Receipt / PDF</button>
+          <button class="secondary" onclick="openInvoiceEditor(this)">Invoice Edit / ওষুধ যোগ</button>
+          <button class="secondary" onclick="printReceipt(this)">Invoice / PDF</button>
           <button class="danger" onclick="deleteOrder(this)">Delete Order</button>
         </div>
       </div>
@@ -1404,89 +592,418 @@ async function deleteOrder(button){
   }
 }
 
+/* ===== Hazi Drug House Invoice ===== */
+// এখানে নিজের ঠিকানা ও ড্রাগ লাইসেন্স নম্বর বসাও
+const INVOICE_SHOP = {
+  name: "Hazi Drug House",
+  address: "এখানে দোকানের ঠিকানা লিখুন",
+  license: "Drug Licence No: এখানে লাইসেন্স নম্বর লিখুন"
+};
+
+let medicineCatalog = [];
+let catalogLoaded = false;
+let catalogLoading = null;
+let editorOrderId = null;
+let editorItems = [];
+let savingEditor = false;
+
+const round2 = n => Math.round((Number(n) + Number.EPSILON) * 100) / 100;
+
+function loadMedicineCatalog(){
+  if(catalogLoaded) return Promise.resolve();
+  if(catalogLoading) return catalogLoading;
+  catalogLoading = (async () => {
+    try{
+      const { data, error } = await db.from("medicines").select("*").order("name");
+      if(error) throw error;
+      medicineCatalog = data || [];
+      catalogLoaded = true;
+    }catch(error){
+      console.warn("Medicine catalog load failed:", error);
+    }finally{
+      catalogLoading = null;
+    }
+  })();
+  return catalogLoading;
+}
+
+function itemIsStrip(item){
+  return item.unit === "strip" || item.package_type === "strip";
+}
+
+function itemPackageLabel(item){
+  return item.package_label || (itemIsStrip(item) ? "Strip" : "Box");
+}
+
+function itemMedicine(item){
+  const mid = String(item.id ?? "").replace(/^db-/, "").replace(/:strip$/, "");
+  return medicineCatalog.find(m => String(m.id) === mid) || null;
+}
+
+// অর্ডারের item থেকে MRP, Discount %, Discount Rate বের করে (ওয়েবসাইটের medicines টেবিলের সাথে মিলিয়ে)
+function hydrateItem(item){
+  const med = itemMedicine(item);
+  const strip = itemIsStrip(item);
+  const charged = Number(item.unit_price ?? item.price ?? item.sale_price ?? 0) || 0;
+  let mrp = Number(item.mrp);
+  let disc = Number(item.discount_percent);
+  const hasSaved = item.mrp != null && Number.isFinite(mrp) && mrp > 0 &&
+    item.discount_percent != null && Number.isFinite(disc);
+
+  if(!hasSaved){
+    const medMrp = med ? Number(strip ? med.strip_price : med.price) : 0;
+    mrp = medMrp > 0 ? medMrp : charged;
+    if(mrp > 0 && charged > 0 && charged <= mrp){
+      disc = (1 - charged / mrp) * 100;
+    }else{
+      disc = med ? (Number(strip ? med.strip_discount_percent : med.discount_percent) || 0) : 0;
+    }
+  }
+
+  disc = Math.min(100, Math.max(0, Number(Number(disc).toFixed(4)) || 0));
+  const rate = charged > 0 ? charged : round2(mrp * (1 - disc / 100));
+
+  return {
+    ...item,
+    quantity: Number(item.quantity ?? item.qty ?? 0) || 0,
+    batch_no: String(item.batch_no || ""),
+    unit: strip ? "strip" : "box",
+    package_type: strip ? "strip" : "box",
+    package_label: itemPackageLabel(item),
+    mrp: round2(mrp),
+    discount_percent: disc,
+    unit_price: round2(rate)
+  };
+}
+
+/* ----- Invoice Edit (batch no, quantity, দাম, নতুন ওষুধ যোগ) ----- */
+async function openInvoiceEditor(button){
+  const card = button.closest(".order");
+  if(!card) return;
+
+  const order = orders.find(o => String(o.id) === String(card.dataset.orderId));
+  if(!order){
+    alert("অর্ডার পাওয়া যায়নি। Refresh করে আবার চেষ্টা করো।");
+    return;
+  }
+
+  await loadMedicineCatalog();
+
+  editorOrderId = order.id;
+  editorItems = (Array.isArray(order.items) ? order.items : []).map(hydrateItem);
+
+  document.getElementById("editorTitle").textContent = "Invoice Edit — অর্ডার #" + order.id;
+  document.getElementById("editorSearch").value = "";
+  document.getElementById("editorResults").innerHTML = "";
+  document.getElementById("editorMsg").textContent = "";
+
+  renderEditor();
+  document.getElementById("invoiceEditor").style.display = "block";
+  document.body.style.overflow = "hidden";
+}
+
+function closeInvoiceEditor(){
+  document.getElementById("invoiceEditor").style.display = "none";
+  document.body.style.overflow = "";
+  editorOrderId = null;
+  editorItems = [];
+}
+
+function updateEditorTotal(){
+  const total = editorItems.reduce((sum, it) => sum + round2(it.quantity * it.unit_price), 0);
+  document.getElementById("editorTotal").textContent = money(round2(total));
+}
+
+function renderEditor(){
+  const body = document.getElementById("editorRows");
+
+  if(!editorItems.length){
+    body.innerHTML = '<tr><td colspan="8">কোনো ওষুধ নেই। নিচ থেকে ওষুধ যোগ করো।</td></tr>';
+  }else{
+    body.innerHTML = editorItems.map((it, i) => `<tr data-i="${i}">
+      <td><b>${escapeHtml(it.name || "ওষুধ")}</b><br><span class="package-tag">${escapeHtml(itemPackageLabel(it))}</span></td>
+      <td><input data-f="quantity" type="number" min="1" step="1" value="${it.quantity}"></td>
+      <td><input data-f="batch_no" value="${escapeHtml(it.batch_no)}" placeholder="Batch no"></td>
+      <td><input data-f="mrp" type="number" min="0" step="0.01" value="${it.mrp}"></td>
+      <td><input data-f="discount_percent" type="number" min="0" max="100" step="any" value="${it.discount_percent}"></td>
+      <td class="rate-cell">${money(it.unit_price)}</td>
+      <td class="total-cell">${money(round2(it.quantity * it.unit_price))}</td>
+      <td><button type="button" class="danger" data-remove="${i}">✕</button></td>
+    </tr>`).join("");
+  }
+
+  updateEditorTotal();
+}
+
+document.getElementById("editorRows").addEventListener("input", event => {
+  const input = event.target.closest("input[data-f]");
+  if(!input) return;
+
+  const tr = input.closest("tr");
+  const it = editorItems[Number(tr.dataset.i)];
+  if(!it) return;
+
+  const field = input.dataset.f;
+
+  if(field === "batch_no"){
+    it.batch_no = input.value;
+  }else{
+    const v = Number(input.value);
+    it[field] = Number.isFinite(v) ? v : 0;
+
+    if(field === "mrp" || field === "discount_percent"){
+      const d = Math.min(100, Math.max(0, Number(it.discount_percent) || 0));
+      it.unit_price = round2((Number(it.mrp) || 0) * (1 - d / 100));
+    }
+  }
+
+  tr.querySelector(".rate-cell").textContent = money(it.unit_price);
+  tr.querySelector(".total-cell").textContent = money(round2(it.quantity * it.unit_price));
+  updateEditorTotal();
+});
+
+document.getElementById("editorRows").addEventListener("click", event => {
+  const btn = event.target.closest("button[data-remove]");
+  if(!btn) return;
+
+  editorItems.splice(Number(btn.dataset.remove), 1);
+  renderEditor();
+});
+
+function renderEditorResults(){
+  const term = document.getElementById("editorSearch").value.toLowerCase().trim();
+  const box = document.getElementById("editorResults");
+
+  if(!term){
+    box.innerHTML = "";
+    return;
+  }
+
+  const found = medicineCatalog
+    .filter(m => [m.name, m.company, m.strength].join(" ").toLowerCase().includes(term))
+    .slice(0, 8);
+
+  box.innerHTML = found.length ? found.map(m => {
+    const strip = Number(m.strips_per_box) >= 2 && Number(m.strip_price) > 0;
+    const mid = escapeHtml(m.id);
+
+    return `<div class="result-row">
+      <div><b>${escapeHtml(m.name)} ${escapeHtml(m.strength || "")}</b><br><span class="muted">${escapeHtml(m.company || "")} · MRP ${money(m.price)}</span></div>
+      <div class="actions">
+        <button type="button" class="secondary" data-add="${mid}" data-unit="box">+ Box</button>
+        ${strip ? `<button type="button" class="secondary" data-add="${mid}" data-unit="strip">+ Strip</button>` : ""}
+      </div>
+    </div>`;
+  }).join("") : '<p class="muted">কোনো ওষুধ পাওয়া যায়নি।</p>';
+}
+
+document.getElementById("editorSearch").addEventListener("input", renderEditorResults);
+
+document.getElementById("editorResults").addEventListener("click", event => {
+  const btn = event.target.closest("button[data-add]");
+  if(!btn) return;
+
+  const m = medicineCatalog.find(x => String(x.id) === btn.dataset.add);
+  if(!m) return;
+
+  const strip = btn.dataset.unit === "strip";
+  const id = "db-" + m.id + (strip ? ":strip" : "");
+  const existing = editorItems.find(it => String(it.id) === id);
+
+  if(existing){
+    existing.quantity = (Number(existing.quantity) || 0) + 1;
+  }else{
+    const mrp = Number(strip ? m.strip_price : m.price) || 0;
+    const disc = Math.min(100, Math.max(0, Number(strip ? m.strip_discount_percent : m.discount_percent) || 0));
+    const name = String(m.name || "").trim();
+    const strength = String(m.strength || "").trim();
+
+    editorItems.push({
+      id,
+      name: strength && !name.toLowerCase().includes(strength.toLowerCase()) ? name + " " + strength : name,
+      company: m.company || "",
+      image_url: m.image_url || "",
+      unit: strip ? "strip" : "box",
+      package_type: strip ? "strip" : "box",
+      package_label: strip ? "Strip" : "Box",
+      strips_per_box: Number(m.strips_per_box) || 0,
+      quantity: 1,
+      batch_no: "",
+      mrp,
+      discount_percent: disc,
+      unit_price: round2(mrp * (1 - disc / 100))
+    });
+  }
+
+  renderEditor();
+  document.getElementById("editorMsg").textContent = "✅ ওষুধ যোগ হয়েছে। Batch no দিয়ে Save করো।";
+});
+
+async function saveInvoiceEditor(openAfter){
+  if(savingEditor) return;
+
+  // popup block এড়াতে window আগেই খোলা হচ্ছে
+  const preWin = openAfter ? window.open("", "_blank") : null;
+  const msgEl = document.getElementById("editorMsg");
+
+  const fail = text => {
+    msgEl.textContent = text;
+    if(preWin) preWin.close();
+  };
+
+  const items = editorItems.map(it => ({
+    ...it,
+    quantity: Math.floor(Number(it.quantity) || 0),
+    batch_no: String(it.batch_no || "").trim(),
+    mrp: round2(it.mrp),
+    discount_percent: Math.min(100, Math.max(0, Number(it.discount_percent) || 0)),
+    unit_price: round2(it.unit_price)
+  }));
+
+  if(!items.length) return fail("কমপক্ষে একটা ওষুধ থাকতে হবে।");
+  if(items.some(it => it.quantity < 1)) return fail("প্রতিটি ওষুধের পরিমাণ ১ বা তার বেশি দাও।");
+  if(items.some(it => !(it.unit_price > 0))) return fail("প্রতিটি ওষুধের দাম শূন্যের বেশি হতে হবে।");
+
+  const total = round2(items.reduce((sum, it) => sum + it.quantity * it.unit_price, 0));
+  const id = editorOrderId;
+
+  savingEditor = true;
+  msgEl.textContent = "Save হচ্ছে...";
+
+  try{
+    const { data, error } = await db
+      .from("orders")
+      .update({ items, total_amount: total })
+      .eq("id", id)
+      .select("id")
+      .maybeSingle();
+
+    if(error) throw error;
+    if(!data) throw new Error("Update হয়নি। Admin UPDATE policy ও RLS পরীক্ষা করো।");
+
+    const local = orders.find(o => String(o.id) === String(id));
+    if(local){
+      local.items = items;
+      local.total_amount = total;
+    }
+
+    renderOrders();
+    closeInvoiceEditor();
+
+    if(openAfter) showInvoice(id, preWin);
+  }catch(error){
+    console.error("Invoice save failed:", error);
+    fail("❌ Save হয়নি: " + (error.message || error));
+  }finally{
+    savingEditor = false;
+  }
+}
+
+/* ----- Invoice ----- */
 function printReceipt(button){
   const card = button.closest(".order");
   if(!card) return;
 
-  const id = card.dataset.orderId;
+  const w = window.open("", "_blank");
+  if(!w){
+    alert("Invoice খুলতে browser popup allow করো।");
+    return;
+  }
+
+  showInvoice(card.dataset.orderId, w);
+}
+
+async function showInvoice(id, w){
   const order = orders.find(item => String(item.id) === String(id));
 
   if(!order){
-    alert("\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u09AA\u09BE\u0993\u09AF\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BFÃ Â¥Â¤ Refresh \u0995\u09B0\u09C7 \u0986\u09AC\u09BE\u09B0 \u099A\u09C7\u09B7\u09CD\u099F\u09BE \u0995\u09B0\u09CBÃ Â¥Â¤");
+    alert("অর্ডার পাওয়া যায়নি। Refresh করে আবার চেষ্টা করো।");
+    if(w) w.close();
     return;
   }
 
-  const items = Array.isArray(order.items) ? order.items : [];
+  await loadMedicineCatalog();
 
-  const rows = items.map(item => {
-    const qty = Number(item.quantity ?? item.qty ?? 0);
-    const price = Number(item.unit_price ?? item.price ?? item.sale_price ?? 0);
-    const packageType = item.package_label || (item.package_type === "strip" ? "Strip" : "Box");
+  const rows = (Array.isArray(order.items) ? order.items : []).map(hydrateItem);
+  let grand = 0;
+
+  const bodyRows = rows.map(it => {
+    const line = round2(it.quantity * it.unit_price);
+    grand += line;
 
     return `<tr>
-      <td>${escapeHtml(item.name || item.medicine_name || item.product_name || "\u0993\u09B7\u09C1\u09A7")}</td>
-      <td>${escapeHtml(item.company || item.company_name || "-")}</td>
-      <td><span class="package-tag">${qty} ${packageType}</span></td>
-      <td>${money(price)} / ${packageType}</td>
-      <td>${money(qty * price)}</td>
+      <td>${escapeHtml(it.name || it.medicine_name || it.product_name || "ওষুধ")}</td>
+      <td>${it.quantity} ${escapeHtml(itemPackageLabel(it))}</td>
+      <td>${escapeHtml(it.batch_no || "-")}</td>
+      <td class="num">${money(it.mrp)}</td>
+      <td class="num">${Number(Number(it.discount_percent).toFixed(2))}%</td>
+      <td class="num">${money(it.unit_price)}</td>
+      <td class="num">${money(line)}</td>
     </tr>`;
   }).join("");
 
-  const w = window.open("", "_blank", "width=850,height=700");
-
-  if(!w){
-    alert("Receipt \u0996\u09C1\u09B2\u09A4\u09C7 browser popup allow \u0995\u09B0\u09CBÃ Â¥Â¤");
-    return;
-  }
-
-  w.document.write(`<!DOCTYPE html>
+  const html = `<!DOCTYPE html>
   <html lang="bn">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Medispot BD Receipt #${escapeHtml(order.id)}</title>
+    <title>${escapeHtml(INVOICE_SHOP.name)} Invoice #${escapeHtml(order.id)}</title>
     <style>
       body{font-family:"Noto Sans Bengali","Hind Siliguri",Arial,sans-serif;color:#18352b;max-width:850px;margin:25px auto;padding:20px}
       header{text-align:center;border-bottom:2px solid #075e46;padding-bottom:14px}
-      h1{margin:0;color:#075e46}
-      h2{font-size:18px}
+      h1{margin:0;color:#075e46;font-size:40px;line-height:1.2}
+      .addr{margin-top:6px;font-size:13px;color:#333}
+      .lic{margin-top:3px;font-size:12px;color:#555}
+      .doc-title{margin:14px 0 0;font-size:15px;font-weight:bold;letter-spacing:2px}
       .line{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}
-      .info{margin:18px 0}
-      .info p{margin:7px 0}
+      .info{margin:16px 0}
+      .info p{margin:6px 0;font-size:14px}
       table{width:100%;border-collapse:collapse;margin-top:12px}
-      th,td{border-bottom:1px solid #ddd;text-align:left;padding:10px 6px;font-size:13px}
+      th,td{border:1px solid #cfd9d3;text-align:left;padding:8px 6px;font-size:13px;vertical-align:top}
       th{background:#f0f6f2}
+      .num{text-align:right;white-space:nowrap}
       .total{text-align:right;font-size:22px;font-weight:bold;margin-top:20px;border-top:2px solid #075e46;padding-top:14px}
-      .muted{color:#666;font-size:12px}
-      .package-tag{display:inline-block;padding:3px 8px;border-radius:6px;background:#e6f4ee;color:#0b6b4f;font-size:11px;font-weight:700}
-      .print{padding:10px 15px;background:#075e46;color:white;border:0;border-radius:6px;cursor:pointer}
+      .print{margin-top:20px;padding:10px 15px;background:#075e46;color:white;border:0;border-radius:6px;cursor:pointer}
       @media print{.print{display:none}body{margin:0;padding:0}}
     </style>
   </head>
   <body>
-    <header><h1>MEDISPOT BD</h1><p>Medicine Order Receipt</p></header>
+    <header>
+      <h1>${escapeHtml(INVOICE_SHOP.name)}</h1>
+      <div class="addr">${escapeHtml(INVOICE_SHOP.address)}</div>
+      <div class="lic">${escapeHtml(INVOICE_SHOP.license)}</div>
+      <div class="doc-title">INVOICE</div>
+    </header>
     <div class="line info">
-      <div><b>Order ID:</b> #${escapeHtml(order.id)}<br><b>Order Date:</b> ${escapeHtml(formatDate(order.created_at))}</div>
-      <div><b>Status:</b> ${escapeHtml(String(order.status || "pending").toUpperCase())}</div>
+      <div><b>Order ID:</b> #${escapeHtml(order.id)}<br><b>Date:</b> ${escapeHtml(formatDate(order.created_at))}</div>
+      <div>
+        <b>Name:</b> ${escapeHtml(order.customer_name || "-")}<br>
+        <b>Pharmacy:</b> ${escapeHtml(order.pharmacy_name || "-")}<br>
+        <b>Mobile:</b> ${escapeHtml(order.phone || "-")}<br>
+        <b>Address:</b> ${escapeHtml(order.address || "-")}
+      </div>
     </div>
-    <h2>\u0985\u09B0\u09CD\u09A1\u09BE\u09B0\u0995\u09BE\u09B0\u09C0\u09B0 \u09A4\u09A5\u09CD\u09AF</h2>
-    <div class="info">
-      <p><b>\u09A8\u09BE\u09AE:</b> ${escapeHtml(order.customer_name || "-")}</p>
-      <p><b>\u09AB\u09BE\u09B0\u09CD\u09AE\u09C7\u09B8\u09BF\u09B0 \u09A8\u09BE\u09AE:</b> ${escapeHtml(order.pharmacy_name || "-")}</p>
-      <p><b>\u09AE\u09CB\u09AC\u09BE\u0987\u09B2:</b> ${escapeHtml(order.phone || "-")}</p>
-      <p><b>\u09A0\u09BF\u0995\u09BE\u09A8\u09BE:</b> ${escapeHtml(order.address || "-")}</p>
-    </div>
-    <h2>\u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u0995\u09B0\u09BE \u09AA\u09A3\u09CD\u09AF</h2>
     <table>
-      <thead><tr><th>\u09AA\u09A3\u09CD\u09AF\u09C7\u09B0 \u09A8\u09BE\u09AE</th><th>\u0995\u09CB\u09AE\u09CD\u09AA\u09BE\u09A8\u09BF</th><th>\u09AA\u09CD\u09AF\u09BE\u0995\u09C7\u099C \u0993 \u09AA\u09B0\u09BF\u09AE\u09BE\u09A3</th><th>\u098F\u0995\u0995 \u09AE\u09C2\u09B2\u09CD\u09AF</th><th>\u09AE\u09CB\u099F</th></tr></thead>
-      <tbody>${rows || '<tr><td colspan="5">\u098F\u0987 \u0985\u09B0\u09CD\u09A1\u09BE\u09B0\u09C7\u09B0 \u09AA\u09A3\u09CD\u09AF\u09C7\u09B0 \u09AC\u09BF\u09B8\u09CD\u09A4\u09BE\u09B0\u09BF\u09A4 \u09B8\u0982\u09B0\u0995\u09CD\u09B7\u09BF\u09A4 \u09A8\u09C7\u0987Ã Â¥Â¤</td></tr>'}</tbody>
+      <thead><tr>
+        <th>Product Name</th><th>Quantity</th><th>Batch No</th><th>MRP Rate</th><th>Discount</th><th>Discount Rate</th><th>Total</th>
+      </tr></thead>
+      <tbody>${bodyRows || '<tr><td colspan="7">এই অর্ডারে কোনো ওষুধ নেই।</td></tr>'}</tbody>
     </table>
-    <div class="total">\u09B8\u09B0\u09CD\u09AC\u09AE\u09CB\u099F: ${money(order.total_amount)}</div>
-    <p class="muted">\u098F\u0987 \u09B0\u09B8\u09BF\u09A6\u099F\u09BF Medispot BD \u0985\u09B0\u09CD\u09A1\u09BE\u09B0 \u09B0\u09C7\u0995\u09B0\u09CD\u09A1 \u09A5\u09C7\u0995\u09C7 \u09A4\u09C8\u09B0\u09BFÃ Â¥Â¤</p>
+    <div class="total">Grand Total: ${money(round2(grand))}</div>
     <button class="print" onclick="window.print()">Print / Save as PDF</button>
   </body>
-  </html>`);
+  </html>`;
 
+  if(!w){
+    w = window.open("", "_blank");
+    if(!w){
+      alert("Invoice খুলতে browser popup allow করো।");
+      return;
+    }
+  }
+
+  w.document.open();
+  w.document.write(html);
   w.document.close();
 }
 
