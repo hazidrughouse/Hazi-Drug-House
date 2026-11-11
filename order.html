@@ -955,16 +955,14 @@ async function showInvoice(id, w){
 
   const rows = (Array.isArray(order.items) ? order.items : []).map(hydrateItem);
   let grand = 0;
-  let mrpTotal = 0;
 
   const bodyRows = rows.map((it, i) => {
     const line = round2(it.quantity * it.unit_price);
     grand += line;
-    mrpTotal += it.quantity * it.mrp;
 
     return `<tr>
-      <td class="sl">${i + 1}</td>
-      <td class="pname">${escapeHtml(it.name || it.medicine_name || it.product_name || "ওষুধ")}${it.company ? `<small>${escapeHtml(it.company)}</small>` : ""}</td>
+      <td class="ctr">${i + 1}</td>
+      <td>${escapeHtml(it.name || it.medicine_name || it.product_name || "ওষুধ")}</td>
       <td class="ctr">${it.quantity} ${escapeHtml(itemPackageLabel(it))}</td>
       <td class="ctr">${escapeHtml(it.batch_no || "-")}</td>
       <td class="num">${money(it.mrp)}</td>
@@ -975,123 +973,75 @@ async function showInvoice(id, w){
   }).join("");
 
   grand = round2(grand);
-  const saved = Math.max(0, round2(mrpTotal - grand));
   const rawId = String(order.id);
   const invNo = rawId.length > 8 ? rawId.slice(-6).toUpperCase() : rawId;
-  const licenseHtml = INVOICE_SHOP.license ? `<div class="lic">${escapeHtml(INVOICE_SHOP.license)}</div>` : "";
+  const licenseHtml = INVOICE_SHOP.license ? `<div class="addr">${escapeHtml(INVOICE_SHOP.license)}</div>` : "";
 
   const html = `<!DOCTYPE html>
   <html lang="bn">
   <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=794">
     <title>${escapeHtml(INVOICE_SHOP.name)} Invoice #${escapeHtml(invNo)}</title>
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+      @page{size:A4;margin:8mm}
       *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-      body{margin:0;background:#eef3f0;font-family:"Hind Siliguri","Noto Sans Bengali",Arial,sans-serif;color:#17322a;padding:24px 12px}
-      .sheet{max-width:860px;margin:auto;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 10px 40px rgba(7,94,70,.15)}
-      .topbar{height:10px;background:linear-gradient(90deg,#064c37,#0b8a63 60%,#c9a24a)}
-      .inner{padding:28px 32px 26px}
-      .head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap}
-      .brand{display:flex;align-items:center;gap:14px}
-      .mark{width:58px;height:58px;border-radius:16px;background:linear-gradient(145deg,#075e46,#0b8a63);color:#fff;font-size:30px;font-weight:700;display:grid;place-items:center;box-shadow:0 6px 16px rgba(7,94,70,.3)}
-      h1{margin:0;font-size:36px;line-height:1.1;color:#064c37;font-weight:700;letter-spacing:.3px}
-      .addr{margin-top:5px;font-size:13px;color:#4c6258}
-      .lic{margin-top:2px;font-size:12px;color:#66786f}
-      .doc{text-align:right}
-      .doc-title{font-size:30px;font-weight:700;letter-spacing:6px;color:#b08a33;line-height:1}
-      .meta{margin-top:10px;font-size:13px;color:#33493f;line-height:1.7}
-      .meta b{color:#064c37}
-      .rule{height:2px;margin:22px 0;background:linear-gradient(90deg,#075e46,#d7e7df 70%,transparent)}
-      .bill{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;background:#f4faf7;border:1px solid #dcebe4;border-left:5px solid #075e46;border-radius:10px;padding:14px 18px}
-      .bill .label{font-size:11px;letter-spacing:2px;font-weight:700;color:#b08a33;margin-bottom:4px}
-      .bill .nm{font-size:18px;font-weight:700;color:#064c37}
-      .bill p{margin:2px 0;font-size:13px;color:#33493f}
-      .tablewrap{overflow-x:auto;margin-top:22px;border-radius:10px;border:1px solid #dcebe4}
-      table.items{width:100%;border-collapse:collapse;min-width:640px}
-      .items th{background:linear-gradient(180deg,#0a7656,#064c37);color:#fff;font-size:12px;font-weight:600;padding:11px 8px;text-align:left;letter-spacing:.3px}
-      .items td{padding:10px 8px;font-size:13px;border-bottom:1px solid #e6eee9;vertical-align:top}
-      .items tbody tr:nth-child(even){background:#f7fbf9}
-      .items tbody tr:last-child td{border-bottom:0}
-      .sl{width:30px;color:#7a8c83;text-align:center}
-      .pname{font-weight:600;color:#17322a}
-      .pname small{display:block;font-weight:400;color:#7a8c83;font-size:11px;margin-top:1px}
-      .ctr{text-align:center;white-space:nowrap}
-      .num{text-align:right;white-space:nowrap}
-      .items th.ctr{text-align:center}.items th.num{text-align:right}
-      .strong{font-weight:700;color:#064c37}
-      .summary{margin:20px 0 0 auto;width:min(340px,100%)}
-      .srow{display:flex;justify-content:space-between;padding:7px 4px;font-size:14px;color:#33493f}
-      .srow.save{color:#0a7656;font-weight:600}
-      .grand{display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding:14px 18px;border-radius:10px;background:linear-gradient(135deg,#064c37,#0b8a63);color:#fff;font-size:19px;font-weight:700}
-      .foot{display:flex;justify-content:space-between;gap:20px;margin-top:46px;font-size:12px;color:#5b6f65}
-      .sig{width:200px;text-align:center;border-top:1px solid #9db5aa;padding-top:6px}
-      .thanks{text-align:center;margin-top:28px;padding-top:14px;border-top:1px dashed #cfe0d7;font-size:13px;color:#4c6258}
-      .thanks b{color:#064c37}
-      .actions{max-width:860px;margin:16px auto 0;text-align:center}
-      .print{padding:12px 26px;background:#075e46;color:#fff;border:0;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer}
-      @media(max-width:560px){.inner{padding:20px 16px}h1{font-size:28px}.doc{text-align:left}.doc-title{font-size:24px}}
-      @media print{body{background:#fff;padding:0}.sheet{box-shadow:none;border-radius:0;max-width:none}.actions{display:none}.tablewrap{overflow:visible}@page{margin:10mm}}
+      body{margin:0;background:#e9eeeb;font-family:"Hind Siliguri","Noto Sans Bengali",Arial,sans-serif;color:#111;padding:10px}
+      .sheet{width:210mm;min-height:297mm;margin:0 auto;background:#fff;padding:8mm}
+      .head{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;border-bottom:2px solid #075e46;padding-bottom:6px}
+      h1{margin:0;font-size:30px;line-height:1.1;color:#064c37}
+      .addr{margin-top:2px;font-size:11px;color:#333}
+      .doc{text-align:right;font-size:11px;line-height:1.5}
+      .doc .t{font-size:16px;font-weight:700;letter-spacing:3px;color:#064c37}
+      .bill{display:flex;justify-content:space-between;gap:10px;margin:8px 0 4px;padding:5px 8px;border:1px solid #cfd9d3;font-size:11px;line-height:1.5}
+      table{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:6px}
+      thead{display:table-header-group}
+      tr{page-break-inside:avoid}
+      th{background:#075e46;color:#fff;font-size:10px;font-weight:600;padding:5px 4px;text-align:left}
+      td{border-bottom:1px solid #dfe7e2;font-size:10.5px;padding:3px 4px;line-height:1.25;overflow-wrap:anywhere}
+      .ctr{text-align:center}.num{text-align:right}
+      th.ctr{text-align:center}th.num{text-align:right}
+      .strong{font-weight:700}
+      .grand{margin-top:8px;text-align:right;font-size:15px;font-weight:700;border-top:2px solid #075e46;padding-top:6px}
+      .actions{text-align:center;margin:14px 0}
+      .print{padding:10px 24px;background:#075e46;color:#fff;border:0;border-radius:8px;font-size:15px;cursor:pointer}
+      @media print{body{background:#fff;padding:0}.sheet{width:auto;min-height:0;padding:0}.actions{display:none}}
     </style>
   </head>
   <body>
     <div class="sheet">
-      <div class="topbar"></div>
-      <div class="inner">
-        <div class="head">
-          <div class="brand">
-            <div class="mark">H</div>
-            <div>
-              <h1>${escapeHtml(INVOICE_SHOP.name)}</h1>
-              <div class="addr">${escapeHtml(INVOICE_SHOP.address)}</div>
-              ${licenseHtml}
-            </div>
-          </div>
-          <div class="doc">
-            <div class="doc-title">INVOICE</div>
-            <div class="meta"><b>Invoice No:</b> #${escapeHtml(invNo)}<br><b>Date:</b> ${escapeHtml(formatDate(order.created_at))}</div>
-          </div>
+      <div class="head">
+        <div>
+          <h1>${escapeHtml(INVOICE_SHOP.name)}</h1>
+          <div class="addr">${escapeHtml(INVOICE_SHOP.address)}</div>
+          ${licenseHtml}
         </div>
-
-        <div class="rule"></div>
-
-        <div class="bill">
-          <div>
-            <div class="label">BILLED TO</div>
-            <div class="nm">${escapeHtml(order.pharmacy_name || order.customer_name || "-")}</div>
-            <p>${escapeHtml(order.customer_name || "-")}</p>
-          </div>
-          <div>
-            <div class="label">CONTACT</div>
-            <p><b>Mobile:</b> ${escapeHtml(order.phone || "-")}</p>
-            <p><b>Address:</b> ${escapeHtml(order.address || "-")}</p>
-          </div>
+        <div class="doc">
+          <div class="t">INVOICE</div>
+          <div><b>Invoice No:</b> #${escapeHtml(invNo)}</div>
+          <div><b>Date:</b> ${escapeHtml(formatDate(order.created_at))}</div>
         </div>
-
-        <div class="tablewrap">
-          <table class="items">
-            <thead><tr>
-              <th class="ctr">#</th><th>Product Name</th><th class="ctr">Quantity</th><th class="ctr">Batch No</th>
-              <th class="num">MRP Rate</th><th class="num">Discount</th><th class="num">Discount Rate</th><th class="num">Total</th>
-            </tr></thead>
-            <tbody>${bodyRows || '<tr><td colspan="8">এই অর্ডারে কোনো ওষুধ নেই।</td></tr>'}</tbody>
-          </table>
-        </div>
-
-        <div class="summary">
-          <div class="srow"><span>Total MRP</span><span>${money(round2(mrpTotal))}</span></div>
-          <div class="srow save"><span>Total Discount</span><span>- ${money(saved)}</span></div>
-          <div class="grand"><span>Grand Total</span><span>${money(grand)}</span></div>
-        </div>
-
-        <div class="foot">
-          <div class="sig">Receiver's Signature</div>
-          <div class="sig">Authorized Signature</div>
-        </div>
-
-        <div class="thanks"><b>ধন্যবাদ!</b> আপনার ব্যবসার সাফল্য কামনা করি — ${escapeHtml(INVOICE_SHOP.name)}</div>
       </div>
+
+      <div class="bill">
+        <div><b>${escapeHtml(order.pharmacy_name || "-")}</b><br>${escapeHtml(order.customer_name || "-")}</div>
+        <div style="text-align:right"><b>Mobile:</b> ${escapeHtml(order.phone || "-")}<br>${escapeHtml(order.address || "-")}</div>
+      </div>
+
+      <table>
+        <colgroup>
+          <col style="width:5%"><col style="width:31%"><col style="width:10%"><col style="width:11%">
+          <col style="width:11%"><col style="width:8%"><col style="width:12%"><col style="width:12%">
+        </colgroup>
+        <thead><tr>
+          <th class="ctr">#</th><th>Product Name</th><th class="ctr">Quantity</th><th class="ctr">Batch No</th>
+          <th class="num">MRP Rate</th><th class="num">Discount</th><th class="num">Discount Rate</th><th class="num">Total</th>
+        </tr></thead>
+        <tbody>${bodyRows || '<tr><td colspan="8">এই অর্ডারে কোনো ওষুধ নেই।</td></tr>'}</tbody>
+      </table>
+
+      <div class="grand">Grand Total: ${money(grand)}</div>
     </div>
     <div class="actions"><button class="print" onclick="window.print()">Print / Save as PDF</button></div>
   </body>
