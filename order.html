@@ -1063,19 +1063,56 @@ async function showInvoice(id, w){
     </div>`;
 
   // ---- অর্ধেক A4 পাতা (এক A4-তে ২টা) ----
-  const PER_HALF = 20;
+  const PER_HALF = 30;
   const chunks = [];
   for(let i = 0; i < rows.length; i += PER_HALF) chunks.push(rows.slice(i, i + PER_HALF));
   if(!chunks.length) chunks.push([]);
 
+  const fmt2 = n => Number(n).toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+  const halfRow = (it, i) => `<tr>
+      <td class="ctr">${i + 1}</td>
+      <td>${escapeHtml(it.name || it.medicine_name || it.product_name || "ওষুধ")}</td>
+      <td class="ctr">${it.quantity}<small>${escapeHtml(itemPackageLabel(it))}</small></td>
+      <td class="ctr">${escapeHtml(it.batch_no || "-")}</td>
+      <td class="num">${fmt2(it.mrp)}</td>
+      <td class="num">${Number(Number(it.discount_percent).toFixed(2))}</td>
+      <td class="num">${fmt2(it.unit_price)}</td>
+      <td class="num strong">${fmt2(round2(it.quantity * it.unit_price))}</td>
+    </tr>`;
+
+  const halfCols = `<colgroup>
+      <col style="width:5%"><col style="width:25%"><col style="width:8%"><col style="width:11%">
+      <col style="width:11%"><col style="width:8%"><col style="width:14%"><col style="width:18%">
+    </colgroup>`;
+
+  const halfThead = `<thead><tr>
+      <th class="ctr">#</th><th>Product</th><th class="ctr">Qty</th><th class="ctr">Batch</th>
+      <th class="num">MRP</th><th class="num">Disc %</th><th class="num">Disc Rate</th><th class="num">Total</th>
+    </tr></thead>`;
+
+  const halfHead = (page, total) => `<div class="hh">
+      <h1>${escapeHtml(INVOICE_SHOP.name)}</h1>
+      <div class="addr">${escapeHtml(INVOICE_SHOP.address)}</div>
+      ${licenseHtml}
+      <div class="inv">Invoice: #${escapeHtml(invNo)}</div>
+    </div>
+    <div class="hinfo">
+      <div><b>Date:</b> ${escapeHtml(formatDate(order.created_at))}</div>
+      <div><b>Customer:</b> ${escapeHtml(order.pharmacy_name || "-")}${order.customer_name ? " (" + escapeHtml(order.customer_name) + ")" : ""}</div>
+      <div><b>Mobile:</b> ${escapeHtml(order.phone || "-")}</div>
+      <div><b>Address:</b> ${escapeHtml(order.address || "-")}</div>
+      ${total > 1 ? `<div><b>Page:</b> ${page}/${total}</div>` : ""}
+    </div>`;
+
   const halfHtml = (c, copyLabel) => {
     const last = c === chunks.length - 1;
-    const body = chunks[c].map((it, k) => rowHtml(it, c * PER_HALF + k)).join("") || emptyRow;
+    const body = chunks[c].map((it, k) => halfRow(it, c * PER_HALF + k)).join("") || emptyRow;
 
     return `<div class="half">
         ${copyLabel ? `<div class="copy">${copyLabel}</div>` : ""}
-        ${head(c + 1, chunks.length)}${bill}
-        <table>${colgroup}${thead}<tbody>${body}</tbody></table>
+        ${halfHead(c + 1, chunks.length)}
+        <table class="ht">${halfCols}${halfThead}<tbody>${body}</tbody></table>
         ${last ? `<div class="grand">Grand Total: ${money(grand)}</div>` : '<div class="cont">পরের অংশে চলবে…</div>'}
       </div>`;
   };
@@ -1124,21 +1161,21 @@ async function showInvoice(id, w){
       .strong{font-weight:700}
       .grand{margin-top:8px;text-align:right;font-size:15px;font-weight:700;border-top:2px solid #075e46;padding-top:6px}
 
-      .pg{width:210mm;height:296mm;margin:0 auto 14px;background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.12);page-break-after:always}
-      .half{position:relative;height:148mm;padding:5mm 8mm}
-      .pg .half:first-child{border-bottom:1px dashed #8a9a92}
-      .half h1{font-size:20px}
-      .half .addr{font-size:10px;margin-top:1px}
-      .half .head{padding-bottom:3px;border-bottom-width:1.5px}
-      .half .doc{font-size:10px;line-height:1.35}
-      .half .doc .t{font-size:13px;letter-spacing:2px}
-      .half .bill{margin:5px 0 2px;padding:3px 7px;font-size:10px;line-height:1.35}
-      .half table{margin-top:3px}
-      .half th{font-size:9px;padding:3px 4px}
-      .half td{font-size:9.5px;padding:2px 4px;line-height:1.2}
-      .half .grand{font-size:13px;margin-top:5px;padding-top:4px}
-      .half .cont{margin-top:6px;text-align:right;font-size:10px;color:#555}
-      .copy{position:absolute;top:1.5mm;right:8mm;font-size:8.5px;font-weight:700;color:#075e46;border:1px solid #075e46;border-radius:3px;padding:0 5px;line-height:1.5}
+      .pg{display:flex;width:210mm;height:296mm;margin:0 auto 14px;background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.12);page-break-after:always}
+      .half{position:relative;width:105mm;height:296mm;padding:6mm 5mm 4mm}
+      .pg .half:first-child{border-right:1px dashed #8a9a92}
+      .hh{text-align:center}
+      .hh h1{font-size:20px;line-height:1.15;color:#000}
+      .hh .addr{font-size:10px;color:#222;margin-top:2px}
+      .hh .inv{margin-top:4px;font-size:13px;font-weight:700}
+      .hinfo{text-align:left;font-size:9px;line-height:1.4;margin:4px 0 2px;overflow-wrap:anywhere}
+      .ht{margin-top:3px}
+      .ht th{background:none;color:#000;font-size:8.5px;font-weight:700;padding:4px 2px;border-top:1.5px solid #000;border-bottom:1.5px solid #000;line-height:1.15}
+      .ht td{font-size:9px;padding:3px 2px;line-height:1.15;border-bottom:1px solid #e3e3e3;vertical-align:top}
+      .ht td small{display:block;font-size:7px;line-height:1.1;color:#555}
+      .half .grand{font-size:13px;margin-top:5px;padding-top:4px;border-top:1.5px solid #000}
+      .half .cont{margin-top:6px;text-align:right;font-size:9px;color:#555}
+      .copy{position:absolute;top:2mm;right:5mm;font-size:8px;font-weight:700;color:#000;border:1px solid #000;border-radius:3px;padding:0 5px;line-height:1.5}
 
       @media print{
         body{background:#fff;padding:0}
@@ -1151,8 +1188,8 @@ async function showInvoice(id, w){
   </head>
   <body class="m-half2">
     <div class="toolbar">
-      <button type="button" data-m="half2">১ পাতায় ২ কপি (Customer + Office)</button>
-      <button type="button" data-m="half">অর্ধেক পাতা (১ কপি)</button>
+      <button type="button" data-m="half2">১ পাতায় ২ কপি (পাশাপাশি)</button>
+      <button type="button" data-m="half">অর্ধেক পাতা (লম্বালম্বি, ১ কপি)</button>
       <button type="button" data-m="full">পূর্ণ A4 পাতা</button>
       <button type="button" class="print" id="printBtn">Print / Save as PDF</button>
     </div>
