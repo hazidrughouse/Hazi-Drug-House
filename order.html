@@ -1006,12 +1006,14 @@ async function showInvoice(id, w){
 
   const rows = (Array.isArray(order.items) ? order.items : []).map(hydrateItem);
   let grand = 0;
+  rows.forEach(it => { grand += round2(it.quantity * it.unit_price); });
+  grand = round2(grand);
 
-  const bodyRows = rows.map((it, i) => {
-    const line = round2(it.quantity * it.unit_price);
-    grand += line;
+  const rawId = String(order.id);
+  const invNo = rawId.length > 8 ? rawId.slice(-6).toUpperCase() : rawId;
+  const licenseHtml = INVOICE_SHOP.license ? `<div class="addr">${escapeHtml(INVOICE_SHOP.license)}</div>` : "";
 
-    return `<tr>
+  const rowHtml = (it, i) => `<tr>
       <td class="ctr">${i + 1}</td>
       <td>${escapeHtml(it.name || it.medicine_name || it.product_name || "ওষুধ")}</td>
       <td class="ctr">${it.quantity} ${escapeHtml(itemPackageLabel(it))}</td>
@@ -1019,14 +1021,73 @@ async function showInvoice(id, w){
       <td class="num">${money(it.mrp)}</td>
       <td class="num">${Number(Number(it.discount_percent).toFixed(2))}%</td>
       <td class="num">${money(it.unit_price)}</td>
-      <td class="num strong">${money(line)}</td>
+      <td class="num strong">${money(round2(it.quantity * it.unit_price))}</td>
     </tr>`;
-  }).join("");
 
-  grand = round2(grand);
-  const rawId = String(order.id);
-  const invNo = rawId.length > 8 ? rawId.slice(-6).toUpperCase() : rawId;
-  const licenseHtml = INVOICE_SHOP.license ? `<div class="addr">${escapeHtml(INVOICE_SHOP.license)}</div>` : "";
+  const colgroup = `<colgroup>
+      <col style="width:5%"><col style="width:31%"><col style="width:10%"><col style="width:11%">
+      <col style="width:11%"><col style="width:8%"><col style="width:12%"><col style="width:12%">
+    </colgroup>`;
+
+  const thead = `<thead><tr>
+      <th class="ctr">#</th><th>Product Name</th><th class="ctr">Quantity</th><th class="ctr">Batch No</th>
+      <th class="num">MRP Rate</th><th class="num">Discount</th><th class="num">Discount Rate</th><th class="num">Total</th>
+    </tr></thead>`;
+
+  const emptyRow = '<tr><td colspan="8">এই অর্ডারে কোনো ওষুধ নেই।</td></tr>';
+
+  const head = (page, total) => `<div class="head">
+      <div>
+        <h1>${escapeHtml(INVOICE_SHOP.name)}</h1>
+        <div class="addr">${escapeHtml(INVOICE_SHOP.address)}</div>
+        ${licenseHtml}
+      </div>
+      <div class="doc">
+        <div class="t">INVOICE</div>
+        <div><b>Invoice No:</b> #${escapeHtml(invNo)}</div>
+        <div><b>Date:</b> ${escapeHtml(formatDate(order.created_at))}</div>
+        ${total > 1 ? `<div><b>Page:</b> ${page}/${total}</div>` : ""}
+      </div>
+    </div>`;
+
+  const bill = `<div class="bill">
+      <div><b>${escapeHtml(order.pharmacy_name || "-")}</b><br>${escapeHtml(order.customer_name || "-")}</div>
+      <div style="text-align:right"><b>Mobile:</b> ${escapeHtml(order.phone || "-")}<br>${escapeHtml(order.address || "-")}</div>
+    </div>`;
+
+  // ---- পূর্ণ A4 পাতা ----
+  const fullView = `<div class="sheet">
+      ${head(1, 1)}${bill}
+      <table>${colgroup}${thead}<tbody>${rows.map(rowHtml).join("") || emptyRow}</tbody></table>
+      <div class="grand">Grand Total: ${money(grand)}</div>
+    </div>`;
+
+  // ---- অর্ধেক A4 পাতা (এক A4-তে ২টা) ----
+  const PER_HALF = 20;
+  const chunks = [];
+  for(let i = 0; i < rows.length; i += PER_HALF) chunks.push(rows.slice(i, i + PER_HALF));
+  if(!chunks.length) chunks.push([]);
+
+  const halfHtml = (c, copyLabel) => {
+    const last = c === chunks.length - 1;
+    const body = chunks[c].map((it, k) => rowHtml(it, c * PER_HALF + k)).join("") || emptyRow;
+
+    return `<div class="half">
+        ${copyLabel ? `<div class="copy">${copyLabel}</div>` : ""}
+        ${head(c + 1, chunks.length)}${bill}
+        <table>${colgroup}${thead}<tbody>${body}</tbody></table>
+        ${last ? `<div class="grand">Grand Total: ${money(grand)}</div>` : '<div class="cont">পরের অংশে চলবে…</div>'}
+      </div>`;
+  };
+
+  const singlePages = [];
+  for(let c = 0; c < chunks.length; c += 2){
+    singlePages.push(`<div class="pg">${halfHtml(c, "")}${c + 1 < chunks.length ? halfHtml(c + 1, "") : '<div class="half"></div>'}</div>`);
+  }
+
+  const twoCopyPages = chunks.map((_, c) =>
+    `<div class="pg">${halfHtml(c, "Customer Copy")}${halfHtml(c, "Office Copy")}</div>`
+  );
 
   const html = `<!DOCTYPE html>
   <html lang="bn">
@@ -1035,11 +1096,18 @@ async function showInvoice(id, w){
     <meta name="viewport" content="width=794">
     <title>${escapeHtml(INVOICE_SHOP.name)} Invoice #${escapeHtml(invNo)}</title>
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style id="pg">@page{size:A4;margin:0}</style>
     <style>
-      @page{size:A4;margin:8mm}
       *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
       body{margin:0;background:#e9eeeb;font-family:"Hind Siliguri","Noto Sans Bengali",Arial,sans-serif;color:#111;padding:10px}
-      .sheet{width:210mm;min-height:297mm;margin:0 auto;background:#fff;padding:8mm}
+      .toolbar{max-width:210mm;margin:0 auto 10px;display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+      .toolbar button{padding:9px 12px;border:1px solid #075e46;background:#fff;color:#075e46;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}
+      .toolbar button.on{background:#075e46;color:#fff}
+      .toolbar .print{background:#b08a33;border-color:#b08a33;color:#fff}
+      .view{display:none}
+      body.m-full #v-full,body.m-half #v-half,body.m-half2 #v-half2{display:block}
+
+      .sheet{width:210mm;margin:0 auto;background:#fff;padding:8mm}
       .head{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;border-bottom:2px solid #075e46;padding-bottom:6px}
       h1{margin:0;font-size:30px;line-height:1.1;color:#064c37}
       .addr{margin-top:2px;font-size:11px;color:#333}
@@ -1055,46 +1123,56 @@ async function showInvoice(id, w){
       th.ctr{text-align:center}th.num{text-align:right}
       .strong{font-weight:700}
       .grand{margin-top:8px;text-align:right;font-size:15px;font-weight:700;border-top:2px solid #075e46;padding-top:6px}
-      .actions{text-align:center;margin:14px 0}
-      .print{padding:10px 24px;background:#075e46;color:#fff;border:0;border-radius:8px;font-size:15px;cursor:pointer}
-      @media print{body{background:#fff;padding:0}.sheet{width:auto;min-height:0;padding:0}.actions{display:none}}
+
+      .pg{width:210mm;height:296mm;margin:0 auto 14px;background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.12);page-break-after:always}
+      .half{position:relative;height:148mm;padding:5mm 8mm}
+      .pg .half:first-child{border-bottom:1px dashed #8a9a92}
+      .half h1{font-size:20px}
+      .half .addr{font-size:10px;margin-top:1px}
+      .half .head{padding-bottom:3px;border-bottom-width:1.5px}
+      .half .doc{font-size:10px;line-height:1.35}
+      .half .doc .t{font-size:13px;letter-spacing:2px}
+      .half .bill{margin:5px 0 2px;padding:3px 7px;font-size:10px;line-height:1.35}
+      .half table{margin-top:3px}
+      .half th{font-size:9px;padding:3px 4px}
+      .half td{font-size:9.5px;padding:2px 4px;line-height:1.2}
+      .half .grand{font-size:13px;margin-top:5px;padding-top:4px}
+      .half .cont{margin-top:6px;text-align:right;font-size:10px;color:#555}
+      .copy{position:absolute;top:1.5mm;right:8mm;font-size:8.5px;font-weight:700;color:#075e46;border:1px solid #075e46;border-radius:3px;padding:0 5px;line-height:1.5}
+
+      @media print{
+        body{background:#fff;padding:0}
+        .toolbar{display:none}
+        .sheet{width:auto;padding:0}
+        .pg{margin:0;box-shadow:none}
+        .pg:last-child{page-break-after:auto}
+      }
     </style>
   </head>
-  <body>
-    <div class="sheet">
-      <div class="head">
-        <div>
-          <h1>${escapeHtml(INVOICE_SHOP.name)}</h1>
-          <div class="addr">${escapeHtml(INVOICE_SHOP.address)}</div>
-          ${licenseHtml}
-        </div>
-        <div class="doc">
-          <div class="t">INVOICE</div>
-          <div><b>Invoice No:</b> #${escapeHtml(invNo)}</div>
-          <div><b>Date:</b> ${escapeHtml(formatDate(order.created_at))}</div>
-        </div>
-      </div>
-
-      <div class="bill">
-        <div><b>${escapeHtml(order.pharmacy_name || "-")}</b><br>${escapeHtml(order.customer_name || "-")}</div>
-        <div style="text-align:right"><b>Mobile:</b> ${escapeHtml(order.phone || "-")}<br>${escapeHtml(order.address || "-")}</div>
-      </div>
-
-      <table>
-        <colgroup>
-          <col style="width:5%"><col style="width:31%"><col style="width:10%"><col style="width:11%">
-          <col style="width:11%"><col style="width:8%"><col style="width:12%"><col style="width:12%">
-        </colgroup>
-        <thead><tr>
-          <th class="ctr">#</th><th>Product Name</th><th class="ctr">Quantity</th><th class="ctr">Batch No</th>
-          <th class="num">MRP Rate</th><th class="num">Discount</th><th class="num">Discount Rate</th><th class="num">Total</th>
-        </tr></thead>
-        <tbody>${bodyRows || '<tr><td colspan="8">এই অর্ডারে কোনো ওষুধ নেই।</td></tr>'}</tbody>
-      </table>
-
-      <div class="grand">Grand Total: ${money(grand)}</div>
+  <body class="m-half2">
+    <div class="toolbar">
+      <button type="button" data-m="half2">১ পাতায় ২ কপি (Customer + Office)</button>
+      <button type="button" data-m="half">অর্ধেক পাতা (১ কপি)</button>
+      <button type="button" data-m="full">পূর্ণ A4 পাতা</button>
+      <button type="button" class="print" id="printBtn">Print / Save as PDF</button>
     </div>
-    <div class="actions"><button class="print" onclick="window.print()">Print / Save as PDF</button></div>
+    <div class="view" id="v-full">${fullView}</div>
+    <div class="view" id="v-half">${singlePages.join("")}</div>
+    <div class="view" id="v-half2">${twoCopyPages.join("")}</div>
+    <script>
+      function setMode(m){
+        document.body.className = "m-" + m;
+        document.getElementById("pg").textContent = m === "full"
+          ? "@page{size:A4;margin:8mm}" : "@page{size:A4;margin:0}";
+        var bs = document.querySelectorAll(".toolbar button[data-m]");
+        for(var i = 0; i < bs.length; i++){
+          bs[i].className = bs[i].getAttribute("data-m") === m ? "on" : "";
+          bs[i].onclick = function(){ setMode(this.getAttribute("data-m")); };
+        }
+      }
+      document.getElementById("printBtn").onclick = function(){ window.print(); };
+      setMode("half2");
+    <\/script>
   </body>
   </html>`;
 
