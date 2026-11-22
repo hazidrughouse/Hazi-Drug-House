@@ -1,25 +1,42 @@
-self.addEventListener("push", function (event) {
-  let data = {};
-
-  if (event.data) {
-    data = event.data.json();
-  }
-
-  event.waitUntil(
-    self.registration.showNotification(data.title || "Medispot BD", {
-      body: data.body || "নতুন অর্ডার এসেছে!",
-      icon: "/Hazi-Drug-House/favicon.png",
-      data: {
-        url: data.url || "https://hazidrughouse.github.io/Hazi-Drug-House/order.html"
-      }
-    })
-  );
+self.addEventListener("install", () => {
+  self.skipWaiting();
 });
 
-self.addEventListener("notificationclick", function (event) {
+self.addEventListener("activate", (event) => {
+  event.waitUntil(self.clients.claim());
+});
+
+self.addEventListener("push", (event) => {
+  let data = {};
+  try {
+    data = event.data ? event.data.json() : {};
+  } catch (e) {
+    data = { body: event.data ? event.data.text() : "" };
+  }
+
+  const title = data.title || "Medispot BD: নতুন অর্ডার";
+  const options = {
+    body: data.body || "একটি নতুন অর্ডার এসেছে।",
+    tag: "new-order",
+    renotify: true,
+    data: { url: "/Hazi-Drug-House/order.html" }
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+self.addEventListener("notificationclick", (event) => {
   event.notification.close();
+  const url = (event.notification.data && event.notification.data.url) || "/Hazi-Drug-House/order.html";
 
   event.waitUntil(
-    clients.openWindow(event.notification.data.url)
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((list) => {
+      for (const client of list) {
+        if (client.url.includes("order.html") && "focus" in client) {
+          return client.focus();
+        }
+      }
+      return self.clients.openWindow(url);
+    })
   );
 });
